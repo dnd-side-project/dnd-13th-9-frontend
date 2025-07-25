@@ -1,9 +1,9 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import storybook from 'eslint-plugin-storybook';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { FlatCompat } from '@eslint/eslintrc';
+import filenames from 'eslint-plugin-filenames';
+import importPlugin from 'eslint-plugin-import';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,8 +13,45 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  ...storybook.configs["flat/recommended"]
+  {
+    languageOptions: {
+      parser: '@typescript-eslint/parser',
+    },
+    rules: {
+      '@next/next/no-img-element': 'error',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/explicit-module-boundary-types': 'warn',
+    },
+  },
+  ...storybook.configs['flat/recommended'],
+  {
+    plugins: {
+      filenames,
+      import: importPlugin,
+    },
+    rules: {
+      'filenames/match-regex': ['error', '^[a-z0-9-]+$', true],
+      'filenames/match-exported': ['error', 'pascalCase'],
+      'import/order': [
+        'error',
+        {
+          groups: [
+            ['builtin', 'external'],
+            ['internal'],
+            ['sibling', 'parent'],
+            ['index'],
+          ],
+          'newlines-between': 'always',
+        },
+      ],
+    },
+  },
+  {
+    plugins: ['@typescript-eslint', 'prettier'],
+    rules: {
+      'prettier/prettier': 'error',
+    },
+  },
 ];
 
 export default eslintConfig;
