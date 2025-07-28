@@ -1,0 +1,12 @@
+# 현재 브랜치 이름 가져오기
+branch_name=$(git symbolic-ref --short HEAD)
+
+# 브랜치명에서 이슈 번호 추출 (예: feat/#3 -> 3)
+if [[ $branch_name =~ \#([0-9]+)$ ]]; then
+  issue_number=${BASH_REMATCH[1]}
+  commit_file=$1
+  commit_message=$(cat "$commit_file")
+  if [[ ! $commit_message =~ \(\#$issue_number\) ]]; then
+    echo "$commit_message (#$issue_number)" > "$commit_file"
+  fi
+fi
