@@ -1,4 +1,4 @@
-ame: '🐞 Bug Report'
+name: '🐞 Bug Report'
 description: '버그 리포트'
 labels: ["bug"]
 body:
