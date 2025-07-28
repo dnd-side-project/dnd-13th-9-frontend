@@ -1,0 +1,33 @@
+ame: '🐞 Bug Report'
+description: '버그 리포트'
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: '🐞 버그 설명'
+      description: '발견한 버그를 설명해주세요.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: '🎯 재현 방법'
+      description: '버그를 재현하는 단계를 작성해주세요'
+      value: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: '📷 스크린샷 (선택)'
+      description: '버그 상황을 보여주는 스크린샷을 첨부해주세요'
+      placeholder: '스크린샷을 여기에 드래그하거나 링크를 입력하세요'
+    validations:
+      required: false
