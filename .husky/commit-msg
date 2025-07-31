@@ -1,11 +1,18 @@
-# 현재 브랜치 이름 가져오기
-branch_name=$(git symbolic-ref --short HEAD)
+# 현재 브랜치 이름 가져오기 (detached HEAD 상태면 에러 무시)
+branch_name=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+# detached HEAD 상태면 커밋 메시지 수정 없이 종료
+if [ -z "$branch_name" ]; then
+  exit 0
+fi
 
 # 브랜치명에서 이슈 번호 추출 (예: feat/#3 -> 3)
 if [[ $branch_name =~ \#([0-9]+)$ ]]; then
   issue_number=${BASH_REMATCH[1]}
   commit_file=$1
   commit_message=$(cat "$commit_file")
+
+  # 커밋 메시지에 이미 이슈 번호가 포함되어 있지 않으면 추가
   if [[ ! $commit_message =~ \(\#$issue_number\) ]]; then
     echo "$commit_message (#$issue_number)" > "$commit_file"
   fi
