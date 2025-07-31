@@ -1,0 +1,27 @@
+# 현재 브랜치명 가져오기 (detached HEAD 상태 처리)
+BRANCH_NAME=$(git branch --show-current 2>/dev/null)
+if [ -z "$BRANCH_NAME" ]; then
+  exit 0
+fi
+
+# 브랜치명에서 #숫자 추출
+ISSUE_NUMBER=$(echo "$BRANCH_NAME" | grep -o '#[0-9]*' || echo "")
+
+# 커밋 메시지 경로 및 내용
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE" 2>/dev/null || exit 1)
+
+# 이미 (#숫자) 형태가 있으면 그대로 둠
+if echo "$COMMIT_MSG" | grep -q "(#[0-9]*)"; then
+  exit 0
+fi
+
+# 이슈 번호 있으면 (#숫자) 붙임
+if [ -n "$ISSUE_NUMBER" ]; then
+  FORMATTED_ISSUE="($ISSUE_NUMBER)"
+  echo "$COMMIT_MSG $FORMATTED_ISSUE" > "$COMMIT_MSG_FILE"
+  echo "✅ 이슈 번호 $FORMATTED_ISSUE 커밋 메시지에 추가됨"
+else
+  echo "$COMMIT_MSG (no-issue)" > "$COMMIT_MSG_FILE"
+  echo "ℹ️ 이슈 번호가 없어 (no-issue) 추가됨"
+fi
