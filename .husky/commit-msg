@@ -1,19 +1,27 @@
-# 현재 브랜치 이름 가져오기 (detached HEAD 상태면 에러 무시)
-branch_name=$(git symbolic-ref --short HEAD 2>/dev/null)
-
-# detached HEAD 상태면 커밋 메시지 수정 없이 종료
-if [ -z "$branch_name" ]; then
+# 현재 브랜치명 가져오기 (detached HEAD 상태 처리)
+BRANCH_NAME=$(git branch --show-current 2>/dev/null)
+if [ -z "$BRANCH_NAME" ]; then
   exit 0
 fi
 
-# 브랜치명에서 이슈 번호 추출 (예: feat/#3 -> 3)
-if [[ $branch_name =~ \#([0-9]+)$ ]]; then
-  issue_number=${BASH_REMATCH[1]}
-  commit_file=$1
-  commit_message=$(cat "$commit_file")
+# 브랜치명에서 #숫자 추출
+ISSUE_NUMBER=$(echo "$BRANCH_NAME" | grep -o '#[0-9]*' || echo "")
 
-  # 커밋 메시지에 이미 이슈 번호가 포함되어 있지 않으면 추가
-  if [[ ! $commit_message =~ \(\#$issue_number\) ]]; then
-    echo "$commit_message (#$issue_number)" > "$commit_file"
-  fi
+# 커밋 메시지 경로 및 내용
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE" 2>/dev/null || exit 1)
+
+# 이미 (#숫자) 형태가 있으면 그대로 둠
+if echo "$COMMIT_MSG" | grep -q "(#[0-9]*)"; then
+  exit 0
+fi
+
+# 이슈 번호 있으면 (#숫자) 붙임
+if [ -n "$ISSUE_NUMBER" ]; then
+  FORMATTED_ISSUE="($ISSUE_NUMBER)"
+  echo "$COMMIT_MSG $FORMATTED_ISSUE" > "$COMMIT_MSG_FILE"
+  echo "🆕 커밋 메시지에 이슈 번호 $FORMATTED_ISSUE 추가됨"
+else
+  echo "$COMMIT_MSG (no-issue)" > "$COMMIT_MSG_FILE"
+  echo "⚠️ 이슈 번호를 찾을 수 없어 (no-issue) 추가됨"
 fi
