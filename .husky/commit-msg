@@ -20,8 +20,8 @@ fi
 if [ -n "$ISSUE_NUMBER" ]; then
   FORMATTED_ISSUE="($ISSUE_NUMBER)"
   echo "$COMMIT_MSG $FORMATTED_ISSUE" > "$COMMIT_MSG_FILE"
-  echo "🆕 커밋 메시지에 이슈 번호 $FORMATTED_ISSUE 추가됨"
+  echo "✅ 이슈 번호 $FORMATTED_ISSUE 커밋 메시지에 추가됨"
 else
   echo "$COMMIT_MSG (no-issue)" > "$COMMIT_MSG_FILE"
-  echo "⚠️ 이슈 번호를 찾을 수 없어 (no-issue) 추가됨"
+  echo "ℹ️ 이슈 번호가 없어 (no-issue) 추가됨"
 fi
