@@ -12,9 +12,12 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.84.0",
+    "ky": "^1.8.2",
     "next": "15.4.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.1",
