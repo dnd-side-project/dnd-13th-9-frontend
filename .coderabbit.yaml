@@ -11,4 +11,4 @@ reviews:
     enabled: true
     drafts: false
 chat:
-  auto_reply: false
+  auto_reply: true
