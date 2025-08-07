@@ -1,0 +1,65 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
+import { colors } from '@/utils/style/colors';
+
+<Meta title="foundations/Colors" />
+
+# Colors
+
+<ColorPalette>
+  <ColorItem
+    title="Primary"
+    subtitle="Primary"
+    colors={{
+      50: colors.primary[50],
+      55: colors.primary[55],
+    }}
+  />
+  <ColorItem
+    title="Secondary"
+    subtitle="Secondary"
+    colors={{
+      50: colors.secondary[50],
+    }}
+  />
+  <ColorItem
+    title="Neutral"
+    subtitle="Neutral"
+    colors={{
+      20: colors.neutral[20],
+      30: colors.neutral[30],
+      40: colors.neutral[40],
+      50: colors.neutral[50],
+      60: colors.neutral[60],
+      70: colors.neutral[70],
+      80: colors.neutral[80],
+      90: colors.neutral[90],
+      100: colors.neutral[100],
+      110: colors.neutral[110],
+      120: colors.neutral[120],
+    }}
+  />
+  <ColorItem
+    title="CoolGray"
+    subtitle="CoolGray"
+    colors={{
+      20: colors.coolGray[20],
+      50: colors.coolGray[50],
+      80: colors.coolGray[80],
+    }}
+  />
+  <ColorItem
+    title="Status"
+    subtitle="Status"
+    colors={{
+      red: colors.status.red,
+    }}
+  />
+  <ColorItem
+    title="Static"
+    subtitle="Static Colors"
+    colors={{
+      black: colors.static.black,
+      white: colors.static.white,
+    }}
+  />
+</ColorPalette>

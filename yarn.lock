@@ -1487,6 +1487,14 @@
   resolved "https://registry.yarnpkg.com/@storybook/addon-onboarding/-/addon-onboarding-9.1.0.tgz#3fc2c5b67816d0c701d8cf419bd31a30d202ecf6"
   integrity sha512-6TUcVTR8CFp4lqTm/79wa+rI5BUsw6XcX/xcxK/Ufo7AD1DPHx2xMEz3pp6KNNdzSajjBSU9Y/HqupginbjnfA==
 
+"@storybook/blocks@^8.6.14":
+  version "8.6.14"
+  resolved "https://registry.yarnpkg.com/@storybook/blocks/-/blocks-8.6.14.tgz#9d39e64f4fd0a446d96f1f5d6b220d4812fc05fa"
+  integrity sha512-rBMHAfA39AGHgkrDze4RmsnQTMw1ND5fGWobr9pDcJdnDKWQWNRD7Nrlxj0gFlN3n4D9lEZhWGdFrCbku7FVAQ==
+  dependencies:
+    "@storybook/icons" "^1.2.12"
+    ts-dedent "^2.0.0"
+
 "@storybook/builder-webpack5@9.1.0":
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/@storybook/builder-webpack5/-/builder-webpack5-9.1.0.tgz#471a568fce64c0090cc0aa72cb519e6995dfbcc6"
@@ -1527,7 +1535,7 @@
   resolved "https://registry.yarnpkg.com/@storybook/global/-/global-5.0.0.tgz#b793d34b94f572c1d7d9e0f44fac4e0dbc9572ed"
   integrity sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==
 
-"@storybook/icons@^1.4.0":
+"@storybook/icons@^1.2.12", "@storybook/icons@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@storybook/icons/-/icons-1.4.0.tgz#7cf7ab3dfb41943930954c4ef493a73798d8b31d"
   integrity sha512-Td73IeJxOyalzvjQL+JXx72jlIYHgs+REaHiREOqfpo3A2AYYG71AUbcv+lg7mEDIweKVCxsMQ0UKo634c8XeA==
@@ -6552,6 +6560,11 @@ synckit@^0.11.7:
   integrity sha512-MeQTA1r0litLUf0Rp/iisCaL8761lKAZHaimlbGK4j0HysC4PLfqygQj9srcs0m2RdtDYnF8UuYyKpbjHYp7Jw==
   dependencies:
     "@pkgr/core" "^0.2.9"
+
+tailwind-merge@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-3.3.1.tgz#a7e7db7c714f6020319e626ecfb7e7dac8393a4b"
+  integrity sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==
 
 tailwindcss@4.1.11, tailwindcss@^4:
   version "4.1.11"
