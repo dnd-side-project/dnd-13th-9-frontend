@@ -9,8 +9,7 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepare": "husky install",
-    "chromatic": "npx chromatic --project-token=chpt_e3dcf3b88d6fceb"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.84.0",
