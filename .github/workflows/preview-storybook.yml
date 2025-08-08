@@ -1,0 +1,53 @@
+name: Preview Storybook
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+    types: [opened, reopened, synchronize]
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  preview-storybook:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install packages
+        run: npm install
+
+      - name: Deploy Chromatic
+        id: chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          onlyChanged: true
+          autoAcceptChanges: true
+
+      - name: Get current time (KST)
+        id: current-time
+        uses: josStorer/get-current-time@v2
+        with:
+          format: 'YYYY년 MM월 DD일 HH시 mm분 ss초'
+          utcOffset: '+09:00'
+
+      - name: Comment on PR with update time and Storybook URL
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: ${{ github.event.number }}-storybook
+          message: |
+            Update: ${{ steps.current-time.outputs.formattedTime }}
+            Storybook 미리보기 🎉: ${{ steps.chromatic.outputs.storybookUrl }}
