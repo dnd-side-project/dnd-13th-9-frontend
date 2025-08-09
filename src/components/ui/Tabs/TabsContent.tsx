@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTabsContext } from './TabsContext';
 
-interface TabsContentProps {
+type TabsContentProps = {
   value: string;
   children: React.ReactNode;
-}
+};
 
 export function TabsContent({ value, children }: TabsContentProps) {
   const context = useTabsContext();
