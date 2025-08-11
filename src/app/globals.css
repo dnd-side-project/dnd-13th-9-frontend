@@ -1,1 +1,37 @@
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/font/PretendardVariable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/font/PoppinsSemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@theme {
+  --font-family-pretendard: 'Pretendard', sans-serif;
+  --font-family-poppins: 'Poppins', sans-serif;
+}
+
+@layer base {
+  :root {
+    --font-pretendard: 'Pretendard', sans-serif;
+    --font-poppins: 'Poppins', sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-pretendard {
+    font-family: var(--font-pretendard);
+  }
+
+  .font-poppins {
+    font-family: var(--font-poppins);
+  }
+}
