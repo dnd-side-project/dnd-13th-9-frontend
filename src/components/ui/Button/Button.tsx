@@ -46,7 +46,7 @@ export const Button = ({
   return (
     <button
       type="button"
-      disabled={disabled || disabled}
+      disabled={disabled || loading}
       className={cn(
         baseClass,
         sizeClass[size],
