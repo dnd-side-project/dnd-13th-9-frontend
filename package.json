@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.84.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "ky": "^1.8.2",
     "next": "15.4.4",
