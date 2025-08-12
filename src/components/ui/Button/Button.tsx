@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 type Variant = 'primary' | 'secondary' | 'tertiary';
 type Size = 'small' | 'medium' | 'large';
 
-export interface ButtonProps {
+export type ButtonProps = {
   variant?: Variant;
   size?: Size;
   label?: string;
@@ -14,7 +14,7 @@ export interface ButtonProps {
   children?: ReactNode;
   loading?: boolean;
   className?: string;
-}
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Button = ({
   variant = 'primary',
