@@ -11,28 +11,30 @@ type Props = {
 
 export function BottomSheet({ isOpen, closeModal, children }: Props) {
   return (
-    <Portal isOpen={isOpen}>
+    <Portal>
       <AnimatePresence>
-        <>
-          <motion.div
-            className="fixed inset-0 z-30 bg-black/50"
-            variants={OVERLAY_MOTION}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            onClick={closeModal}
-          />
+        {isOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-30 bg-black/50"
+              variants={OVERLAY_MOTION}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              onClick={closeModal}
+            />
 
-          <motion.div
-            className="fixed bottom-0 left-0 z-40 w-full rounded-t-2xl bg-white shadow-lg"
-            variants={BOTTOMSHEET_MOTION}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            {children}
-          </motion.div>
-        </>
+            <motion.div
+              className="fixed bottom-0 left-0 z-40 w-full rounded-t-2xl bg-white shadow-lg"
+              variants={BOTTOMSHEET_MOTION}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              {children}
+            </motion.div>
+          </>
+        )}
       </AnimatePresence>
     </Portal>
   );
