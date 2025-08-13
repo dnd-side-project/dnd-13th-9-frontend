@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import Image from 'next/image';
 
 import { Modal } from './Modal';
+import { Button } from '../Button';
 
 import useModal from '@/hooks/useModal';
 
@@ -18,9 +19,9 @@ export const Basic: StoryObj<typeof Modal> = {
 
     return (
       <div className="flex flex-col items-center gap-2">
-        <button onClick={openModal} className="rounded-2xl bg-[#3E3F48] px-16 py-3 text-white">
+        <Button onClick={openModal} variant="primary" size="large">
           모달 열기
-        </button>
+        </Button>
 
         <Modal {...args} isOpen={isOpen} closeModal={closeModal}>
           <div className="flex flex-col items-center gap-2 rounded-2xl bg-white p-5 shadow-sm">
@@ -34,18 +35,12 @@ export const Basic: StoryObj<typeof Modal> = {
             </div>
 
             <div className="flex flex-row gap-2">
-              <button
-                className="rounded-2xl bg-[#E6E6E6] px-16 py-3 whitespace-nowrap text-[#878787]"
-                onClick={closeModal}
-              >
+              <Button onClick={closeModal} variant="tertiary" size="medium">
                 취소
-              </button>
-              <button
-                className="rounded-2xl bg-[#3E3F48] px-16 py-3 whitespace-nowrap text-white"
-                onClick={closeModal}
-              >
+              </Button>
+              <Button onClick={closeModal} size="medium">
                 삭제하기
-              </button>
+              </Button>
             </div>
           </div>
         </Modal>
