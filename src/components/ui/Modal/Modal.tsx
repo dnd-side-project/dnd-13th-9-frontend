@@ -1,6 +1,7 @@
 import React from 'react';
-
+import { motion, AnimatePresence } from 'framer-motion';
 import { Portal } from '../Portal';
+import { OVERLAY_MOTION } from '@/utils/style/animations/motionConstants';
 
 type Props = {
   isOpen: boolean;
@@ -11,10 +12,22 @@ type Props = {
 export function Modal({ isOpen, closeModal, children }: Props) {
   return (
     <Portal isOpen={isOpen}>
-      <div className="absolute inset-0 z-30 bg-black opacity-50" onClick={closeModal} />
-      <div className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center">
-        <div className="pointer-events-auto rounded-2xl bg-white">{children}</div>
-      </div>
+      <AnimatePresence>
+        <>
+          <motion.div
+            className="absolute inset-0 z-30 bg-black/50"
+            onClick={closeModal}
+            variants={OVERLAY_MOTION}
+            initial={'initial'}
+            animate={'animate'}
+            exit={'exit'}
+          />
+
+          <div className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center">
+            {children}
+          </div>
+        </>
+      </AnimatePresence>
     </Portal>
   );
 }
