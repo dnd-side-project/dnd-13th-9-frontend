@@ -19,13 +19,13 @@
   - '**/*.scss'
   - '**/*.sass'
 
-'🐞 BugFix':
-  - 'src/**'
-  - '!src/**/*.test.*'
+# '🐞 BugFix':
+#   - 'src/**'
+#   - '!src/**/*.test.*'
 
-'💻 CrossBrowsing':
-  - 'src/**'
-  - 'public/**'
+# '💻 CrossBrowsing':
+#   - 'src/**'
+#   - 'public/**'
 
 '📃 Docs':
   - '**/*.md'
@@ -35,8 +35,8 @@
   - 'src/api/**'
   - 'src/services/**'
 
-'🔨 Refactor':
-  - 'src/**'
+# '🔨 Refactor':
+#   - 'src/**'
 
 '🙋‍♂️ Question':
   - 'docs/questions/**'
