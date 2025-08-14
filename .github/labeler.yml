@@ -19,14 +19,6 @@
   - '**/*.scss'
   - '**/*.sass'
 
-# '🐞 BugFix':
-#   - 'src/**'
-#   - '!src/**/*.test.*'
-
-# '💻 CrossBrowsing':
-#   - 'src/**'
-#   - 'public/**'
-
 '📃 Docs':
   - '**/*.md'
   - 'docs/**'
@@ -35,15 +27,8 @@
   - 'src/api/**'
   - 'src/services/**'
 
-# '🔨 Refactor':
-#   - 'src/**'
-
 '🙋‍♂️ Question':
   - 'docs/questions/**'
-
-'🥰 Accessibility':
-  - 'src/components/**'
-  - 'src/pages/**'
 
 '✅ Test':
   - '**/*.test.*'
