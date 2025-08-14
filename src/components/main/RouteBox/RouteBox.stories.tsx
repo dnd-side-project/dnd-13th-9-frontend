@@ -1,4 +1,5 @@
 import React from 'react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import { RouteBox } from './RouteBox';
 
@@ -14,13 +15,15 @@ export default {
     textColor: { control: 'color' },
     size: { control: { type: 'select', options: ['small', 'large'] } },
   },
-};
+} as Meta<typeof RouteBox>;
 
 const mockRouter = {
   push: (path: string) => console.log('Mock push to', path),
 };
 
-const Template = (args) => <RouteBox {...args} router={mockRouter} />;
+const Template: StoryFn<React.ComponentProps<typeof RouteBox>> = (args) => (
+  <RouteBox {...args} router={mockRouter} />
+);
 
 export const LargeBox = Template.bind({});
 LargeBox.args = {

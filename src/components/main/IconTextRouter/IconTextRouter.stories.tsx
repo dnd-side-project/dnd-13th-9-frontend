@@ -1,4 +1,5 @@
 import React from 'react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import { IconTextRouter } from './IconTextRouter';
 
@@ -11,13 +12,15 @@ export default {
     routePath: { control: 'text' },
     icoPath: { control: 'text' },
   },
-};
+} as Meta<typeof IconTextRouter>;
 
 const mockRouter = {
   push: (path: string) => console.log('Mock push to', path),
 };
 
-const Template = (args) => <IconTextRouter {...args} router={mockRouter} />;
+const Template: StoryFn<React.ComponentProps<typeof IconTextRouter>> = (args) => (
+  <IconTextRouter {...args} router={mockRouter} />
+);
 
 export const Default = Template.bind({});
 Default.args = {
