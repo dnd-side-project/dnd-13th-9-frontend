@@ -1,5 +1,5 @@
 import React from 'react';
 
-export function RecentlyViewedHouses({ src, 월세 }) {
+export function RecentlyViewedHouses() {
   return <div></div>;
 }
