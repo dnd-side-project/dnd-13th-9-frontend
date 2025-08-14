@@ -1,54 +1,44 @@
-enable:
-  issues: false
-  prs: true
+'⚙ Setting':
+  include:
+    - '.github/**'
+    - 'config/**'
+    - 'scripts/**'
 
-comments:
-  prs: |
-    Labeler has applied any labels matching special text in your title and description.
-    Please review the labels and make any necessary changes.
+'✨ Feature':
+  include:
+    - 'src/features/**'
+    - 'src/components/**'
+    - 'src/pages/**'
 
-labels:
-  '⚙ Setting':
-    include:
-      - '.github/**'
-      - 'config/**'
-      - 'scripts/**'
+'🌏 Deploy':
+  include:
+    - '.github/workflows/**'
+    - 'Dockerfile'
+    - 'docker-compose.yml'
 
-  '✨ Feature':
-    include:
-      - 'src/features/**'
-      - 'src/components/**'
-      - 'src/pages/**'
+'🎨 Html&css':
+  include:
+    - '**/*.html'
+    - '**/*.css'
+    - '**/*.scss'
+    - '**/*.sass'
 
-  '🌏 Deploy':
-    include:
-      - '.github/workflows/**'
-      - 'Dockerfile'
-      - 'docker-compose.yml'
+'📃 Docs':
+  include:
+    - '**/*.md'
+    - 'docs/**'
 
-  '🎨 Html&css':
-    include:
-      - '**/*.html'
-      - '**/*.css'
-      - '**/*.scss'
-      - '**/*.sass'
+'📬 API':
+  include:
+    - 'src/api/**'
+    - 'src/services/**'
 
-  '📃 Docs':
-    include:
-      - '**/*.md'
-      - 'docs/**'
+'🙋‍♂️ Question':
+  include:
+    - 'docs/questions/**'
 
-  '📬 API':
-    include:
-      - 'src/api/**'
-      - 'src/services/**'
-
-  '🙋‍♂️ Question':
-    include:
-      - 'docs/questions/**'
-
-  '✅ Test':
-    include:
-      - '**/*.test.*'
-      - 'src/**/*.stories.@(js|jsx|ts|tsx)'
-      - '.storybook/**'
+'✅ Test':
+  include:
+    - '**/*.test.*'
+    - 'src/**/*.stories.@(js|jsx|ts|tsx)'
+    - '.storybook/**'
