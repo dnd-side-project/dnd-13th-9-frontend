@@ -17,14 +17,9 @@ type Props = {
    * @default 25
    */
   size?: number;
-  /**
-   * whether to show the icon name below the icon.
-   * @default false
-   */
-  showName?: boolean;
 } & React.SVGProps<SVGSVGElement>;
 
-export function Icon({ name, color = 'neutral', size = 25, showName = true, ...props }: Props) {
+export function Icon({ name, color = 'neutral', size = 25, ...props }: Props) {
   const SVGIcon = Icons[name];
 
   // SVG 컴포넌트가 존재하는지 확인
@@ -42,7 +37,6 @@ export function Icon({ name, color = 'neutral', size = 25, showName = true, ...p
         color={COLORS[color]}
         {...props}
       />
-      {showName && <span className="mt-4 font-mono text-xs text-gray-600">{name}</span>}
     </div>
   );
 }
