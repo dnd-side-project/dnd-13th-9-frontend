@@ -1,14 +1,57 @@
-name: Auto Label PR
+name: 'Auto Label PR by Commit Type'
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  issues: write
+  pull-requests: write
 
 jobs:
-  label:
+  auto-label:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/labeler@v5
+      - uses: actions/github-script@v6
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          configuration-path: .github/labeler.yml
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            const labelMap = {
+              'feat': '✨feature',
+              'fix': '🐞bugfix',
+              'refactor': '🔄refactor',
+              'style': '🎨style',
+              'docs': '📚docs',
+              'test': '✅test',
+              'chore': '⚙️chore',
+              'deploy': '⬆️deploy',
+            };
+
+            const labels = new Set();
+
+            for (const commit of commits) {
+              const message = commit.commit.message.toLowerCase();
+              const match = message.match(/^(\w+):/);
+              if (match) {
+                const type = match[1];
+                if (labelMap[type]) {
+                  labels.add(labelMap[type]);
+                }
+              }
+            }
+
+            if (labels.size > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                labels: Array.from(labels),
+              });
+            }
