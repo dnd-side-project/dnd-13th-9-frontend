@@ -37,9 +37,9 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          skip: true # UI 테스트 스킵
           onlyChanged: ${{ github.event_name == 'pull_request' }}
           autoAcceptChanges: true
+          exitOnceUploaded: true
 
       - name: Get current time (KST)
         if: github.event_name == 'pull_request'
