@@ -31,15 +31,11 @@ jobs:
       - name: Install packages
         run: yarn install --frozen-lockfile
 
-      - name: Deploy Storybook to Chromatic (No UI Tests)
+      - name: Run Chromatic and capture output
         id: chromatic
-        uses: chromaui/action@v1
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          onlyChanged: ${{ github.event_name == 'pull_request' }}
-          autoAcceptChanges: true
-          exitOnceUploaded: true
+        run: |
+          npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} > chromatic_output.txt
+          echo "CHROMATIC_URL=$(grep -o 'https://www.chromatic.com/build[^ ]*' chromatic_output.txt)" >> $GITHUB_OUTPUT
 
       - name: Get current time (KST)
         if: github.event_name == 'pull_request'
@@ -49,11 +45,18 @@ jobs:
           format: 'YYYY년 MM월 DD일 HH시 mm분 ss초'
           utcOffset: '+09:00'
 
-      - name: Comment on PR with update time and Storybook URL
+      - name: Comment on PR with custom message
         if: github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v2
+        uses: actions/github-script@v7
         with:
-          comment_tag: ${{ github.event.number }}-storybook
-          message: |
-            업데이트 시간: ${{ steps.current-time.outputs.formattedTime }}
-            Storybook 미리보기 🎉: ${{ steps.chromatic.outputs.storybookUrl }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const url = process.env.CHROMATIC_URL || '${{ steps.chromatic.outputs.CHROMATIC_URL }}';
+            const time = '${{ steps.current-time.outputs.formattedTime }}';
+            const body = `스토리북이 배포됐어요 🎉\n\n${url}\n\n업데이트 시간: ${time}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
