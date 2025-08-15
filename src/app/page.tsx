@@ -61,7 +61,7 @@ export default function index() {
           <IconTextRouter label="매물 리스트" routePath="/map" icoPath="/assets/ico-house.svg" />
           <IconTextRouter
             label="에티켓"
-            routePath="/etiqqutte"
+            routePath="/etiquette"
             icoPath="/assets/ico-etiquette.svg"
           />
           <IconTextRouter label="자취팁 영상" routePath="/tip" icoPath="/assets/ico-video.svg" />
