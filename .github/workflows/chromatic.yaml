@@ -53,7 +53,7 @@ jobs:
           script: |
             const url = process.env.CHROMATIC_URL || '${{ steps.chromatic.outputs.CHROMATIC_URL }}';
             const time = '${{ steps.current-time.outputs.formattedTime }}';
-            const body = `스토리북이 배포됐어요 🎉\n\n${url}\n\n업데이트 시간: ${time}`;
+            const body = `변경된 스토리북 내용 🎉\n\n${url}\n\n업데이트 시간: ${time}`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
