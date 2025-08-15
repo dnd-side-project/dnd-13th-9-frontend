@@ -7,6 +7,14 @@ on:
   pull_request:
     paths:
       - 'src/**'
+      - '.storybook/**'
+      - '**/*.stories.{js,jsx,ts,tsx,mdx}'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'package-lock.json'
+      - 'tsconfig*.json'
+      - 'next.config.*'
+
     types: [opened, reopened, synchronize]
     branches:
       - main
