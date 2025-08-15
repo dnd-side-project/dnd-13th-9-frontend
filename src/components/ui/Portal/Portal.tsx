@@ -1,11 +1,10 @@
 import React from 'react';
-
+import { AnimatePresence } from 'framer-motion';
 import ReactDOM from 'react-dom';
 type Props = {
-  isOpen: boolean;
   children: React.ReactNode;
 };
-export function Portal({ isOpen, children }: Props) {
+export function Portal({ children }: Props) {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -13,5 +12,7 @@ export function Portal({ isOpen, children }: Props) {
     return () => setMounted(false);
   }, []);
 
-  return mounted && isOpen ? ReactDOM.createPortal(children, document.body) : null;
+  return mounted
+    ? ReactDOM.createPortal(<AnimatePresence>{children}</AnimatePresence>, document.body)
+    : null;
 }
