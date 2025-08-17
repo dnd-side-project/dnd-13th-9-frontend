@@ -17,9 +17,13 @@ type Props = {
    * @default 25
    */
   size?: number;
+  /**
+   * 아이콘 주위 여백. 숫자(px) 또는 CSS 문자열 값.
+   */
+  padding?: number | string;
 } & React.SVGProps<SVGSVGElement>;
 
-export function Icon({ name, color = 'neutral', size = 25, ...props }: Props) {
+export function Icon({ name, color = 'neutral', size = 25, padding, ...props }: Props) {
   const SVGIcon = Icons[name];
 
   // SVG 컴포넌트가 존재하는지 확인
@@ -28,11 +32,17 @@ export function Icon({ name, color = 'neutral', size = 25, ...props }: Props) {
     return null;
   }
 
+  const wrapperStyle =
+    padding === undefined
+      ? undefined
+      : { padding: typeof padding === 'number' ? `${padding}px` : padding };
+
   return (
-    <div className="flex w-30 flex-col items-center">
+    <div className="flex flex-col items-center" style={wrapperStyle}>
       <SVGIcon
         width={`${size}px`}
         height={`${size}px`}
+        padding={padding}
         fill={COLORS[color]}
         color={COLORS[color]}
         {...props}
