@@ -8,9 +8,10 @@ type Props = {
   name: IconName;
   /**
    * color of the icon.
-   * @default 'neutral'
+   * If omitted or set to 'inherit', the icon inherits CSS color. Also accepts any CSS color string (e.g., '#f00', 'red').
+   * @default 'inherit'
    */
-  color?: IconColor;
+  color?: IconColor | 'inherit' | 'currentColor' | string;
   /**
    * size of the icon.
    * @description px 단위로 변환합니다.
@@ -23,7 +24,7 @@ type Props = {
   padding?: number | string;
 } & React.SVGProps<SVGSVGElement>;
 
-export function Icon({ name, color = 'neutral', size = 25, padding, ...props }: Props) {
+export function Icon({ name, color = 'inherit', size = 25, padding, ...props }: Props) {
   const SVGIcon = Icons[name];
 
   // SVG 컴포넌트가 존재하는지 확인
@@ -37,14 +38,19 @@ export function Icon({ name, color = 'neutral', size = 25, padding, ...props }: 
       ? undefined
       : { padding: typeof padding === 'number' ? `${padding}px` : padding };
 
+  const shouldInherit = color === 'inherit' || color === 'currentColor' || color === undefined;
+  const resolvedColor = shouldInherit
+    ? undefined
+    : typeof color === 'string'
+      ? ((COLORS as Record<string, string>)[color] ?? color)
+      : COLORS[color as IconColor];
+
   return (
     <div className="flex flex-col items-center" style={wrapperStyle}>
       <SVGIcon
         width={`${size}px`}
         height={`${size}px`}
-        padding={padding}
-        fill={COLORS[color]}
-        color={COLORS[color]}
+        {...(shouldInherit ? {} : { fill: resolvedColor, color: resolvedColor })}
         {...props}
       />
     </div>
