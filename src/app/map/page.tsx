@@ -4,7 +4,7 @@ import { MainLayout } from '@/components/layout';
 import { TabBox, TabBoxList, TabBoxTrigger, TabBoxContent } from '@/components/ui/TabBox';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Chip } from '@/components/ui/Chip/Chip';
-import { KakaoMap } from '@/components/map/KakaoMap';
+import { KakaoMap } from '@/components/map/Map/KakaoMap';
 
 export default function MapPage() {
   const folders = ['기본 폴더', '폴더 A', '폴더 B'];
@@ -40,6 +40,7 @@ export default function MapPage() {
         <TabBoxContent value="map" className="relative flex min-h-0 grow">
           <KakaoMap className="flex-1 px-0" fitParent />
         </TabBoxContent>
+
         <TabBoxContent value="list">
           <div className="text-neutral-60 flex items-center justify-center py-20">
             리스트는 준비 중입니다.
