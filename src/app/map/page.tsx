@@ -3,12 +3,10 @@ import Link from 'next/link';
 import { MainLayout } from '@/components/layout';
 import { TabBox, TabBoxList, TabBoxTrigger, TabBoxContent } from '@/components/ui/TabBox';
 import { Icon } from '@/components/ui/Icon/Icon';
-import { Chip } from '@/components/ui/Chip/Chip';
+import { MapChips } from '@/components/map/Map/MapChips';
 import { KakaoMap } from '@/components/map/Map/KakaoMap';
 
 export default function MapPage() {
-  const folders = ['기본 폴더', '폴더 A', '폴더 B'];
-
   return (
     <MainLayout>
       <TabBox defaultValue="map" className="flex min-h-0 grow flex-col">
@@ -29,13 +27,7 @@ export default function MapPage() {
           </button>
         </header>
 
-        <div className="px-6 py-3">
-          <div className="flex flex-wrap gap-2">
-            {folders.map((name, idx) => (
-              <Chip key={idx} text={name} variant={idx === 0 ? 'primary' : 'secondary'} />
-            ))}
-          </div>
-        </div>
+        <MapChips />
 
         <TabBoxContent value="map" className="relative flex min-h-0 grow">
           <KakaoMap className="flex-1 px-0" fitParent />

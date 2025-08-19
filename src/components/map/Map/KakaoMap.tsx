@@ -2,13 +2,11 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useKakaoLoader } from '@/hooks/useKakaoLoader';
-import { Icon } from '@/components/ui/Icon/Icon';
 import { CurrentLocationOverlay } from '@/components/map/Map/CurrentLocationOverlay';
-import { BodyM } from '@/components/ui/Typography/Typography';
 import useModal from '@/hooks/useModal';
 import { useRouter } from 'next/navigation';
-import { Portal } from '@/components/ui/Portal/Portal';
 import { Fab } from '@/components/ui/Fab';
+import { MemoOverlay } from './MemoOverlay';
 
 // Kakao 지도를 화면에 표시하고, 사용자의 현재 위치를 추적하여 보여주는 컴포넌트
 type KakaoMapProps = {
@@ -192,7 +190,6 @@ export function KakaoMap({ className, fitParent = true, height = 560 }: KakaoMap
         iconColor={isAwayFromUser ? 'neutral' : 'black'}
       />
 
-      {/* 메모 버튼 */}
       {!isOpen && (
         <Fab
           onClick={openModal}
@@ -202,46 +199,13 @@ export function KakaoMap({ className, fitParent = true, height = 560 }: KakaoMap
         />
       )}
 
-      {/* Mini Popup Overlay */}
-      {isOpen && (
-        <Portal selector="#main-layout">
-          <div
-            className="absolute inset-0 z-30"
-            style={{ backgroundColor: 'rgba(1, 1, 1, 0.6)' }}
-            onClick={closeModal}
-          />
-
-          {/* Popup card */}
-          <div className="absolute right-4 bottom-26 z-40">
-            <div className="min-w-[140px] rounded-xl bg-white py-3 shadow-md">
-              <button
-                type="button"
-                onClick={handleHomeMemo}
-                className="hover:bg-neutral-20 flex w-full items-center gap-1 rounded-md px-[14px] py-3"
-              >
-                <Icon name="house" size={20} color="primary" />
-                <BodyM>매물 정보 기록</BodyM>
-              </button>
-              <button
-                type="button"
-                onClick={handleNearMemo}
-                className="hover:bg-neutral-20 flex w-full items-center gap-1 rounded-md px-[14px] py-3"
-              >
-                <Icon name="favorite" size={20} color="secondary" />
-                <BodyM>주변 장소 메모</BodyM>
-              </button>
-            </div>
-          </div>
-
-          {/* Close FAB (X) */}
-          <Fab
-            onClick={closeModal}
-            className="right-[18px] bottom-12 z-40"
-            icon="close"
-            color="primary"
-          />
-        </Portal>
-      )}
+      <MemoOverlay
+        isOpen={isOpen}
+        onClose={closeModal}
+        onHomeMemo={handleHomeMemo}
+        onNearMemo={handleNearMemo}
+        portalSelector="#main-layout"
+      />
     </div>
   );
 }
