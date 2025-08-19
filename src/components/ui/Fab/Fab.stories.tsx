@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Fab } from './Fab';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import React from 'react';
+
+import { Fab } from './Fab';
 
 const meta: Meta<typeof Fab> = {
   title: 'Components/common/Fab',
