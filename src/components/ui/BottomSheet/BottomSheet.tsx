@@ -2,14 +2,16 @@ import React from 'react';
 import { Portal } from '../Portal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BOTTOMSHEET_MOTION, OVERLAY_MOTION } from '@/utils/style/animations/motionConstants';
+import { cn } from '@/utils/utils';
 
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
   children: React.ReactNode;
+  className?: string;
 };
 
-export function BottomSheet({ isOpen, closeModal, children }: Props) {
+export function BottomSheet({ isOpen, closeModal, children, className }: Props) {
   return (
     <Portal>
       <AnimatePresence>
@@ -25,7 +27,10 @@ export function BottomSheet({ isOpen, closeModal, children }: Props) {
             />
 
             <motion.div
-              className="fixed bottom-0 left-0 z-40 w-full rounded-t-2xl bg-white shadow-lg"
+              className={cn(
+                'fixed bottom-0 left-0 z-40 w-full rounded-t-2xl bg-white shadow-lg',
+                className
+              )}
               variants={BOTTOMSHEET_MOTION}
               initial="initial"
               animate="animate"

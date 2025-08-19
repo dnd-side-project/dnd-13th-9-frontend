@@ -33,9 +33,28 @@ export const Basic: Story = {
   render: ({ defaultValue }) => (
     <Tabs defaultValue={defaultValue}>
       <TabsList>
-        <TabsTrigger value="tab1">기본 정보</TabsTrigger>
-        <TabsTrigger value="tab2">체크리스트</TabsTrigger>
-        <TabsTrigger value="tab3">생활 동선</TabsTrigger>
+        <TabsTrigger.Bar value="tab1">기본 정보</TabsTrigger.Bar>
+        <TabsTrigger.Bar value="tab2">체크리스트</TabsTrigger.Bar>
+        <TabsTrigger.Bar value="tab3">생활 동선</TabsTrigger.Bar>
+      </TabsList>
+
+      <TabsContent value="tab1">첫 번째 내용</TabsContent>
+      <TabsContent value="tab2">두 번째 내용</TabsContent>
+      <TabsContent value="tab3">세 번째 내용</TabsContent>
+    </Tabs>
+  ),
+};
+
+export const ChipTabs: Story = {
+  args: {
+    defaultValue: 'tab1',
+  },
+  render: ({ defaultValue }) => (
+    <Tabs defaultValue={defaultValue}>
+      <TabsList>
+        <TabsTrigger.Chip value="tab1" text="필수 확인" />
+        <TabsTrigger.Chip value="tab2" text="메인공간" />
+        <TabsTrigger.Chip value="tab3" text="창문" />
       </TabsList>
 
       <TabsContent value="tab1">첫 번째 내용</TabsContent>
