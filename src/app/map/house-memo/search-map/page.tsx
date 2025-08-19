@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { MainLayout } from '@/components/layout';
 import { Input } from '@/components/ui/Input';
 import { Icon } from '@/components/ui/Icon';
-import KakaoMap from '@/components/HouseMemo/BaseInfo/Map/KakaoMap';
+import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { TitleM } from '@/components/ui/Typography';
 import { Button } from '@/components/ui/Button';
 import { BottomSheet } from '@/components/ui/BottomSheet';
