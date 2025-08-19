@@ -29,7 +29,7 @@ export function Icon({ name, color = 'neutral', size = 25, ...props }: Props) {
   }
 
   return (
-    <div className="flex w-30 flex-col items-center">
+    <div className="flex flex-col items-center">
       <SVGIcon
         width={`${size}px`}
         height={`${size}px`}

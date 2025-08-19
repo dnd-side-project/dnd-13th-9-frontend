@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { HtmlHTMLAttributes } from 'react';
 import { Body3xs, Body2xs } from '../Typography';
 import { cn } from '@/utils/utils';
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  ref?: React.Ref<HTMLInputElement>;
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
@@ -12,6 +13,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export function Input({
+  ref,
   value,
   onChange,
   placeholder,
@@ -25,7 +27,7 @@ export function Input({
     <div className="flex h-fit w-full flex-col gap-1">
       <div
         className={cn(
-          'bg-neutral-30 focus-within:border-primary flex w-full items-center gap-2 rounded-xl border-2 px-4 py-3',
+          'bg-neutral-30 focus-within:border-primary flex w-full items-center gap-2 rounded-xl border-2 px-3 py-3',
           error ? 'border-status-red' : 'border-transparent',
           className
         )}
@@ -34,10 +36,12 @@ export function Input({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="font-pretendard placeholder:text-neutral-70 flex-1 bg-transparent text-[16px] leading-[140%] font-normal outline-none"
+          className="font-pretendard placeholder:text-neutral-70 min-w-0 flex-1 bg-transparent text-[16px] leading-[140%] font-normal outline-none"
           {...props}
         />
-        {unit && <Body3xs className="text-neutral-80">{unit}</Body3xs>}
+        {unit && (
+          <Body3xs className="text-neutral-80 flex-shrink-0 whitespace-nowrap">{unit}</Body3xs>
+        )}
         {rightChildren}
       </div>
       {error && <Body2xs className="text-status-red px-2">{error}</Body2xs>}
