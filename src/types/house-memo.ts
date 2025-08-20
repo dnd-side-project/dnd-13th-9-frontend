@@ -12,12 +12,19 @@ export type HouseType =
   | '하숙'
   | '기타';
 
+export type Address = {
+  x: string;
+  y: string;
+  address_name: string;
+  place_name: string;
+};
+
 export type HouseMemo = {
   feeling: Feeling;
   propertyName: string; // 매물명
   memo: string;
   referenceLink: string; // 참고링크
-  address: string;
+  address: Address | null;
   detailedAddress: string;
   contractType: ContractType; // 계약 형태
   houseType: HouseType; // 집 유형
