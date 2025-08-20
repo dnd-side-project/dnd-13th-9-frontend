@@ -1,0 +1,44 @@
+'⚙ Setting':
+  include:
+    - '.github/**'
+    - 'config/**'
+    - 'scripts/**'
+
+'✨ Feature':
+  include:
+    - 'src/features/**'
+    - 'src/components/**'
+    - 'src/pages/**'
+
+'🌏 Deploy':
+  include:
+    - '.github/workflows/**'
+    - 'Dockerfile'
+    - 'docker-compose.yml'
+
+'🎨 Html&css':
+  include:
+    - '**/*.html'
+    - '**/*.css'
+    - '**/*.scss'
+    - '**/*.sass'
+
+'📃 Docs':
+  include:
+    - '**/*.md'
+    - 'docs/**'
+
+'📬 API':
+  include:
+    - 'src/api/**'
+    - 'src/services/**'
+
+'🙋‍♂️ Question':
+  include:
+    - 'docs/questions/**'
+
+'✅ Test':
+  include:
+    - '**/*.test.*'
+    - 'src/**/*.stories.@(js|jsx|ts|tsx)'
+    - '.storybook/**'
