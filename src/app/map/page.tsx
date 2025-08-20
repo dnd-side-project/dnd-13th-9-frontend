@@ -5,6 +5,7 @@ import { TabBox, TabBoxList, TabBoxTrigger, TabBoxContent } from '@/components/u
 import { Icon } from '@/components/ui/Icon/Icon';
 import { MapChips } from '@/components/map/Map/MapChips';
 import { KakaoMap } from '@/components/map/Map/KakaoMap';
+import { FolderList } from '@/components/map/List/FolderList';
 
 export default function MapPage() {
   return (
@@ -27,13 +28,12 @@ export default function MapPage() {
           </button>
         </header>
 
-        <MapChips />
-
-        <TabBoxContent value="map" className="relative flex min-h-0 grow">
+        <TabBoxContent value="map" className="relative flex min-h-0 grow flex-col">
+          <MapChips />
           <KakaoMap className="flex-1 px-0" fitParent />
         </TabBoxContent>
 
-        <TabBoxContent value="list">
+        <TabBoxContent value="list" className="min-h-0 grow overflow-auto">
           <div className="text-neutral-60 flex items-center justify-center py-20">
             리스트는 준비 중입니다.
           </div>

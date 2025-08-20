@@ -156,12 +156,12 @@ export function KakaoMap({ className, fitParent = true, height = 560 }: KakaoMap
 
   const handleHomeMemo = () => {
     closeModal();
-    router.push('/map/home-memo');
+    router.push('/map/house-memo');
   };
 
   const handleNearMemo = () => {
     closeModal();
-    router.push('/map/near-memo');
+    router.push('/map/nearby-memo');
   };
 
   return (

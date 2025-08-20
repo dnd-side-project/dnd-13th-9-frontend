@@ -55,4 +55,41 @@
   .font-poppins {
     font-family: var(--font-poppins);
   }
+
+  /* Hide scrollbar but enable scrolling */
+  .scrollbar-hidden {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  /* Dropdown reveal animation utilities */
+  .reveal-panel {
+    will-change: transform, opacity, clip-path;
+    transform-origin: top center;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease,
+      clip-path 220ms ease;
+  }
+  .reveal-panel-closed {
+    opacity: 0;
+    transform: translateY(-6px);
+    clip-path: inset(0 0 100% 0);
+    pointer-events: none;
+  }
+  .reveal-panel-open {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+  }
+
+  .icon-rotate {
+    transition: transform 200ms ease;
+  }
+  .icon-rotate-open {
+    transform: rotate(180deg);
+  }
 }
