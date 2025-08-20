@@ -6,7 +6,7 @@ export const initialHouseMemo: HouseMemo = {
   propertyName: '',
   memo: '',
   referenceLink: '',
-  address: '',
+  address: null,
   detailedAddress: '',
   contractType: '월세',
   houseType: '오피스텔',
