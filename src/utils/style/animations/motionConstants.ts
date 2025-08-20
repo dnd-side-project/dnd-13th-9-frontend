@@ -5,11 +5,11 @@ export const BOTTOMSHEET_MOTION: Variants = {
   initial: { y: '100%' },
   animate: {
     y: 0,
-    transition: { type: 'spring', stiffness: 300, damping: 30 },
+    transition: { stiffness: 300, damping: 30 },
   },
   exit: {
     y: '100%',
-    transition: { type: 'spring', stiffness: 300, damping: 30 },
+    transition: { stiffness: 300, damping: 30 },
   },
 };
 

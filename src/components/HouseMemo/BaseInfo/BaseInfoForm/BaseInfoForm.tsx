@@ -1,5 +1,6 @@
 'use client';
 import React, { useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { LabelContainer } from '../../LabelContainer';
 import { Icon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/Input';
@@ -15,17 +16,14 @@ import {
   doubleInputFields,
 } from './BaseInfoConfig';
 import { ContractType, HouseType } from '@/types/house-memo';
+import { createFieldUpdater } from '@/contexts/updateHouseMemoField';
 
 export default function BaseInfoForm() {
   const { houseMemo, setHouseMemo } = useHouseMemo();
-  const mapRef = useRef<any>(null);
+  const handleFieldChange = createFieldUpdater(houseMemo, setHouseMemo);
+  const router = useRouter();
 
-  const handleFieldChange = <T extends keyof typeof houseMemo>(
-    key: T,
-    value: (typeof houseMemo)[T]
-  ) => {
-    setHouseMemo({ ...houseMemo, [key]: value });
-  };
+  const mapRef = useRef<any>(null);
 
   const handleMoveToCurrentLocation = () => {
     if (mapRef.current) {
@@ -94,8 +92,10 @@ export default function BaseInfoForm() {
               <CurrentLocationButton onClick={handleMoveToCurrentLocation} />
               <Input
                 placeholder={placeholder}
-                value={houseMemo.address || ''}
-                onChange={(e) => handleFieldChange('address', e.target.value)}
+                value={houseMemo.address?.address_name || houseMemo.address?.place_name || ''}
+                onChange={(_) => {}}
+                onClick={() => router.push('/map/house-memo/search-map')}
+                readOnly
               />
               <KakaoMap ref={mapRef} height="130px" />
             </>
