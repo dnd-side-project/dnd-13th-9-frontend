@@ -18,7 +18,7 @@ import {
 import { ContractType, HouseType } from '@/types/house-memo';
 import { createFieldUpdater } from '@/contexts/updateHouseMemoField';
 
-export default function BaseInfoForm() {
+export function BaseInfoForm() {
   const { houseMemo, setHouseMemo } = useHouseMemo();
   const handleFieldChange = createFieldUpdater(houseMemo, setHouseMemo);
   const router = useRouter();
@@ -53,6 +53,7 @@ export default function BaseInfoForm() {
       <LabelContainer label="계약 형태" required={true}>
         <div className="flex gap-2">
           <ChipGroup
+            activeChipColor="primary"
             options={contractOptions}
             value={houseMemo.contractType}
             onChange={(val) => handleFieldChange('contractType', val as ContractType)}
@@ -67,6 +68,7 @@ export default function BaseInfoForm() {
             options={houseOptions}
             value={houseMemo.houseType}
             onChange={(val) => handleFieldChange('houseType', val as HouseType)}
+            activeChipColor="primary"
           />
         </div>
       </LabelContainer>

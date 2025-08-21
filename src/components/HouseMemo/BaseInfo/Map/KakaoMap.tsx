@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 
 interface KakaoMapProps {
   height?: string;
+  x?: string | number;
+  y?: string | number;
 }
 
 export interface KakaoMapRef {
@@ -11,9 +13,9 @@ export interface KakaoMapRef {
 }
 
 const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
-  const { height = '300px' } = props;
+  const { height = '300px', x, y } = props;
   const mapRef = useRef<HTMLDivElement | null>(null);
-  const [map, setMap] = useState<MapInstance | null>(null);
+  const [map, setMap] = useState<any>(null);
 
   useEffect(() => {
     const loadKakaoMap = () => {
@@ -21,8 +23,11 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
         const container = mapRef.current;
         if (!container) return;
 
+        const centerLat = y ? Number(y) : 33.450701;
+        const centerLng = x ? Number(x) : 126.570667;
+
         const options = {
-          center: new kakao.maps.LatLng(33.450701, 126.570667),
+          center: new kakao.maps.LatLng(centerLat, centerLng),
           level: 3,
         };
 
@@ -46,6 +51,18 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
       document.head.appendChild(script);
     }
   }, []);
+
+  useEffect(() => {
+    if (map && x != null && y != null) {
+      const newCenter = new kakao.maps.LatLng(Number(y), Number(x));
+      map.setCenter(newCenter);
+
+      new kakao.maps.Marker({
+        map,
+        position: newCenter,
+      });
+    }
+  }, [map, x, y]);
 
   useImperativeHandle(ref, () => ({
     moveToCurrentLocation: () => {
