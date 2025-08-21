@@ -14,7 +14,7 @@ export default function page() {
       <Button
         size="large"
         label="저장하기"
-        className="bg-secondary-50 fixed bottom-5 w-[390px] hover:bg-amber-500"
+        className="bg-secondary-50 fixed bottom-5 left-1/2 w-full max-w-[390px] -translate-x-1/2 hover:bg-amber-500"
       />
     </MainLayout>
   );
