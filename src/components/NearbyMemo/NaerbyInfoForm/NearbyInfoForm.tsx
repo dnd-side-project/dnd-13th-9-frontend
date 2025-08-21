@@ -9,6 +9,7 @@ import { InputFields, placeTagOptions } from './NearbyInfoConfig';
 import { PlaceTag, NearbyMemo } from '@/types/nearby-memo';
 import { ChipGroup } from '@/components/ui/ChipGroup';
 import SearchMapBottomSheet from '@/components/map/Map/SearchMapBottomSheet';
+import { useBottomSheet } from '@/hooks/useBottomSheet';
 
 export function NearbyInfoForm() {
   const [nearbyInfo, setNearbyInfo] = useState<NearbyMemo>({
@@ -19,11 +20,22 @@ export function NearbyInfoForm() {
   });
 
   const mapRef = useRef<any>(null);
-  const [isOpenSearchMap, setIsOpenSearchMap] = useState(false);
+  const { isOpen, open, close } = useBottomSheet();
 
   const handleMoveToCurrentLocation = async () => {
     if (mapRef.current) {
       const info = await mapRef.current.moveToCurrentLocation();
+      if (info) {
+        setNearbyInfo((prev) => ({
+          ...prev,
+          address: {
+            address_name: info.address,
+            place_name: info.placeName,
+            x: info.lng,
+            y: info.lat,
+          },
+        }));
+      }
     }
   };
 
@@ -58,7 +70,7 @@ export function NearbyInfoForm() {
                 placeholder={placeholder}
                 value={nearbyInfo.address?.address_name || nearbyInfo.address?.place_name || ''}
                 onChange={() => {}}
-                onClick={() => setIsOpenSearchMap(true)}
+                onClick={open}
                 readOnly
               />
               <KakaoMap
@@ -79,11 +91,11 @@ export function NearbyInfoForm() {
         </LabelContainer>
       ))}
 
-      {isOpenSearchMap && (
+      {isOpen && (
         <SearchMapBottomSheet
           existAddress={nearbyInfo.address || undefined}
-          isOpen={isOpenSearchMap}
-          closeModal={() => setIsOpenSearchMap(false)}
+          isOpen={isOpen}
+          closeModal={close}
           onSelect={(address) => {
             handleFieldChange('address', address);
           }}
