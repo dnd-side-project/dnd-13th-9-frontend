@@ -15,7 +15,8 @@ export interface KakaoMapRef {
 const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
   const { height = '300px', x, y } = props;
   const mapRef = useRef<HTMLDivElement | null>(null);
-  const [map, setMap] = useState<any>(null);
+  const [map, setMap] = useState<MapInstance | null>(null);
+  const markerRef = useRef<any>(null);
 
   useEffect(() => {
     const loadKakaoMap = () => {
@@ -56,11 +57,11 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
     if (map && x != null && y != null) {
       const newCenter = new kakao.maps.LatLng(Number(y), Number(x));
       map.setCenter(newCenter);
-
-      new kakao.maps.Marker({
-        map,
-        position: newCenter,
-      });
+      if (markerRef.current) {
+        markerRef.current.setPosition(newCenter);
+      } else {
+        markerRef.current = new kakao.maps.Marker({ map, position: newCenter });
+      }
     }
   }, [map, x, y]);
 
