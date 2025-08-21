@@ -1,70 +1,20 @@
-name: Storybook Deployment
+name: 'Chromatic Deployment'
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    paths:
-      - 'src/**'
-      - '.storybook/**'
-      - '**/*.stories.{js,jsx,ts,tsx,mdx}'
-      - 'package.json'
-      - 'yarn.lock'
-      - 'package-lock.json'
-      - 'tsconfig*.json'
-      - 'next.config.*'
-
-    types: [opened, reopened, synchronize]
-    branches:
-      - main
-  workflow_dispatch:
+on: push
 
 jobs:
-  storybook:
+  chromatic:
+    name: 'Run Chromatic'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - run: yarn
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: chromaui/action@latest
+
         with:
-          node-version: '20'
-          cache: 'yarn'
-
-      - name: Install packages
-        run: yarn install --frozen-lockfile
-
-      - name: Run Chromatic and capture output
-        id: chromatic
-        run: |
-          npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} > chromatic_output.txt
-          echo "CHROMATIC_URL=$(grep -o 'https://www.chromatic.com/build[^ ]*' chromatic_output.txt)" >> $GITHUB_OUTPUT
-
-      - name: Get current time (KST)
-        if: github.event_name == 'pull_request'
-        id: current-time
-        uses: josStorer/get-current-time@v2
-        with:
-          format: 'YYYY년 MM월 DD일 HH시 mm분 ss초'
-          utcOffset: '+09:00'
-
-      - name: Comment on PR with custom message
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const url = process.env.CHROMATIC_URL || '${{ steps.chromatic.outputs.CHROMATIC_URL }}';
-            const time = '${{ steps.current-time.outputs.formattedTime }}';
-            const body = `변경된 스토리북 내용 🎉\n\n${url}\n\n업데이트 시간: ${time}`;
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            });
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

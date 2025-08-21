@@ -13,7 +13,7 @@ const meta: Meta<typeof Chip> = {
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: ['primary', 'secondary'],
+      options: ['primary', 'secondary', 'neutral'],
     },
   },
 };
@@ -32,5 +32,12 @@ export const Secondary: Story = {
   args: {
     text: 'Secondary Chip',
     variant: 'secondary',
+  },
+};
+
+export const Neutral: Story = {
+  args: {
+    text: 'Neutral Chip',
+    variant: 'neutral',
   },
 };
