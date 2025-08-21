@@ -1,0 +1,1 @@
+export { AddImgButton } from './AddImgButton';

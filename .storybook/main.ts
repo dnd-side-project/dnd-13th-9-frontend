@@ -25,9 +25,11 @@ const config: StorybookConfig = {
       }
 
       return test.test('.svg');
-    }) as { [key: string]: any };
+    }) as { [key: string]: any } | undefined;
 
-    imageRule.exclude = /\.svg$/;
+    if (imageRule) {
+      imageRule.exclude = /\.svg$/;
+    }
 
     config.module?.rules?.push({
       test: /\.svg$/,

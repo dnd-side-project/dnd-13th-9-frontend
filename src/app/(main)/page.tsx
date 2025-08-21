@@ -55,7 +55,7 @@ export default function index() {
         <div className="flex py-3">
           <IconTextRouter
             label="바로 메모"
-            routePath="/house-memo"
+            routePath="map/house-memo"
             icoPath="/assets/ico-memo.svg"
           />
           <IconTextRouter label="매물 리스트" routePath="/map" icoPath="/assets/ico-house.svg" />
