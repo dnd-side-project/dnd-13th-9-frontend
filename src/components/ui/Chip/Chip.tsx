@@ -18,7 +18,7 @@ type Props = {
 
 export function Chip({ text, variant = 'primary', className, iconName, ...props }: Props) {
   const variantStyles = {
-    primary: 'bg-[#669AFF] text-white',
+    primary: 'bg-primary-50 text-white',
     secondary: 'bg-secondary-50 text-white',
     neutral: 'bg-neutral-30 text-neutral-80',
   };

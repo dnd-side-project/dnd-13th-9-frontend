@@ -39,8 +39,11 @@ export function NearbyInfoForm() {
     }
   };
 
-  const handleFieldChange = (key: keyof NearbyMemo, value: any) => {
-    setNearbyInfo((prev) => ({ ...prev, [key]: value }));
+  const handleFieldChange = <K extends keyof NearbyMemo>(key: K, value: NearbyMemo[K]) => {
+    setNearbyInfo((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
   return (

@@ -18,7 +18,7 @@ export function CurrentLocationButton({ onClick, className = '', color = 'primar
       onClick={onClick}
       className={cn('absolute flex w-full items-center justify-end gap-0.5', className)}
     >
-      <Icon name="gps" width={15} color={'secondary'} />
+      <Icon name="gps" width={15} color={color} />
       <BodyS className={cn('flex', textColor)}>현재 위치로 주소 입력</BodyS>
     </button>
   );

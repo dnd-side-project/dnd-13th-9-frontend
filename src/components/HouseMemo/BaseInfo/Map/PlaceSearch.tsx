@@ -6,7 +6,6 @@ import { Icon } from '@/components/ui/Icon';
 import { usePlacesQuery } from '@/queries/houseMemo/usePlacesQuery';
 import { Place } from '@/services/house.memo';
 import { useHouseMemo } from '@/contexts/HouseMemoContext';
-import { CurrentLocationButton } from '@/components/ui/CurrentLocationButton';
 
 type PlaceSearchProps = {
   value: string;
