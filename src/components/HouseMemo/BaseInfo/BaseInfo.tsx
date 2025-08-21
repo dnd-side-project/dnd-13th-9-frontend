@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { Button } from '@/components/ui/Button';
 import { TitleXs } from '@/components/ui/Typography';
-import BaseInfoForm from './BaseInfoForm/BaseInfoForm';
+import { BaseInfoForm } from './BaseInfoForm';
 
 export default function BaseInfo() {
   return (

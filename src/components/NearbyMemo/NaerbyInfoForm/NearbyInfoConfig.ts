@@ -1,0 +1,33 @@
+import { NearbyMemoInputField } from '@/types/nearby-memo';
+
+export const placeTagOptions: { text: string }[] = [
+  { text: '장점' },
+  { text: '단점' },
+  { text: '편의시설' },
+  { text: '교통' },
+  { text: '치안' },
+  { text: '소음' },
+];
+
+export const contractOptions: { text: string }[] = [
+  { text: '월세' },
+  { text: '전세' },
+  { text: '매매' },
+];
+
+export const InputFields: NearbyMemoInputField[] = [
+  {
+    key: 'placeName',
+    label: '장소명',
+    placeholder: '지도에 표시될 제목을 입력하세요.',
+    required: true,
+  },
+  { key: 'memo', label: '메모', placeholder: '기억해두고 싶은 정보와 느낌을 작성하세요.' },
+
+  {
+    key: 'address',
+    label: '주소',
+    placeholder: '주소를 입력하면 지도에 표시돼요.',
+    required: true,
+  },
+];
