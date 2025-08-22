@@ -1,28 +1,30 @@
 import React from 'react';
 import { MainLayout } from '@/components/layout';
-import Image from 'next/image';
-import { Title2xl } from '@/components/ui/Typography';
 import { VerticalSlider } from '@/components/main/VerticalSlider';
 import { RouteBox } from '@/components/main/RouteBox';
 import { IconTextRouter } from '@/components/main/IconTextRouter';
 import { TitleL } from '@/components/ui/Typography';
+import { Header } from '@/components/ui/Header';
 
 export default function index() {
   return (
-    <MainLayout className="px-6">
-      <header className="flex w-full justify-between py-3">
-        <Image src={'assets/ico-logo.svg'} alt="logo" width={80} height={20} />
-        <Image src={'assets/ico-my-page.svg'} alt="my-page" width={30} height={20} />
-      </header>
-      <div className="flex flex-col items-start justify-center py-4">
+    <MainLayout>
+      <Header
+        leftIconName="house"
+        leftHref="/"
+        rightIconName="myPage"
+        rightHref="/mypage"
+        rightIconColor="coolGray-50"
+      />
+      {/* <div className="flex flex-col items-start justify-center py-4">
         <Title2xl className="text-xl font-semibold">내 기준에 맞는 집</Title2xl>
         <div className="flex flex-row">
           <Title2xl className="text-xl font-semibold text-[#669AFF]">.zip!</Title2xl>
           <Title2xl className="text-xl font-semibold">해서 후회없게</Title2xl>
         </div>
-      </div>
+      </div> */}
 
-      <div className="w-full">
+      <div className="w-full px-6">
         <VerticalSlider />
 
         <div className="flex w-full flex-row justify-center gap-4 py-4">

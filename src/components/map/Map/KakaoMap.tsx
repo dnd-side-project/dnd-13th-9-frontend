@@ -24,6 +24,7 @@ export function KakaoMap({ className, fitParent = true, height = 560 }: KakaoMap
   const mapInstanceRef = useRef<any | null>(null);
   // 오류 메시지 및 현재 위치 관련 상태
   const [error, setError] = useState<string | null>(null);
+  const [permissionDenied, setPermissionDenied] = useState<boolean>(false);
   const userPosRef = useRef<{ lat: number; lng: number } | null>(null);
   const [userPosState, setUserPosState] = useState<{ lat: number; lng: number } | null>(null);
   const [isAwayFromUser, setIsAwayFromUser] = useState<boolean>(false);
@@ -61,19 +62,24 @@ export function KakaoMap({ className, fitParent = true, height = 560 }: KakaoMap
         setUserPosState({ lat: coords.latitude, lng: coords.longitude });
         setError(null);
         setIsAwayFromUser(false);
+        setPermissionDenied(false);
       },
       (err) => {
         const reason =
           err.code === 1
-            ? '브라우저 위치 권한이 거부되었어요.'
+            ? '위치권한이 거부되었어요.'
             : err.code === 2
               ? '위치 정보를 사용할 수 없어요.'
               : '위치 요청이 시간 초과되었어요.';
-        setError(`${reason} 브라우저 권한 설정을 확인해주세요.`);
+        // 첫 진입 시 1회만 알림
+        if (!permissionDenied) {
+          alert(`${reason}\n브라우저 권한 설정을 확인해주세요.`);
+        }
+        setPermissionDenied(true);
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );
-  }, []);
+  }, [permissionDenied]);
 
   // 지도 초기화 및 각종 이벤트 바인딩
   useEffect(() => {
@@ -172,22 +178,32 @@ export function KakaoMap({ className, fitParent = true, height = 560 }: KakaoMap
         className="min-h-0"
       />
       {mapInstanceRef.current && (
-        <CurrentLocationOverlay map={mapInstanceRef.current} position={userPosState} />
+        <CurrentLocationOverlay
+          map={mapInstanceRef.current}
+          position={userPosState}
+          onClick={() => {
+            if (permissionDenied) {
+              alert('위치권한이 거부되었어요.\n브라우저 권한 설정을 확인해주세요.');
+            } else {
+              locate();
+            }
+          }}
+        />
       )}
       {!isReady && (
         <div className="text-neutral-60 flex items-center justify-center py-6">
           지도를 불러오는 중...
         </div>
       )}
-      {error && <div className="px-4 py-2 text-red-500">{error}</div>}
+      {/* 오류 문구는 표시하지 않습니다. (alert로 대체) */}
 
       {/* 현재 위치로 이동 버튼 */}
       <Fab
         onClick={locate}
-        className="top-6 right-[18px] z-10"
+        className="bottom-12 left-[18px] z-10"
         color="white"
         icon="currentLocation"
-        iconColor={isAwayFromUser ? 'neutral' : 'black'}
+        iconColor={isAwayFromUser ? 'neutral' : 'primary'}
       />
 
       {!isOpen && (
