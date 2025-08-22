@@ -53,6 +53,13 @@ export function useKakaoLoader(): boolean {
     script.addEventListener('error', () => {
       console.error('Failed to load Kakao Maps SDK');
       setError('카카오 지도 SDK 로드에 실패했습니다. 도메인/앱키/네트워크를 확인하세요.');
+      // 실패 시 사용자에게 재시도/메인 이동을 확인받습니다.
+      const retry = window.confirm('지도 로드에 실패했어요. 재시도 하시겠어요?');
+      if (retry) {
+        window.location.reload();
+      } else {
+        window.location.href = '/';
+      }
     });
 
     document.head.appendChild(script);
@@ -108,9 +115,18 @@ export function useKakaoLoaderStatus(): { isReady: boolean; error: string | null
       }
     };
     const onError = () => setErr('카카오 지도 SDK 로드 실패(도메인/앱키/쿼터 확인)');
+    const onErrorWithConfirm = () => {
+      setErr('카카오 지도 SDK 로드 실패(도메인/앱키/쿼터 확인)');
+      const retry = window.confirm('지도 로드에 실패했어요. 재시도 하시겠어요?');
+      if (retry) {
+        window.location.reload();
+      } else {
+        window.location.href = '/';
+      }
+    };
 
     script!.addEventListener('load', onLoad);
-    script!.addEventListener('error', onError);
+    script!.addEventListener('error', onErrorWithConfirm);
 
     // 6초 내 준비 안 되면 안내 메시지 세팅
     const t = window.setTimeout(() => {
@@ -119,7 +135,7 @@ export function useKakaoLoaderStatus(): { isReady: boolean; error: string | null
 
     return () => {
       script!.removeEventListener('load', onLoad);
-      script!.removeEventListener('error', onError);
+      script!.removeEventListener('error', onErrorWithConfirm);
       window.clearTimeout(t);
     };
   }, []);
