@@ -22,6 +22,7 @@ import IcoSpinnerDown from './ico-spinner-down.svg';
 import IcoTrash from './ico-trash.svg';
 import IcoAngryFill from './ico-angry-fill.svg';
 import IcoGps from './ico-gps.svg';
+import IcoExample from './ico-example.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -48,6 +49,7 @@ export const Icons = {
   trash: IcoTrash,
   angryFill: IcoAngryFill,
   gps: IcoGps,
+  example: IcoExample,
 };
 
 export type IconName = keyof typeof Icons;
