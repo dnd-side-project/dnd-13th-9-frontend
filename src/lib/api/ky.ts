@@ -13,15 +13,5 @@ export const api = ky.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  hooks: {
-    beforeRequest: [
-      (request) => {
-        const token = getToken();
-        if (token) {
-          request.headers.set('Cookie', `Access=${token}`);
-        }
-      },
-    ],
-  },
   credentials: 'include',
 });
