@@ -1,7 +1,8 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/Tabs';
 import { Dropdown, DropdownContent } from '@/components/ui/Dropdown';
+import { useChecklistInfo } from '@/queries/houseMemo/useCheklistInfo';
 
 // 예시 데이터
 const checkListData = {
@@ -66,6 +67,10 @@ const checkListData = {
 };
 
 export default function CheckList() {
+  const { data, isLoading, error } = useChecklistInfo();
+
+  console.log(data, 'chekList data');
+
   return (
     <div>
       <Tabs defaultValue="필수 확인">

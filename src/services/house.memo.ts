@@ -1,4 +1,5 @@
 import ky from 'ky';
+import { api } from '@/lib/api/ky';
 
 export type Place = {
   id: string;
@@ -41,4 +42,8 @@ export async function fetchPlaces(query: string, page: number): Promise<ApiRespo
       },
     })
     .json<ApiResponse>();
+}
+
+export async function getChecklist() {
+  return api.get('api/checklist').json();
 }
