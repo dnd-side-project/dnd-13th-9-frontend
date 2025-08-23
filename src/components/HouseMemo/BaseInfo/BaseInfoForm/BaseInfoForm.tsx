@@ -1,6 +1,5 @@
 'use client';
 import React, { useRef } from 'react';
-import { useRouter } from 'next/navigation';
 import { LabelContainer } from '../../LabelContainer';
 import { Icon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/Input';
@@ -17,17 +16,27 @@ import {
 } from './BaseInfoConfig';
 import { ContractType, HouseType } from '@/types/house-memo';
 import { createFieldUpdater } from '@/contexts/updateHouseMemoField';
+import { useBottomSheet } from '@/hooks/useBottomSheet';
+import SearchMapBottomSheet from '@/components/map/Map/SearchMapBottomSheet';
 
-export default function BaseInfoForm() {
+export function BaseInfoForm() {
   const { houseMemo, setHouseMemo } = useHouseMemo();
   const handleFieldChange = createFieldUpdater(houseMemo, setHouseMemo);
-  const router = useRouter();
 
   const mapRef = useRef<any>(null);
+  const { isOpen, open, close } = useBottomSheet();
 
-  const handleMoveToCurrentLocation = () => {
+  const handleMoveToCurrentLocation = async () => {
     if (mapRef.current) {
-      mapRef.current.moveToCurrentLocation();
+      const info = await mapRef.current.moveToCurrentLocation();
+      if (info) {
+        handleFieldChange('address', {
+          address_name: info.address,
+          place_name: info.placeName,
+          x: info.lng,
+          y: info.lat,
+        });
+      }
     }
   };
 
@@ -50,9 +59,10 @@ export default function BaseInfoForm() {
       </LabelContainer>
 
       {/* 계약 형태 */}
-      <LabelContainer label="계약 형태" required={true}>
+      <LabelContainer label="계약 형태" required>
         <div className="flex gap-2">
           <ChipGroup
+            activeChipColor="primary"
             options={contractOptions}
             value={houseMemo.contractType}
             onChange={(val) => handleFieldChange('contractType', val as ContractType)}
@@ -67,14 +77,17 @@ export default function BaseInfoForm() {
             options={houseOptions}
             value={houseMemo.houseType}
             onChange={(val) => handleFieldChange('houseType', val as HouseType)}
+            activeChipColor="primary"
           />
         </div>
       </LabelContainer>
 
+      {/* 보증금 */}
       <LabelContainer label="보증금">
         <div className="flex gap-2">
           {doubleInputFields.map(({ key, placeholder, unit }) => (
             <Input
+              key={key}
               placeholder={placeholder}
               value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
               onChange={(e) => handleFieldChange(key, e.target.value)}
@@ -85,6 +98,7 @@ export default function BaseInfoForm() {
         </div>
       </LabelContainer>
 
+      {/* 주소 */}
       {InputFields.map(({ key, label, placeholder, required, unit }) => (
         <LabelContainer key={key} label={label} required={required}>
           {key === 'address' ? (
@@ -93,11 +107,16 @@ export default function BaseInfoForm() {
               <Input
                 placeholder={placeholder}
                 value={houseMemo.address?.address_name || houseMemo.address?.place_name || ''}
-                onChange={(_) => {}}
-                onClick={() => router.push('/map/house-memo/search-map')}
+                onChange={() => {}}
+                onClick={open}
                 readOnly
               />
-              <KakaoMap ref={mapRef} height="130px" />
+              <KakaoMap
+                ref={mapRef}
+                height="130px"
+                x={houseMemo.address?.x}
+                y={houseMemo.address?.y}
+              />
             </>
           ) : (
             <Input
@@ -109,6 +128,17 @@ export default function BaseInfoForm() {
           )}
         </LabelContainer>
       ))}
+
+      {isOpen && (
+        <SearchMapBottomSheet
+          existAddress={houseMemo.address || undefined}
+          isOpen={isOpen}
+          closeModal={close}
+          onSelect={(address) => {
+            handleFieldChange('address', address);
+          }}
+        />
+      )}
     </div>
   );
 }

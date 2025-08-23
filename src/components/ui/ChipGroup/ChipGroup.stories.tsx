@@ -21,7 +21,12 @@ export const Default: Story = {
 
     return (
       <div style={{ padding: '20px' }}>
-        <ChipGroup<OptionType> options={options} value={value} onChange={(val) => setValue(val)} />
+        <ChipGroup<OptionType>
+          options={options}
+          value={value}
+          onChange={(val) => setValue(val)}
+          activeChipColor="primary"
+        />
       </div>
     );
   },
