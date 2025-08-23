@@ -18,9 +18,10 @@ export const api = ky.create({
       (request) => {
         const token = getToken();
         if (token) {
-          request.headers.set('Authorization', `Bearer ${token}`);
+          request.headers.set('Cookie', `Access=${token}`);
         }
       },
     ],
   },
+  credentials: 'include',
 });
