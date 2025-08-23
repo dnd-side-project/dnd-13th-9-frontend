@@ -45,5 +45,5 @@ export async function fetchPlaces(query: string, page: number): Promise<ApiRespo
 }
 
 export async function getChecklist() {
-  return await api.get('/api/checklist');
+  return await api.get('api/checklist').json();
 }
