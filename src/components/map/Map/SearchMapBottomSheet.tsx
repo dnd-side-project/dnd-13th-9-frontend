@@ -4,7 +4,6 @@ import { BottomSheet } from '@/components/ui/BottomSheet';
 import { TitleM, BodyXl } from '@/components/ui/Typography';
 import PlaceSearch from '@/components/HouseMemo/BaseInfo/Map/PlaceSearch';
 import { PlaceAddress } from '@/types/nearby-memo';
-import { CurrentLocationButton } from '@/components/ui/CurrentLocationButton';
 
 type Props = {
   existAddress?: PlaceAddress;

@@ -2,10 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-/**
- * Loads Kakao Maps JavaScript SDK once on the client.
- * Exposes a boolean indicating whether `kakao.maps` is ready.
- */
 export function useKakaoLoader(): boolean {
   const [isReady, setIsReady] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);

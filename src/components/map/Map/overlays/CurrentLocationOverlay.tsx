@@ -60,7 +60,7 @@ function createContent(): HTMLDivElement {
 export function CurrentLocationOverlay({ map, position, onClick }: Props) {
   const overlayRef = useRef<any | null>(null);
 
-  // Create overlay once when map is ready
+  // 지도가 준비되면 오버레이를 한 번 만들기
   useEffect(() => {
     if (!map || overlayRef.current) return;
     const { kakao } = window as any;
@@ -85,7 +85,7 @@ export function CurrentLocationOverlay({ map, position, onClick }: Props) {
     };
   }, [map]);
 
-  // Update position
+  // 위치 업데이트
   useEffect(() => {
     if (!map || !overlayRef.current || !position) return;
     const { kakao } = window as any;

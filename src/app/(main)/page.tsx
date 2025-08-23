@@ -15,6 +15,7 @@ export default function index() {
         rightIconName="myPage"
         rightHref="/mypage"
         rightIconColor="coolGray-50"
+        className="px-4"
       />
       {/* <div className="flex flex-col items-start justify-center py-4">
         <Title2xl className="text-xl font-semibold">내 기준에 맞는 집</Title2xl>

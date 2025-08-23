@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
       <Link
         href={leftHref}
         aria-label={leftAria}
-        className="inline-flex items-center justify-center rounded-xl hover:bg-black/5 active:bg-black/10"
+        className="inline-flex cursor-pointer items-center justify-center rounded-xl"
       >
         {leftIconEl}
       </Link>
@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
         type="button"
         aria-label={leftAria}
         {...(leftOnClick ? { onClick: leftOnClick } : {})}
-        className="inline-flex items-center justify-center rounded-xl hover:bg-black/5 active:bg-black/10"
+        className="inline-flex cursor-pointer items-center justify-center rounded-xl"
       >
         {leftIconEl}
       </button>
@@ -81,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({
         <Link
           href={rightHref}
           aria-label="right"
-          className="inline-flex items-center justify-center rounded-xl hover:bg-black/5 active:bg-black/10"
+          className="inline-flex cursor-pointer items-center justify-center rounded-xl"
         >
           {rightIconEl}
         </Link>
@@ -90,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
           type="button"
           aria-label="right"
           {...(rightAction ? { onClick: rightAction } : {})}
-          className="inline-flex items-center justify-center rounded-xl hover:bg-black/5 active:bg-black/10"
+          className="inline-flex cursor-pointer items-center justify-center rounded-xl"
         >
           {rightIconEl}
         </button>
