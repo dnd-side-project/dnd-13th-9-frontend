@@ -4,8 +4,6 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Header } from './Header';
 
 import { Icon } from '@/components/ui/Icon';
-import { iconNames } from '@/components/ui/assets';
-import { COLORS } from '@/utils/style/colors';
 
 const meta = {
   title: 'components/common/Header',
@@ -22,26 +20,10 @@ const meta = {
   },
   argTypes: {
     title: { control: 'text', description: '센터 타이틀 텍스트 (center가 없을 때만 노출)' },
-    leftIconName: {
-      control: 'select',
-      options: iconNames,
-      description: '좌측 아이콘 이름 (left 미전달 시 동작)',
-    },
-    leftIconColor: {
-      control: 'select',
-      options: Object.keys(COLORS),
-      description: '좌측 아이콘 색상',
-    },
-    rightIconName: {
-      control: 'select',
-      options: iconNames,
-      description: '우측 아이콘 이름 (right 미전달 시 동작)',
-    },
-    rightIconColor: {
-      control: 'select',
-      options: Object.keys(COLORS),
-      description: '우측 아이콘 색상',
-    },
+    center: { control: false },
+    left: { control: false },
+    leftBack: { control: 'boolean' },
+    right: { control: false },
   },
 } satisfies Meta<typeof Header>;
 
@@ -50,29 +32,29 @@ type Story = StoryObj<typeof meta>;
 
 export const Main: Story = {
   args: {
-    title: '홈',
-    leftIconName: 'house',
-    rightIconName: 'search',
-    leftIconColor: 'black',
-    rightIconColor: 'black',
-    leftHref: '/',
-  },
-  render: (args) => (
-    <div className="relative min-h-[220px] bg-white text-black">
-      <Header {...args} />
-    </div>
-  ),
-};
-
-export const DefaultBack: Story = {
-  args: {
     title: '타이틀',
   },
   render: (args) => (
     <div className="relative min-h-[220px] bg-white text-black">
       <Header
         {...args}
-        // left 미전달 → 기본 back 버튼 표시
+        left={<Icon name="house" color="primary-50" />}
+        right={<Icon name="search" />}
+      />
+    </div>
+  ),
+};
+
+export const DefaultBack: Story = {
+  args: {
+    title: '뒤로가기 leftBack',
+  },
+  render: (args) => (
+    <div className="relative min-h-[220px] bg-white text-black">
+      <Header
+        {...args}
+        // 기본 back 버튼 표시
+        leftBack
       />
     </div>
   ),
@@ -88,19 +70,8 @@ export const WithTabsCenter: Story = {
             <div className="rounded-full bg-black/10 px-3 py-1 text-sm text-black">리스트</div>
           </div>
         }
-        rightIconName="search"
+        right={<Icon name="search" />}
       />
-    </div>
-  ),
-};
-
-export const ActionsByProps: Story = {
-  args: {
-    title: '액션 예시',
-  },
-  render: (args) => (
-    <div className="relative min-h-[220px] bg-white text-black">
-      <Header {...args} leftIconName="arrowLeft" rightIconName="share" rightHref="/share" />
     </div>
   ),
 };

@@ -2,8 +2,8 @@
 
 import React, { useEffect } from 'react';
 import { useKakaoMapCore } from '@/hooks/useKakaoMapCore';
-import { CurrentLocationOverlay } from './overlays/CurrentLocationOverlay';
-import { MemoOverlay } from './overlays/MemoOverlay';
+import { CurrentLocationOverlay } from '../MapTab/CurrentLocationOverlay';
+import { MemoOverlay } from './MemoOverlay';
 import useModal from '@/hooks/useModal';
 import { Fab } from '@/components/ui/Fab';
 import { useMapSelection } from '@/hooks/useMapSelection';
@@ -57,6 +57,19 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
     if (!effectiveMarkers) return;
     renderMarkers(effectiveMarkers, handleMarkerClick);
   }, [effectiveMarkers, handleMarkerClick, renderMarkers]);
+
+  // 지도 빈 공간 클릭 시 선택 해제
+  useEffect(() => {
+    if (!isReady || !mapInstanceRef.current) return;
+    const win = window as unknown as { kakao: any };
+    const { kakao } = win;
+    const map = mapInstanceRef.current;
+    const clearSelection = () => setSelectedPropId(null);
+    kakao.maps.event.addListener(map, 'click', clearSelection);
+    return () => {
+      kakao.maps.event.removeListener(map, 'click', clearSelection);
+    };
+  }, [isReady, setSelectedPropId, mapInstanceRef]);
 
   return (
     <div className={`relative flex-1 px-0`}>

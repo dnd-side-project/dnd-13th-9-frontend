@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { MainLayout } from '@/components/layout';
 import { VerticalSlider } from '@/components/main/VerticalSlider';
@@ -5,25 +7,36 @@ import { RouteBox } from '@/components/main/RouteBox';
 import { IconTextRouter } from '@/components/main/IconTextRouter';
 import { TitleL } from '@/components/ui/Typography';
 import { Header } from '@/components/ui/Header';
+import { Icon } from '@/components/ui/Icon';
+import { useRouter } from 'next/navigation';
 
-export default function index() {
+export default function HomePage() {
+  const router = useRouter();
+
   return (
     <MainLayout>
       <Header
-        leftIconName="house"
-        leftHref="/"
-        rightIconName="myPage"
-        rightHref="/mypage"
-        rightIconColor="coolGray-50"
-        className="px-4"
+        left={
+          <Icon
+            name="house"
+            color="primary-50"
+            className="cursor-pointer"
+            size={24}
+            padding={10}
+            onClick={() => router.push('/')}
+          />
+        }
+        right={
+          <Icon
+            name="myPage"
+            color="coolGray-50"
+            className="cursor-pointer"
+            size={24}
+            padding={10}
+            onClick={() => router.push('/mypage')}
+          />
+        }
       />
-      {/* <div className="flex flex-col items-start justify-center py-4">
-        <Title2xl className="text-xl font-semibold">내 기준에 맞는 집</Title2xl>
-        <div className="flex flex-row">
-          <Title2xl className="text-xl font-semibold text-[#669AFF]">.zip!</Title2xl>
-          <Title2xl className="text-xl font-semibold">해서 후회없게</Title2xl>
-        </div>
-      </div> */}
 
       <div className="w-full px-6">
         <VerticalSlider />

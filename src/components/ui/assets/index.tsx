@@ -23,6 +23,9 @@ import IcoTrash from './ico-trash.svg';
 import IcoAngryFill from './ico-angry-fill.svg';
 import IcoGps from './ico-gps.svg';
 import IcoExample from './ico-example.svg';
+import IcoMore from './ico-more.svg';
+import IcoFolder from './ico-folder.svg';
+import IcoAdd from './ico-add.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -50,6 +53,9 @@ export const Icons = {
   angryFill: IcoAngryFill,
   gps: IcoGps,
   example: IcoExample,
+  more: IcoMore,
+  folder: IcoFolder,
+  add: IcoAdd,
 };
 
 export type IconName = keyof typeof Icons;

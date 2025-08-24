@@ -10,10 +10,15 @@ type Props = {
   value: string;
   leadingIcon?: React.ReactNode;
   children: React.ReactNode;
+  /**
+   * Return true to intercept and prevent activating this tab (e.g., when you navigate elsewhere).
+   * Return false/void to allow normal activation.
+   */
+  onActivate?: () => boolean | void;
 };
 
 // TabBox 전용 아이템. 기존 Tabs 컨텍스트를 재사용하여 활성 상태를 동기화
-export function TabBoxTrigger({ value, leadingIcon, children }: Props) {
+export function TabBoxTrigger({ value, leadingIcon, children, onActivate }: Props) {
   const context = useTabBoxContext();
   const { activeValue, setActiveValue } = context ?? { activeValue: '', setActiveValue: () => {} };
   const isActive = activeValue === value;
@@ -21,7 +26,11 @@ export function TabBoxTrigger({ value, leadingIcon, children }: Props) {
   return (
     <button
       type="button"
-      onClick={() => setActiveValue(value)}
+      onClick={() => {
+        const intercepted = onActivate?.();
+        if (intercepted) return;
+        setActiveValue(value);
+      }}
       className={cn(
         'fit-content relative inline-flex items-center gap-2 rounded-full px-4 py-2 font-semibold',
         isActive ? 'text-white' : 'text-neutral-60'

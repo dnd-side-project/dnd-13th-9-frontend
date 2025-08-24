@@ -21,6 +21,8 @@ export type PropertySummary = {
   propertyId: number;
   planId: number;
   folderId: number;
+  memoType?: 'PROPERTY' | 'NEARBY';
+  placeTag?: string;
   feeling: 'GOOD' | 'SOSO' | 'BAD';
   propertyName: string;
   memo: string;
@@ -193,9 +195,10 @@ const propsByFolder: Record<number, PropertySummary[]> = {
       propertyId: 1001,
       planId: 1,
       folderId: 101,
+      memoType: 'NEARBY',
       feeling: 'GOOD',
       propertyName: '후문 옆빌 앞 집',
-      memo: '금액 조건은 괜찮은데, 통학이 불편할것 같음. 주변 편의 시설은 많고 편의점 5분거리에 있어서 좋ㅇ',
+      memo: '금액 조건은 괜찮은데, 통학이 불편할것 같음. 주변 편의 시설은 많고 편의점 5분거리에 있어서 좋ㅇ 금액 조건은 괜찮은데, 통학이 불편할것 같음. 주변 편의 시설은 많고 편의점 5분거리에 있어서 좋ㅇ',
       referenceUrl: 'https://naver.me/Gub7uDq5',
       address: '서울특별시 종로구 혜화동',
       detailAddress: '105층',
@@ -269,9 +272,11 @@ const propsByFolder: Record<number, PropertySummary[]> = {
       propertyId: 1201,
       planId: 1,
       folderId: 103,
+      memoType: 'NEARBY',
+      placeTag: 'cafe',
       feeling: 'GOOD',
-      propertyName: '채광 좋은 집',
-      memo: '메모 입니다',
+      propertyName: '셔틀 정류장',
+      memo: '셔틀버스 타면 중앙도서관까지 10분 안에 간다. 친구 피셜 수업 직전에는 버거킹까지 줄이 길게 서 있다고 한다. 미리 가서 타야지 지각 안 할듯',
       referenceUrl: 'https://naver.me/Gub7uDq5',
       address: '서울특별시 종로구 혜화동',
       detailAddress: '105층',

@@ -6,7 +6,7 @@ import {
   type PlanSummary,
   type FolderSummary,
   type PropertySummary,
-} from '@/components/map/Map/mapData';
+} from '@/components/map/mapData';
 
 type State = {
   plans: PlanSummary[];
