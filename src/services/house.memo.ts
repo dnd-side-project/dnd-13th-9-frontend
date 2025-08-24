@@ -1,5 +1,6 @@
 import ky from 'ky';
 import { api } from '@/lib/api/ky';
+import { ChecklistResponse } from '@/types/checklist';
 
 export type Place = {
   id: string;
@@ -44,6 +45,6 @@ export async function fetchPlaces(query: string, page: number): Promise<ApiRespo
     .json<ApiResponse>();
 }
 
-export async function getChecklist() {
+export async function getChecklist(): Promise<ChecklistResponse> {
   return api.get('api/checklist').json();
 }

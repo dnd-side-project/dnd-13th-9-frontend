@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/Tabs';
 import {
   CheckListBox,
@@ -7,19 +7,18 @@ import {
   CheckListBoxFavoriteItem,
   CheckListBoxSeparator,
 } from '@/components/ui/CheckListBox';
-import { checkListData } from '../../../app/checklist/checkListData';
 import { TitleXs } from '@/components/ui/Typography';
+import { useChecklistInfo } from '@/queries/houseMemo/useCheklistInfo';
 
 export default function CheckList() {
   const { data, isLoading, error } = useChecklistInfo();
 
-  console.log(data, 'chekList data');
-
+  const checkListData = data?.data;
   return (
-    <div className="bg-coolGray-20 min-h-lvw px-6 py-2">
+    <div className="bg-coolGray-20 h-fit min-h-120 px-6 py-1 pb-4">
       <Tabs defaultValue="필수 확인">
-        <TabsList className="overflow-scroll py-3">
-          {checkListData.categories.map((category) => (
+        <TabsList className="overflow-scroll py-4">
+          {checkListData?.categories?.map((category) => (
             <TabsTrigger.Chip
               iconName="example"
               key={category.order}
@@ -29,7 +28,7 @@ export default function CheckList() {
           ))}
         </TabsList>
 
-        {checkListData.sections.map((section) => (
+        {checkListData?.sections?.map((section) => (
           <TabsContent key={section.categoryName} value={section.categoryName}>
             <CheckListBox className="w-full py-3">
               <div className="flex flex-col gap-4 px-4 py-4 pt-3">

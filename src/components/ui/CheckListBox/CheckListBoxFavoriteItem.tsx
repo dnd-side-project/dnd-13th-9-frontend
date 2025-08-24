@@ -12,7 +12,7 @@ type Props = {
 
 export function CheckListBoxFavoriteItem({ isFill, onClick, question, description }: Props) {
   return (
-    <div className="flex flex-row items-center gap-3 px-2 py-1" onClick={onClick}>
+    <div className="flex flex-row items-center gap-2 px-2 py-1" onClick={onClick}>
       <Icon name="favorite" color={isFill ? 'secondary' : 'neutral'} />
       <div>
         <TitleXs>{question}</TitleXs>

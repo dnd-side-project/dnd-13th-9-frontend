@@ -57,12 +57,21 @@ export const Button = ({
       )}
       {...props}
     >
-      <TitleXs className="inline-flex items-center gap-2 whitespace-nowrap">
-        {loading && (
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-        )}
-        {children ?? label}
-      </TitleXs>
+      {children ? (
+        <div className="inline-flex items-center gap-2">
+          {loading && (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          )}
+          {children}
+        </div>
+      ) : (
+        <TitleXs className="inline-flex items-center gap-2 whitespace-nowrap">
+          {loading && (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          )}
+          {label}
+        </TitleXs>
+      )}
     </button>
   );
 };
