@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { MapPin, type MemoType } from '@/components/ui/Marker/MapPin';
 
 // Kakao 지도 마커 렌더링 유틸 훅
 export function useKakaoMarkers(mapInstanceRef: React.MutableRefObject<any | null>) {
@@ -8,9 +9,18 @@ export function useKakaoMarkers(mapInstanceRef: React.MutableRefObject<any | nul
   const markerObjsRef = React.useRef<any[]>([]);
 
   const renderMarkers = React.useCallback(
-    // markers: { id, lat, lng } 최소 스펙
-    // onClick: 마커 클릭 시 호출될 콜백 (id 전달)
-    (markers: Array<{ id: number; lat: number; lng: number }>, onClick: (id: number) => void) => {
+    // markers: { id, lat, lng, type?: MemoType, active?: boolean, nearTag?: any }
+    (
+      markers: Array<{
+        id: number;
+        lat: number;
+        lng: number;
+        type?: MemoType;
+        active?: boolean;
+        nearTag?: any;
+      }>,
+      onClick: (id: number) => void
+    ) => {
       if (!mapInstanceRef.current) return;
       const win = window as unknown as { kakao: any };
       const { kakao } = win;
@@ -21,10 +31,16 @@ export function useKakaoMarkers(mapInstanceRef: React.MutableRefObject<any | nul
       // 신규 마커 생성 및 클릭 핸들러 바인딩
       markers.forEach((m) => {
         const pos = new kakao.maps.LatLng(m.lat, m.lng);
-        const marker = new kakao.maps.Marker({ position: pos });
-        marker.setMap(mapInstanceRef.current);
-        kakao.maps.event.addListener(marker, 'click', () => onClick(m.id));
-        markerObjsRef.current.push(marker);
+        // CustomOverlay로 교체: memoType별 핀
+        const content = MapPin({
+          type: m.type ?? 'PROPERTY',
+          nearTag: m.nearTag,
+          active: !!m.active,
+          onClick: () => onClick(m.id),
+        });
+        const overlay = new kakao.maps.CustomOverlay({ position: pos, yAnchor: 1, content });
+        overlay.setMap(mapInstanceRef.current);
+        markerObjsRef.current.push(overlay);
       });
     },
     []

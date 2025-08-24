@@ -11,6 +11,9 @@ import { getPropertyDetail } from '@/components/map/mapData';
 import { BodyS, BodyXl, TitleXs } from '@/components/ui/Typography';
 import { getFeelingColor, getFeelingIconName } from '@/utils/feeling';
 import { getContractLabel } from '@/utils/labels';
+import useModal from '@/hooks/useModal';
+import { Fab } from '@/components/ui/Fab';
+import { MemoOverlay } from '@/components/map/Map/MemoOverlay';
 
 export default function FolderDetailPage() {
   const params = useParams<{ id: string }>();
@@ -28,6 +31,7 @@ export default function FolderDetailPage() {
   const setFolderId = useMapStore((s) => s.setFolderId);
   const propsInFolder = useMapStore((s) => s.propsInFolder);
   const setSelectedPropId = useMapStore((s) => s.setSelectedPropId);
+  const { isOpen, openModal, closeModal } = useModal(false);
 
   React.useEffect(() => {
     if (!Number.isNaN(folderIdFromParams)) {
@@ -153,6 +157,16 @@ export default function FolderDetailPage() {
           )}
         </div>
       </div>
+      {!isOpen && (
+        <Fab
+          label="메모 하기"
+          icon="locationAdd"
+          onClick={openModal}
+          className="right-[18px] bottom-12 z-10"
+        />
+      )}
+
+      <MemoOverlay isOpen={isOpen} onClose={closeModal} portalSelector="#main-layout" />
     </MainLayout>
   );
 }

@@ -35,8 +35,8 @@ export function SelectedPropertyCard() {
           <div className="bg-neutral-30 h-[90px] w-[90px] overflow-hidden rounded-xl">
             {selectedProp.images[0].url ? (
               <Image
-                src={selectedProp.images[0].url}
-                alt={selectedProp.propertyName}
+                src={selectedProp.images[0].url ?? ''}
+                alt={selectedProp.propertyName ?? ''}
                 width={56}
                 height={56}
                 className="h-14 w-14 object-cover"

@@ -22,7 +22,7 @@ export type PropertySummary = {
   planId: number;
   folderId: number;
   memoType?: 'PROPERTY' | 'NEARBY';
-  placeTag?: string;
+  nearTag?: 'GOOD' | 'BAD' | 'CONVENIENCE' | 'TRAFFIC' | 'SECURITY' | 'NOISE';
   feeling: 'GOOD' | 'SOSO' | 'BAD';
   propertyName: string;
   memo: string;
@@ -105,6 +105,20 @@ const foldersByPlan: Record<number, FolderSummary[]> = {
       name: '기본 폴더',
       createdAt: '2025-08-12T21:50:44.801487',
       recordCount: 2,
+      isDefaultFolder: false,
+    },
+    {
+      folderId: 105,
+      name: '후문 옆빌 앞 집',
+      createdAt: '2025-08-12T21:50:44.801487',
+      recordCount: 2,
+      isDefaultFolder: false,
+    },
+    {
+      folderId: 106,
+      name: '아무 폴더',
+      createdAt: '2025-08-12T21:50:44.801487',
+      recordCount: 0,
       isDefaultFolder: false,
     },
   ],
@@ -273,7 +287,7 @@ const propsByFolder: Record<number, PropertySummary[]> = {
       planId: 1,
       folderId: 103,
       memoType: 'NEARBY',
-      placeTag: 'cafe',
+      nearTag: 'CONVENIENCE',
       feeling: 'GOOD',
       propertyName: '셔틀 정류장',
       memo: '셔틀버스 타면 중앙도서관까지 10분 안에 간다. 친구 피셜 수업 직전에는 버거킹까지 줄이 길게 서 있다고 한다. 미리 가서 타야지 지각 안 할듯',
@@ -326,6 +340,34 @@ const propsByFolder: Record<number, PropertySummary[]> = {
       folderId: 104,
       feeling: 'GOOD',
       propertyName: `기본 매물 ${i + 1}`,
+      memo: '메모 입니다',
+      referenceUrl: 'https://naver.me/Gub7uDq5',
+      address: '서울특별시 종로구 혜화동',
+      detailAddress: '105층',
+      longitude: baseCoord.lng + i * 0.0002,
+      latitude: baseCoord.lat + 0,
+      contractType: 'MONTHLY_RENT',
+      houseType: 'ETC',
+      depositBig: 0,
+      depositSmall: 2000,
+      managementFee: 40,
+      moveInInfo: '9월초',
+      categoryMemoList: [
+        { categoryId: 0, memo: '필수 확인 메모 입니다!!' },
+        { categoryId: 1, memo: '메인 공간 메모입니다' },
+        { categoryId: 3, memo: '욕실 공간 메모입니다' },
+      ],
+    })
+  ),
+  105: new Array(6).fill(0).map((_, i) =>
+    makeProp({
+      propertyId: 1401 + i,
+      planId: 1,
+      memoType: 'NEARBY',
+      folderId: 105,
+      nearTag: 'TRAFFIC',
+      feeling: 'GOOD',
+      propertyName: `후문 옆빌 앞 집 ${i + 1}`,
       memo: '메모 입니다',
       referenceUrl: 'https://naver.me/Gub7uDq5',
       address: '서울특별시 종로구 혜화동',

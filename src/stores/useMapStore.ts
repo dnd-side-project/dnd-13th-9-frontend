@@ -35,7 +35,7 @@ export const useMapStore = create<State & Actions>((set, get) => ({
   folders: initialFolders,
   folderId: initialFolderId,
   propsInFolder: initialProps,
-  selectedPropId: initialProps[0]?.propertyId ?? null,
+  selectedPropId: null,
 
   setPlanId: (planId) => {
     const folders = getFolders(planId);
@@ -46,20 +46,26 @@ export const useMapStore = create<State & Actions>((set, get) => ({
       folders,
       folderId,
       propsInFolder,
-      selectedPropId: propsInFolder[0]?.propertyId ?? null,
+      selectedPropId: null,
     });
   },
 
   setFolderId: (folderId) => {
     const propsInFolder = getPropertiesByFolder(folderId);
-    set({ folderId, propsInFolder, selectedPropId: propsInFolder[0]?.propertyId ?? null });
+    set({ folderId, propsInFolder, selectedPropId: null });
   },
 
   setSelectedPropId: (propertyId) => set({ selectedPropId: propertyId }),
 }));
 
 export const selectMarkers = (s: State) =>
-  s.propsInFolder.map((p) => ({ id: p.propertyId, lat: p.latitude, lng: p.longitude }));
+  s.propsInFolder.map((p) => ({
+    id: p.propertyId,
+    lat: p.latitude,
+    lng: p.longitude,
+    type: (p as any).memoType ?? 'PROPERTY',
+    active: s.selectedPropId === p.propertyId,
+  }));
 
 export const selectSelectedProp = (s: State) =>
   s.selectedPropId
