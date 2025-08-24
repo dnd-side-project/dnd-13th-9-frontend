@@ -11,14 +11,16 @@ export default function page() {
   const [houseMemo, setHouseMemo] = useState(initialHouseMemo);
 
   return (
-    <MainLayout className="px-6">
+    <MainLayout>
       <HouseMemoContext.Provider value={{ houseMemo, setHouseMemo }}>
         <AddImgButtonGroup />
         <Tabs defaultValue="baseInfo">
-          <TabsList>
-            <TabsTrigger.Bar value="baseInfo">기본 정보</TabsTrigger.Bar>
-            <TabsTrigger.Bar value="checkList">체크 리스트</TabsTrigger.Bar>
-          </TabsList>
+          <div className="px-6">
+            <TabsList>
+              <TabsTrigger.Bar value="baseInfo">기본 정보</TabsTrigger.Bar>
+              <TabsTrigger.Bar value="checkList">체크 리스트</TabsTrigger.Bar>
+            </TabsList>
+          </div>
 
           <TabsContent value="baseInfo">
             <BaseInfo />

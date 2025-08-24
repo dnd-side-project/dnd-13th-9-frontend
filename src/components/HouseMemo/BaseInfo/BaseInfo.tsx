@@ -6,7 +6,7 @@ import { BaseInfoForm } from './BaseInfoForm';
 
 export default function BaseInfo() {
   return (
-    <div className="relative">
+    <div className="relative px-6">
       <BaseInfoForm />
 
       <Button size="large" className="fixed bottom-4 w-82 gap-2 md:w-100">

@@ -32,7 +32,7 @@ export const Button = ({
   const sizeClass: Record<Size, string> = {
     small: 'px-7 py-3 max-w-[120px]',
     medium: 'px-12 py-3 min-w-[150px]',
-    large: 'px-36 py-4 min-w-[310px]',
+    large: 'px-36 py-4 min-w-[310px] md:w-92',
   };
 
   const variantClass: Record<Variant, string> = {
