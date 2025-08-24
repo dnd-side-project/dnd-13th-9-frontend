@@ -13,8 +13,6 @@ import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-function moveCheckListModal() {}
-
 export default function page() {
   const [houseMemo, setHouseMemo] = useState(initialHouseMemo);
   const { isOpen, closeModal, openModal } = useModal();
