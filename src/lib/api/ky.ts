@@ -1,9 +1,9 @@
 import ky from 'ky';
+import { getCookie } from 'cookies-next';
 
 const getToken = () => {
-  // TODO: 나중에 zustand, cookie, localStorage 등에서 토큰 가져오기
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('accessToken') || '';
+    return getCookie('Access') as string | undefined;
   }
   return '';
 };
@@ -13,14 +13,5 @@ export const api = ky.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  hooks: {
-    beforeRequest: [
-      (request) => {
-        const token = getToken();
-        if (token) {
-          request.headers.set('Authorization', `Bearer ${token}`);
-        }
-      },
-    ],
-  },
+  credentials: 'include',
 });

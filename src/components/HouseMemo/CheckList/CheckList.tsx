@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/Tabs';
 import {
   CheckListBox,
@@ -11,6 +11,10 @@ import { checkListData } from '../../../app/checklist/checkListData';
 import { TitleXs } from '@/components/ui/Typography';
 
 export default function CheckList() {
+  const { data, isLoading, error } = useChecklistInfo();
+
+  console.log(data, 'chekList data');
+
   return (
     <div className="bg-coolGray-20 min-h-lvw px-6 py-2">
       <Tabs defaultValue="필수 확인">
