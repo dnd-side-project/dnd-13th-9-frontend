@@ -60,7 +60,7 @@ export const Icons = {
   folder: IcoFolder,
   add: IcoAdd,
   mapPin: IcoMapPin,
-  Kakao: IcoKakao,
+  kakao: IcoKakao,
   login: IcoLogin,
 };
 
