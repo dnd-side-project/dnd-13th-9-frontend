@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { CategoryChip } from '@/components/ui/CategoryChip';
 import { Chip } from '@/components/ui/Chip/Chip';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -8,21 +8,29 @@ import { FreeMode } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import { useMapStore } from '@/stores/useMapStore';
+import { usePlansQuery } from '@/queries/plan/usePlansQuery';
 
 export function MapChips() {
-  const plans = useMapStore((s) => s.plans);
+  const plansInStore = useMapStore((s) => s.plans);
   const planId = useMapStore((s) => s.planId);
   const setPlanId = useMapStore((s) => s.setPlanId);
   const folders = useMapStore((s) => s.folders);
   const folderId = useMapStore((s) => s.folderId);
   const setFolderId = useMapStore((s) => s.setFolderId);
+  const { data: plansFromApi } = usePlansQuery();
 
-  const planOptions = useMemo(() => plans.map((p) => p.name), [plans]);
-  const nameToId = useMemo(() => Object.fromEntries(plans.map((p) => [p.name, p.planId])), [plans]);
-  const selectedPlanName = useMemo(
-    () => plans.find((p) => p.planId === planId)?.name ?? planOptions[0] ?? '선택',
-    [plans, planId, planOptions]
-  );
+  const plans = plansFromApi ?? [];
+
+  const planOptions = useMemo(() => plans.map((p) => ({ id: p.planId, label: p.name })), [plans]);
+  const selectedPlanId = planId;
+
+  // 최초 렌더 시 스토어를 통해 한 번만 최신 계획으로 초기화 (Map/List 동기화)
+  useEffect(() => {
+    if (plansFromApi && plansFromApi.length > 0) {
+      // 스토어 액션이 최초 1회만 반영하도록 내부에서 가드
+      (useMapStore.getState().initPlanFromApi as any)(plansFromApi);
+    }
+  }, [plansFromApi]);
 
   return (
     <div className="py-3 pl-6">
@@ -30,11 +38,8 @@ export function MapChips() {
         {/* Plan 선택 */}
         <CategoryChip
           options={planOptions}
-          value={selectedPlanName}
-          onChange={(v) => {
-            const id = nameToId[v];
-            if (id) setPlanId(id);
-          }}
+          value={selectedPlanId}
+          onChange={(id) => setPlanId(Number(id))}
         />
 
         {/* Folder 선택 */}
@@ -48,7 +53,12 @@ export function MapChips() {
         >
           {folders.map((f) => (
             <SwiperSlide key={f.folderId} style={{ width: 'auto' }}>
-              <button type="button" onClick={() => setFolderId(f.folderId)}>
+              <button
+                type="button"
+                onClick={() => {
+                  setFolderId(f.folderId);
+                }}
+              >
                 <Chip text={f.name} variant={f.folderId === folderId ? 'primary' : 'neutral'} />
               </button>
             </SwiperSlide>

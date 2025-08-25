@@ -27,6 +27,7 @@ import IcoMore from './ico-more.svg';
 import IcoFolder from './ico-folder.svg';
 import IcoAdd from './ico-add.svg';
 import IcoMapPin from './ico-map-pin.svg';
+import IcoEdit from './ico-edit.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -58,6 +59,7 @@ export const Icons = {
   folder: IcoFolder,
   add: IcoAdd,
   mapPin: IcoMapPin,
+  edit: IcoEdit,
 };
 
 export type IconName = keyof typeof Icons;

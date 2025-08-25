@@ -5,11 +5,13 @@ import { cn } from '@/utils/utils';
 import { BodyS } from '@/components/ui/Typography';
 import { Icon } from '@/components/ui/Icon/Icon';
 
+type ChipOption = string | { id: string | number; label: string };
+
 type Props = {
-  options: readonly string[];
-  value?: string;
+  options: readonly ChipOption[];
+  value?: string | number;
   placeholder?: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | number) => void;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>;
 
 export function CategoryChip({
@@ -23,7 +25,19 @@ export function CategoryChip({
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
-  const label = useMemo(() => value ?? placeholder, [value, placeholder]);
+  const items = useMemo(
+    () =>
+      options.map((opt) =>
+        typeof opt === 'string' ? { id: opt, label: opt } : { id: opt.id, label: opt.label }
+      ),
+    [options]
+  );
+
+  const selectedLabel = useMemo(() => {
+    if (value === undefined || value === null) return placeholder;
+    const found = items.find((i) => i.id === value);
+    return found ? found.label : placeholder;
+  }, [items, value, placeholder]);
 
   // Close when clicking outside or pressing Escape
   useEffect(() => {
@@ -57,14 +71,18 @@ export function CategoryChip({
         onClick={() => setOpen((v) => !v)}
         className={cn(
           'box-border inline-flex items-center gap-1 rounded-3xl border px-4 py-2',
-          value
+          value !== undefined && value !== null
             ? 'border-primary-55 text-primary-55 bg-coolGray-20'
             : 'border-neutral-40 text-neutral-80 bg-white'
         )}
       >
-        <BodyS className="whitespace-nowrap">{label}</BodyS>
+        <BodyS className="whitespace-nowrap">{selectedLabel}</BodyS>
         <div className={cn('icon-rotate', open && 'icon-rotate-open')}>
-          <Icon name="spinnerDown" size={18} color={value ? 'primary' : 'neutral'} />
+          <Icon
+            name="spinnerDown"
+            size={18}
+            color={value !== undefined && value !== null ? 'primary' : 'neutral'}
+          />
         </div>
       </button>
 
@@ -76,22 +94,22 @@ export function CategoryChip({
         )}
         aria-hidden={!open}
       >
-        {options.map((opt) => (
+        {items.map((opt) => (
           <button
-            key={opt}
+            key={String(opt.id)}
             type="button"
             className={cn(
               'flex w-full items-center px-4 py-3 text-left',
-              opt === value
+              opt.id === value
                 ? 'bg-coolGray-20 text-primary-55'
                 : 'text-neutral-80 hover:bg-neutral-20'
             )}
             onClick={() => {
-              onChange(opt);
+              onChange(opt.id);
               setOpen(false);
             }}
           >
-            <BodyS className="whitespace-nowrap">{opt}</BodyS>
+            <BodyS className="whitespace-nowrap">{opt.label}</BodyS>
           </button>
         ))}
       </div>
