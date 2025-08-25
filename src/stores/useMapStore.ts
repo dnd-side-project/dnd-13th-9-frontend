@@ -15,12 +15,14 @@ type State = {
   folderId: number;
   propsInFolder: PropertySummary[];
   selectedPropId: number | null;
+  didInitPlanFromApi: boolean;
 };
 
 type Actions = {
   setPlanId: (planId: number) => void;
   setFolderId: (folderId: number) => void;
   setSelectedPropId: (propertyId: number | null) => void;
+  initPlanFromApi: (plans: Array<{ planId: number; createdAt: string }>) => void;
 };
 
 const initialPlans = getPlans();
@@ -36,6 +38,7 @@ export const useMapStore = create<State & Actions>((set, get) => ({
   folderId: initialFolderId,
   propsInFolder: initialProps,
   selectedPropId: null,
+  didInitPlanFromApi: false,
 
   setPlanId: (planId) => {
     const folders = getFolders(planId);
@@ -56,6 +59,20 @@ export const useMapStore = create<State & Actions>((set, get) => ({
   },
 
   setSelectedPropId: (propertyId) => set({ selectedPropId: propertyId }),
+
+  // 최초 한 번만 API의 최신 계획으로 planId 초기화 (스토어 plans 자체는 유지)
+  initPlanFromApi: (plansFromApi) => {
+    const { didInitPlanFromApi } = get();
+    if (didInitPlanFromApi) return;
+    if (!plansFromApi || plansFromApi.length === 0) return;
+    const latest = [...plansFromApi].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )[0];
+    if (!latest) return;
+    // setPlanId 내부 로직을 재사용하여 폴더/매물 동기화
+    get().setPlanId(latest.planId);
+    set({ didInitPlanFromApi: true });
+  },
 }));
 
 export const selectMarkers = (s: State) =>
