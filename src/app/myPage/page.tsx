@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 
 export default function MyPage() {
   const { data } = useMyInfo();
-  const { mutate: logoutMutate, isLoading: isLoggingOut } = useLogout();
+  const { mutate: logoutMutate, status } = useLogout();
 
   if (!data) return <MainLayout>정보없음</MainLayout>;
 
@@ -18,11 +18,7 @@ export default function MyPage() {
       <p>Provider ID: {data.data.providerId}</p>
       <p>Role: {data.data.role}</p>
 
-      <Button
-        label={isLoggingOut ? '로그아웃 중...' : '로그아웃'}
-        size="large"
-        onClick={() => logoutMutate()}
-      />
+      <Button label={'로그아웃'} size="large" onClick={() => logoutMutate()} />
     </MainLayout>
   );
 }
