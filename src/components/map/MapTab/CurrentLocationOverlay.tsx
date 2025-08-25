@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 type Props = {
   map: any | null;
   position: { lat: number; lng: number } | null;
+  onClick?: () => void;
 };
 
 function ensurePulseStyleInstalled() {
@@ -56,15 +57,19 @@ function createContent(): HTMLDivElement {
   return wrap;
 }
 
-export function CurrentLocationOverlay({ map, position }: Props) {
+export function CurrentLocationOverlay({ map, position, onClick }: Props) {
   const overlayRef = useRef<any | null>(null);
 
-  // Create overlay once when map is ready
+  // 지도가 준비되면 오버레이를 한 번 만들기
   useEffect(() => {
     if (!map || overlayRef.current) return;
     const { kakao } = window as any;
     ensurePulseStyleInstalled();
     const content = createContent();
+    content.style.cursor = onClick ? 'pointer' : content.style.cursor;
+    if (onClick) {
+      content.addEventListener('click', onClick);
+    }
     overlayRef.current = new kakao.maps.CustomOverlay({
       position: position ? new kakao.maps.LatLng(position.lat, position.lng) : undefined,
       content,
@@ -76,10 +81,11 @@ export function CurrentLocationOverlay({ map, position }: Props) {
         overlayRef.current.setMap(null);
         overlayRef.current = null;
       }
+      if (onClick) content.removeEventListener('click', onClick);
     };
   }, [map]);
 
-  // Update position
+  // 위치 업데이트
   useEffect(() => {
     if (!map || !overlayRef.current || !position) return;
     const { kakao } = window as any;

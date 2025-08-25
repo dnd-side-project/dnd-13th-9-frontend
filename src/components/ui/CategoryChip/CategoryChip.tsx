@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '@/utils/utils';
 import { BodyS } from '@/components/ui/Typography';
 import { Icon } from '@/components/ui/Icon/Icon';
@@ -25,44 +25,76 @@ export function CategoryChip({
 
   const label = useMemo(() => value ?? placeholder, [value, placeholder]);
 
+  // Close when clicking outside or pressing Escape
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointer = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node | null;
+      if (target && wrapperRef.current && !wrapperRef.current.contains(target)) {
+        setOpen(false);
+      }
+    };
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+
+    document.addEventListener('mousedown', handlePointer, true);
+    document.addEventListener('touchstart', handlePointer, true);
+    document.addEventListener('keydown', handleKey, true);
+    return () => {
+      document.removeEventListener('mousedown', handlePointer, true);
+      document.removeEventListener('touchstart', handlePointer, true);
+      document.removeEventListener('keydown', handleKey, true);
+    };
+  }, [open]);
+
   return (
     <div className={cn('relative inline-block', className)} ref={wrapperRef} {...props}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          'inline-flex items-center gap-1 rounded-3xl border px-4 py-2',
+          'box-border inline-flex items-center gap-1 rounded-3xl border px-4 py-2',
           value
-            ? 'border-primary-55 text-primary-55 bg-white'
+            ? 'border-primary-55 text-primary-55 bg-coolGray-20'
             : 'border-neutral-40 text-neutral-80 bg-white'
         )}
       >
         <BodyS className="whitespace-nowrap">{label}</BodyS>
-        <Icon name="arrowDown" size={14} color={value ? 'primary' : 'neutral'} />
+        <div className={cn('icon-rotate', open && 'icon-rotate-open')}>
+          <Icon name="spinnerDown" size={18} color={value ? 'primary' : 'neutral'} />
+        </div>
       </button>
 
-      {open && (
-        <div className="absolute top-[calc(100%+6px)] left-0 z-50 min-w-[160px] overflow-hidden rounded-xl bg-white py-2 shadow-md">
-          {options.map((opt) => (
-            <button
-              key={opt}
-              type="button"
-              className={cn(
-                'flex w-full items-center px-4 py-2 text-left',
-                opt === value
-                  ? 'bg-neutral-20 text-neutral-110'
-                  : 'text-neutral-80 hover:bg-neutral-20'
-              )}
-              onClick={() => {
-                onChange(opt);
-                setOpen(false);
-              }}
-            >
-              <BodyS className="whitespace-nowrap">{opt}</BodyS>
-            </button>
-          ))}
-        </div>
-      )}
+      <div
+        className={cn(
+          'reveal-panel absolute left-0 z-50 min-w-[140px] overflow-hidden rounded-xl bg-white py-2 shadow-md',
+          'top-[calc(100%+22px)]',
+          open ? 'reveal-panel-open' : 'reveal-panel-closed'
+        )}
+        aria-hidden={!open}
+      >
+        {options.map((opt) => (
+          <button
+            key={opt}
+            type="button"
+            className={cn(
+              'flex w-full items-center px-4 py-3 text-left',
+              opt === value
+                ? 'bg-coolGray-20 text-primary-55'
+                : 'text-neutral-80 hover:bg-neutral-20'
+            )}
+            onClick={() => {
+              onChange(opt);
+              setOpen(false);
+            }}
+          >
+            <BodyS className="whitespace-nowrap">{opt}</BodyS>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

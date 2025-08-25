@@ -5,6 +5,7 @@ export const colors = {
   },
   secondary: {
     50: '#FBA907',
+    10: '#FFF4DE',
   },
   static: {
     black: '#000000',

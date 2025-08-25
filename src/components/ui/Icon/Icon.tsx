@@ -1,4 +1,4 @@
-import { COLORS, IconColor } from '@/utils/style/colors';
+import { COLORS, IconColor, colors as PALETTE } from '@/utils/style/colors';
 import { IconName, Icons } from '../assets';
 
 type Props = {
@@ -39,10 +39,30 @@ export function Icon({ name, color = 'inherit', size = 25, padding, ...props }: 
       : { padding: typeof padding === 'number' ? `${padding}px` : padding };
 
   const shouldInherit = color === 'inherit' || color === 'currentColor' || color === undefined;
+
+  // 색상 문자열 해석: 1) COLORS 키, 2) "group-tone" (예: coolGray-50), 3) CSS color string
+  const resolveStringColor = (value: string): string => {
+    const fromShortMap = (COLORS as Record<string, string>)[value];
+    if (fromShortMap) return fromShortMap;
+
+    // support tokens like "coolGray-50" or "neutral-90"
+    const match = value.match(/^([a-zA-Z]+)-(\d{2,3})$/);
+    if (match) {
+      const [, group, toneStr] = match;
+      const tone = Number(toneStr);
+      const groupPalette = (PALETTE as Record<string, Record<number, string> | unknown>)[group];
+      if (groupPalette && typeof groupPalette === 'object') {
+        const hex = (groupPalette as Record<number, string>)[tone];
+        if (typeof hex === 'string') return hex;
+      }
+    }
+    return value; // fallback: assume valid CSS color (e.g., #fff, red)
+  };
+
   const resolvedColor = shouldInherit
     ? undefined
     : typeof color === 'string'
-      ? ((COLORS as Record<string, string>)[color] ?? color)
+      ? resolveStringColor(color)
       : COLORS[color as IconColor];
 
   return (

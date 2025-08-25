@@ -4,12 +4,13 @@ import { Portal } from '@/components/ui/Portal/Portal';
 import { Fab } from '@/components/ui/Fab';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { BodyM } from '@/components/ui/Typography/Typography';
+import { useRouter } from 'next/navigation';
 
 type MemoOverlayProps = {
   isOpen: boolean;
-  onClose: () => void;
-  onHomeMemo: () => void;
-  onNearMemo: () => void;
+  onClose?: () => void;
+  onHomeMemo?: () => void;
+  onNearMemo?: () => void;
   portalSelector?: string;
 };
 
@@ -20,7 +21,24 @@ export function MemoOverlay({
   onNearMemo,
   portalSelector,
 }: MemoOverlayProps) {
+  const router = useRouter();
   if (!isOpen) return null;
+
+  const handleHome = () => {
+    if (onHomeMemo) onHomeMemo();
+    else {
+      onClose?.();
+      router.push('/map/house-memo');
+    }
+  };
+
+  const handleNear = () => {
+    if (onNearMemo) onNearMemo();
+    else {
+      onClose?.();
+      router.push('/map/nearby-memo');
+    }
+  };
 
   return (
     <Portal selector={portalSelector}>
@@ -35,7 +53,7 @@ export function MemoOverlay({
         <div className="min-w-[140px] rounded-xl bg-white py-3 shadow-md">
           <button
             type="button"
-            onClick={onHomeMemo}
+            onClick={handleHome}
             className="hover:bg-neutral-20 flex w-full items-center gap-1 rounded-md px-[14px] py-3"
           >
             <Icon name="house" size={20} color="primary" />
@@ -43,7 +61,7 @@ export function MemoOverlay({
           </button>
           <button
             type="button"
-            onClick={onNearMemo}
+            onClick={handleNear}
             className="hover:bg-neutral-20 flex w-full items-center gap-1 rounded-md px-[14px] py-3"
           >
             <Icon name="favorite" size={20} color="secondary" />
