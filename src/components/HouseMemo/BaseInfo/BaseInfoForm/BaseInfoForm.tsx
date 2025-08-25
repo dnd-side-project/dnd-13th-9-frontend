@@ -92,7 +92,7 @@ export function BaseInfoForm() {
               value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
               onChange={(e) => handleFieldChange(key, e.target.value)}
               unit={unit}
-              className="max-w-47"
+              className="w-30 max-w-47"
             />
           ))}
         </div>
@@ -103,7 +103,10 @@ export function BaseInfoForm() {
         <LabelContainer key={key} label={label} required={required}>
           {key === 'address' ? (
             <>
-              <CurrentLocationButton onClick={handleMoveToCurrentLocation} />
+              <CurrentLocationButton
+                className="-translate-x-12"
+                onClick={handleMoveToCurrentLocation}
+              />
               <Input
                 placeholder={placeholder}
                 value={houseMemo.address?.address_name || houseMemo.address?.place_name || ''}

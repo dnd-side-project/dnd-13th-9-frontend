@@ -8,11 +8,11 @@ type Props = {
   description?: string;
 };
 
-export function DropdownBaseItem({ onClick, question, description }: Props) {
+export function CheckListBoxItem({ onClick, question, description }: Props) {
   return (
-    <div className="flex flex-col gap-2" onClick={onClick}>
+    <div className="flex flex-col gap-2 px-5" onClick={onClick}>
       <TitleXs>{question}</TitleXs>
-      <BodyXs>{description}</BodyXs>
+      <BodyXs className="text-neutral-70">{description}</BodyXs>
     </div>
   );
 }
