@@ -8,7 +8,7 @@ import {
   CheckListBoxSeparator,
 } from '@/components/ui/CheckListBox';
 import { TitleXs } from '@/components/ui/Typography';
-import { useChecklistInfo } from '@/queries/houseMemo/useCheklistInfo';
+import { useChecklistInfo } from '@/queries/houseMemo/useChecklistInfo';
 
 export default function CheckList() {
   const { data, isLoading, error } = useChecklistInfo();
