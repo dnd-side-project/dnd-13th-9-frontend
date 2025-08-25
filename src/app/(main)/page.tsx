@@ -9,9 +9,20 @@ import { TitleL } from '@/components/ui/Typography';
 import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { useRouter } from 'next/navigation';
+import { useMyInfo } from '@/queries/user/useMyInfo';
 
 export default function HomePage() {
   const router = useRouter();
+
+  const { data, isLoading } = useMyInfo();
+
+  const handleRightIconClick = () => {
+    if (data) {
+      router.push('/myPage');
+    } else {
+      router.push('/login');
+    }
+  };
 
   return (
     <MainLayout>
@@ -27,14 +38,16 @@ export default function HomePage() {
           />
         }
         right={
-          <Icon
-            name="myPage"
-            color="coolGray-50"
-            className="cursor-pointer"
-            size={24}
-            padding={10}
-            onClick={() => router.push('/mypage')}
-          />
+          !isLoading && (
+            <Icon
+              name={data ? 'myPage' : 'login'}
+              color="coolGray-50"
+              className="cursor-pointer"
+              size={24}
+              padding={10}
+              onClick={handleRightIconClick}
+            />
+          )
         }
       />
 
