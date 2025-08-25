@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useMapStore } from '@/stores/useMapStore';
 import { Icon } from '@/components/ui/Icon';
 import { MainLayout } from '@/components/layout';
@@ -14,20 +14,31 @@ import { getContractLabel } from '@/utils/labels';
 import useModal from '@/hooks/useModal';
 import { Fab } from '@/components/ui/Fab';
 import { MemoOverlay } from '@/components/map/Map/MemoOverlay';
+import { useSelectedPlanName } from '@/hooks/useSelectedPlanName';
+import { usePlansQuery } from '@/queries/plan/usePlansQuery';
+import { useFoldersQuery } from '@/queries/folder/useFoldersQuery';
 
 export default function FolderDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const folderIdFromParams = Number(params?.id);
 
-  const plans = useMapStore((s) => s.plans);
   const planId = useMapStore((s) => s.planId);
-  const displayPlanId = useMapStore((s) => s.propsInFolder[0]?.planId ?? planId);
-  const planName = useMemo(
-    () => plans.find((p) => p.planId === displayPlanId)?.name ?? '계획',
-    [plans, displayPlanId]
-  );
-  const folders = useMapStore((s) => s.folders);
+  const didInit = useMapStore((s) => s.didInitPlanFromApi);
+  const storeFolders = useMapStore((s) => s.folders);
+  const planName = useSelectedPlanName();
+  const setPlanId = useMapStore((s) => s.setPlanId);
+  const { data: plansFromApi } = usePlansQuery();
+  const plans = plansFromApi ?? [];
+  const effectivePlanId = useMemo(() => {
+    if (didInit) return planId;
+    return [...plans].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )[0]?.planId;
+  }, [didInit, planId, plans]);
+  const shouldQuery = Boolean(effectivePlanId);
+  const { data: foldersFromApi = [] } = useFoldersQuery(effectivePlanId as number, shouldQuery);
   const setFolderId = useMapStore((s) => s.setFolderId);
   const propsInFolder = useMapStore((s) => s.propsInFolder);
   const setSelectedPropId = useMapStore((s) => s.setSelectedPropId);
@@ -39,10 +50,20 @@ export default function FolderDetailPage() {
     }
   }, [folderIdFromParams, setFolderId]);
 
-  const currentFolder = useMemo(
-    () => folders.find((f) => f.folderId === folderIdFromParams),
-    [folders, folderIdFromParams]
-  );
+  // URL에 planId가 있으면 스토어에 반영하여 새로고침 시 상태 유지
+  React.useEffect(() => {
+    const pid = Number(searchParams.get('planId'));
+    if (!Number.isNaN(pid) && pid > 0) {
+      setPlanId(pid);
+    }
+  }, [searchParams, setPlanId]);
+
+  const currentFolderName = useMemo(() => {
+    const fromApi = foldersFromApi.find((f) => f.folderId === folderIdFromParams)?.name;
+    if (fromApi) return fromApi;
+    const fromStore = storeFolders.find((f) => f.folderId === folderIdFromParams)?.name;
+    return fromStore ?? '폴더';
+  }, [foldersFromApi, storeFolders, folderIdFromParams]);
 
   return (
     <MainLayout className="flex min-h-0 flex-col">
@@ -81,7 +102,7 @@ export default function FolderDetailPage() {
         <div className="flex items-center gap-2 text-sm text-black">
           <TitleXs>{planName ?? '계획'}</TitleXs>
           <BodyXl className="text-neutral-60">›</BodyXl>
-          <BodyXl className="font-semibold text-black">{currentFolder?.name ?? '폴더'}</BodyXl>
+          <BodyXl className="font-semibold text-black">{currentFolderName}</BodyXl>
         </div>
 
         <div className="mt-1 flex min-h-0 flex-col divide-y divide-black/5 rounded-xl bg-white">
