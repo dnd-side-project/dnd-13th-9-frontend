@@ -1,32 +1,27 @@
-// ChecklistItem
-export interface ChecklistItem {
+export type ChecklistItem = {
   id: number;
   question: string;
   description?: string;
-}
+};
 
-// Category
-export interface ChecklistCategory {
+export type ChecklistCategory = {
   order: number;
   name: string;
-}
+};
 
-// Section
-export interface ChecklistSection {
+export type ChecklistSection = {
   categoryId: number;
   categoryName: string;
   items: ChecklistItem[];
-}
+};
 
-// data 객체
-export interface ChecklistData {
+export type ChecklistData = {
   categories: ChecklistCategory[];
   sections: ChecklistSection[];
-}
+};
 
-// 최상위 응답
-export interface ChecklistResponse {
+export type ChecklistResponse = {
   code: string;
   message: string;
   data: ChecklistData;
-}
+};
