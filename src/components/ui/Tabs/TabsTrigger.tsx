@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { useTabsContext } from './TabsContext';
 import { cn } from '@/utils/utils';
 import { BodyS } from '../Typography';
+import { IconName } from '../assets';
+import { Icon } from '../Icon';
 
 type BarProps = {
   value: string;
@@ -16,6 +18,7 @@ type ChipProps = {
   text?: string;
   chipVariant?: 'primary' | 'secondary';
   className?: string;
+  iconName?: IconName;
 };
 
 function TabsTrigger() {
@@ -51,7 +54,7 @@ TabsTrigger.Bar = function ({ value, children, className }: BarProps) {
   );
 };
 
-TabsTrigger.Chip = function ({ value, text, className }: ChipProps) {
+TabsTrigger.Chip = function ({ iconName, value, text, className }: ChipProps) {
   const context = useTabsContext();
   const { activeTab, setActiveTab } = context ?? { activeTab: '', setActiveTab: () => {} };
   const isActive = activeTab === value;
@@ -61,8 +64,13 @@ TabsTrigger.Chip = function ({ value, text, className }: ChipProps) {
   return (
     <div
       onClick={() => setActiveTab(value)}
-      className={cn('w-min cursor-pointer rounded-3xl px-5 py-2', badgeStyle, className)}
+      className={cn(
+        'flex w-min cursor-pointer flex-row items-center gap-2 rounded-3xl px-5 py-2',
+        badgeStyle,
+        className
+      )}
     >
+      {iconName && <Icon name={iconName} width={20} />}
       <BodyS className="text-center whitespace-nowrap">{text}</BodyS>
     </div>
   );
