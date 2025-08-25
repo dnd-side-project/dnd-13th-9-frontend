@@ -6,7 +6,7 @@ import BaseInfo from '@/components/HouseMemo/BaseInfo/BaseInfo';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup';
 import { HouseMemoContext, initialHouseMemo } from '@/contexts/HouseMemoContext';
 import CheckList from '@/components/HouseMemo/CheckList/CheckList';
-import { useChecklistInfo } from '@/queries/houseMemo/useCheklistInfo';
+import { useChecklistInfo } from '@/queries/houseMemo/useChecklistInfo';
 import { Modal } from '@/components/ui/Modal';
 import useModal from '@/hooks/useModal';
 import { Button } from '@/components/ui/Button';
@@ -25,7 +25,7 @@ export default function page() {
     if (data?.data.sections?.[0].items?.length === 0) {
     }
     openModal();
-  }, []);
+  }, [data]);
 
   return (
     <MainLayout>
