@@ -7,21 +7,18 @@ import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup';
 import HouseMemoProvider from '@/contexts/HouseMemoContext';
 import CheckList from '@/components/HouseMemo/CheckList/CheckList';
 import { useChecklistInfo } from '@/queries/houseMemo/useChecklistInfo';
-import { Modal } from '@/components/ui/Modal';
 import useModal from '@/hooks/useModal';
-import { Button } from '@/components/ui/Button';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { TitleS } from '@/components/ui/Typography';
+import { ChecklistGuideModal } from '@/components/HouseMemo/ChecklistGuideModal';
+import { useRouter } from 'next/navigation';
 
 export default function page() {
   const { isOpen, closeModal, openModal } = useModal();
+  const router = useRouter();
 
   const { data } = useChecklistInfo();
-
-  const router = useRouter();
 
   useEffect(() => {
     if (data?.data.sections?.[0].items?.length === 0) {
@@ -40,11 +37,18 @@ export default function page() {
               className="cursor-pointer"
               size={24}
               padding={10}
-              onClick={() => router.back()}
+              onClick={() => window.history.back()}
             />
           }
           title="매물 메모"
-          right={<TitleS className="text-primary-50 px-3 whitespace-nowrap">완료</TitleS>}
+          right={
+            <TitleS
+              className="text-primary-50 px-3 whitespace-nowrap"
+              onClick={() => router.push('house-memo/select-map-list')}
+            >
+              완료
+            </TitleS>
+          }
         />
         <AddImgButtonGroup />
         <Tabs defaultValue="baseInfo">
@@ -64,33 +68,7 @@ export default function page() {
         </Tabs>
       </HouseMemoProvider>
 
-      <Modal isOpen={isOpen} closeModal={closeModal}>
-        <div className="flex flex-col items-center gap-2 rounded-2xl bg-white p-5 shadow-sm">
-          <Image src="/assets/ico-alert.svg" alt="alert 아이콘" width={60} height={60} />
-          <div className="flex flex-col items-center justify-center pb-4">
-            <span className="text-xl font-semibold">매물 정보 기록 전에</span>
-            <div className="flex flex-row">
-              <span className="text-xl font-semibold text-[#669AFF]">체크리스트 생성</span>
-              <span className="text-xl font-semibold">을 할 수 있어요!</span>
-            </div>
-          </div>
-
-          <div className="flex flex-row gap-2">
-            <Button onClick={closeModal} variant="tertiary" size="medium">
-              취소
-            </Button>
-            <Button
-              onClick={() => {
-                closeModal();
-                router.push('/checklist');
-              }}
-              size="medium"
-            >
-              바로 가기
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <ChecklistGuideModal isOpen={isOpen} closeModal={closeModal} />
     </MainLayout>
   );
 }
