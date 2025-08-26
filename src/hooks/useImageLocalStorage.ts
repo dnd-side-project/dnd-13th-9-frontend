@@ -1,14 +1,21 @@
 import { useState, useEffect } from 'react';
 
-export function useImageLocalStorage(index?: number) {
+export function useImageLocalStorage(key?: string | number) {
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    const images = JSON.parse(localStorage.getItem('images') || '[]');
-    if (images.length > 0) {
-      setPreview(index !== undefined ? images[index] : images[0]);
+    if (typeof key === 'string') {
+      const images = JSON.parse(localStorage.getItem(key) || '[]');
+      if (images.length > 0) {
+        setPreview(images[0]);
+      }
+    } else if (typeof key === 'number') {
+      const images = JSON.parse(localStorage.getItem('images') || '[]');
+      if (images.length > 0) {
+        setPreview(key !== undefined ? images[key] : images[0]);
+      }
     }
-  }, [index]);
+  }, [key]);
 
   const handleFileChange = (file: File) => {
     const url = URL.createObjectURL(file);
@@ -18,9 +25,15 @@ export function useImageLocalStorage(index?: number) {
     reader.onload = function (event) {
       const result = event.target?.result;
       if (typeof result === 'string') {
-        const images = JSON.parse(localStorage.getItem('images') || '[]');
-        images.push(result);
-        localStorage.setItem('images', JSON.stringify(images));
+        if (typeof key === 'string') {
+          const images = JSON.parse(localStorage.getItem(key) || '[]');
+          images.push(result);
+          localStorage.setItem(key, JSON.stringify(images));
+        } else if (typeof key === 'number') {
+          const images = JSON.parse(localStorage.getItem('images') || '[]');
+          images.push(result);
+          localStorage.setItem('images', JSON.stringify(images));
+        }
       }
     };
     reader.readAsDataURL(file);
