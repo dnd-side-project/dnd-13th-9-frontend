@@ -32,12 +32,7 @@ export function BaseInfoForm() {
       if (info) {
         setHouseMemo((prev) => ({
           ...prev,
-          address: {
-            address_name: info.address || '',
-            place_name: info.placeName || '',
-            x: String(info.lng),
-            y: String(info.lat),
-          },
+          address: info.address || '',
           longitude: String(info.lng),
           latitude: String(info.lat),
         }));
@@ -108,7 +103,7 @@ export function BaseInfoForm() {
         <CurrentLocationButton className="-translate-x-12" onClick={handleMoveToCurrentLocation} />
         <Input
           placeholder="현재 위치 버튼을 클릭하거나 지도를 터치하여 주소를 선택하세요."
-          value={houseMemo.address?.address_name || ''}
+          value={houseMemo.address || ''}
           onChange={() => {}}
           onClick={open}
           readOnly
@@ -140,8 +135,8 @@ export function BaseInfoForm() {
           existAddress={
             houseMemo.address
               ? {
-                  address_name: houseMemo.address.address_name,
-                  place_name: houseMemo.address.place_name,
+                  address_name: houseMemo.address,
+                  place_name: houseMemo.address,
                   x: houseMemo.longitude,
                   y: houseMemo.latitude,
                 }
@@ -153,12 +148,7 @@ export function BaseInfoForm() {
             console.log('지도에서 주소 선택:', address);
             setHouseMemo((prev) => ({
               ...prev,
-              address: {
-                address_name: address.address_name || '',
-                place_name: address.place_name || '',
-                x: address.x,
-                y: address.y,
-              },
+              address: address.address_name || '',
               longitude: String(address.x),
               latitude: String(address.y),
             }));

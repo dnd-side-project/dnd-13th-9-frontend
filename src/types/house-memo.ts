@@ -1,10 +1,10 @@
 export type Feeling = 'GOOD' | 'SOSO' | 'BAD';
 
 export type Address = {
-  x: string;
-  y: string;
   address_name: string;
   place_name: string;
+  x: string;
+  y: string;
 };
 
 export type ContractType = 'MONTHLY_RENT' | 'JEONSE' | 'PURCHASE';
@@ -29,7 +29,7 @@ export type HouseMemo = {
   propertyName: string; // 매물명 (1~10자)
   memo?: string; // 메모 (1~80자)
   referenceUrl?: string; // 참고 링크 (최대 255자)
-  address: Address; // 지번 주소
+  address: string; // 지번 주소 (서버 형식)
   detailAddress?: string; // 상세주소
   longitude: string; // 경도
   latitude: string; // 위도
