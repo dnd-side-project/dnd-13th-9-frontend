@@ -1,17 +1,13 @@
-export type PlaceTag = '장점' | '단점' | '편의시설' | '교통' | '치안' | '소음';
-
-export type PlaceAddress = {
-  x: string;
-  y: string;
-  address_name: string;
-  place_name: string;
-};
+export type PlaceTag = 'STRENGTH' | 'WEAKNESS' | 'CONVENIENCE' | 'TRANSPORT' | 'SAFETY' | 'NOISE';
 
 export type NearbyMemo = {
-  placeName: string; // 장소명
-  memo: string;
-  tags: PlaceTag;
-  address: PlaceAddress | null;
+  title: string;
+  description: string;
+  placeTag: PlaceTag;
+  address: string;
+  latitude: number;
+  longitude: number;
+  folderId: number;
 };
 
 export type NearbyMemoInputField = {
