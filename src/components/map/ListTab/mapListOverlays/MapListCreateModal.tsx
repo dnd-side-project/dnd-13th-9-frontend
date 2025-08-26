@@ -64,12 +64,12 @@ export function MapListCreateModal({
           />
         </div>
         <div className="mt-8 flex gap-2">
-          <Button variant="tertiary" size="medium" className="flex-1" onClick={onClose}>
+          <Button variant="tertiary" size="medium" className="flex-1 px-3" onClick={onClose}>
             취소
           </Button>
           <Button
             size="medium"
-            className="flex-1"
+            className="flex-1 px-3"
             loading={loading}
             disabled={loading || value.trim().length === 0}
             onClick={handleConfirm}

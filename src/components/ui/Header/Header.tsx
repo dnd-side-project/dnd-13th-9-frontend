@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
       onClick={defaultBack}
       className="inline-flex cursor-pointer items-center justify-center rounded-xl"
     >
-      <Icon name="arrowLeft" size={24} padding={10} />
+      <Icon name="arrowLeft" size={24} />
     </button>
   ) : left != null ? (
     left
@@ -40,8 +40,8 @@ export const Header: React.FC<HeaderProps> = ({
       className={cn('sticky top-0 left-0 z-20 w-full border-black/5 bg-white', className)}
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
-      <div className={cn('flex w-full items-center justify-between px-2')} style={{ height: 56 }}>
-        <div className="flex w-11 items-center justify-start">{leftNode}</div>
+      <div className={cn('flex w-full items-center justify-between px-6')} style={{ height: 56 }}>
+        <div className="flex items-center justify-start">{leftNode}</div>
 
         <div className="flex flex-1 items-center justify-center">
           {center ??

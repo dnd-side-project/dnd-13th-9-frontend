@@ -27,15 +27,9 @@ export function IconTextRouter({
       }}
       className="flex w-full cursor-pointer flex-col items-center justify-center gap-2"
     >
-      {icoPath && (
-        <img
-          src={icoPath}
-          alt={label}
-          className="mr-2 inline-block h-17 w-17 rounded-full bg-[#F0F5FB] p-2"
-        />
-      )}
+      {icoPath && <img src={icoPath} alt={label} className="inline-block h-13 w-13" />}
 
-      <BodyS className="text-[#858688]">{label}</BodyS>
+      <BodyS className="text-[13px] text-[#767676]">{label}</BodyS>
     </div>
   );
 }
