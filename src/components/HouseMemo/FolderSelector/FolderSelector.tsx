@@ -21,7 +21,6 @@ import {
 } from '@/components/map/ListTab/mapListOverlays';
 import { PlanGrid } from '@/components/map/ListTab/section/PlanGrid';
 
-// createdAt 기준으로 가장 최신 항목을 고르는 헬퍼
 function pickLatestByCreatedAt<T extends { createdAt: string }>(items: T[]): T | undefined {
   if (!items || items.length === 0) return undefined;
   return [...items].sort(
@@ -309,7 +308,7 @@ export function FolderSelector({
           try {
             await deleteFolder.mutateAsync({ folderId: targetFolderId });
             setOpenDelete(false);
-            // 삭제된 폴더가 현재 선택된 폴더라면 다른 폴더 선택
+
             if (targetFolderId === selectedFolderId) {
               const remainingFolders = folders.filter((f) => f.folderId !== targetFolderId);
               const latest = pickLatestByCreatedAt(remainingFolders);
