@@ -1,6 +1,8 @@
 import ky from 'ky';
 import { api } from '@/lib/api/ky';
 import { ChecklistResponse } from '@/types/checklist';
+import { HouseMemo } from '@/types/house-memo';
+import { apiFormData } from '@/lib/api/ky';
 
 export type Place = {
   id: string;
@@ -47,4 +49,12 @@ export async function fetchPlaces(query: string, page: number): Promise<ApiRespo
 
 export async function getChecklist(): Promise<ChecklistResponse> {
   return api.get('api/checklist').json();
+}
+
+export async function createHouseMemo(formData: FormData): Promise<HouseMemo> {
+  const res = apiFormData.post('api/property', {
+    body: formData,
+  });
+
+  return res.json<HouseMemo>();
 }

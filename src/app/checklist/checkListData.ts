@@ -8,10 +8,12 @@ export const checkListData = {
   ],
   sections: [
     {
+      categoryId: 0,
       categoryName: '필수 확인',
       items: [],
     },
     {
+      categoryId: 1,
       categoryName: '메인 공간',
       items: [
         { id: 1, question: '너무 노후화되진 않았나요?', isFill: false },
@@ -49,6 +51,7 @@ export const checkListData = {
       ],
     },
     {
+      categoryId: 2,
       categoryName: '창문',
       items: [
         { id: 8, question: '바람이 잘 통하나요?', isFill: false },
@@ -62,6 +65,7 @@ export const checkListData = {
       ],
     },
     {
+      categoryId: 3,
       categoryName: '욕실',
       items: [
         {
@@ -91,6 +95,7 @@ export const checkListData = {
       ],
     },
     {
+      categoryId: 4,
       categoryName: '건물',
       items: [
         { id: 15, question: '층수는 어떻게 되나요?', isFill: false },

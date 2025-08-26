@@ -25,8 +25,8 @@ export default function Page() {
 
   const [tempDetailedAddress, setTempDetailedAddress] = useState('');
 
-  const displayPlaceName = tempAddress?.place_name ?? houseMemo.address?.place_name;
-  const displayAddressName = tempAddress?.address_name ?? houseMemo.address?.address_name;
+  const displayPlaceName = tempAddress?.place_name ?? '';
+  const displayAddressName = tempAddress?.address_name ?? houseMemo.address;
 
   return (
     <MainLayout>
@@ -77,8 +77,8 @@ export default function Page() {
 
             setHouseMemo({
               ...houseMemo,
-              address: tempAddress,
-              detailedAddress: tempDetailedAddress,
+              address: tempAddress.address_name,
+              detailAddress: tempDetailedAddress,
             });
 
             setTempAddress(null);
@@ -94,14 +94,14 @@ export default function Page() {
         className="left-1/2 h-[600px] w-full max-w-[450px] -translate-x-1/2"
       >
         <div className="flex flex-col gap-2 p-5">
-          {houseMemo.address?.address_name ? (
-            <div>{houseMemo.address.address_name}</div>
+          {houseMemo.address ? (
+            <div>{houseMemo.address}</div>
           ) : (
             <TitleM>이 집의 주소를 알려주세요</TitleM>
           )}
 
-          {houseMemo.address?.place_name ? (
-            <div>{houseMemo.address.place_name}</div>
+          {houseMemo.address ? (
+            <div>{houseMemo.address}</div>
           ) : (
             <BodyXl className="text-neutral-70">
               주소를 모르겠다면, 우선 주변 장소로 입력해보세요.

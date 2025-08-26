@@ -44,8 +44,8 @@ export default function PlaceSearch({ value, onChange, onSelect }: PlaceSearchPr
         />
       </div>
 
-      {isLoading && <div>검색 중...</div>}
-      {isError && <div className="text-red-500">검색 오류가 발생했습니다.</div>}
+      {isLoading && <div></div>}
+      {isError && <div>검색 오류가 발생했습니다.</div>}
 
       <ul className="flex max-h-[400px] flex-col gap-2 overflow-y-auto">
         {results.map((place) => (
@@ -54,14 +54,12 @@ export default function PlaceSearch({ value, onChange, onSelect }: PlaceSearchPr
             className="hover:bg-coolGray-20 cursor-pointer rounded-lg p-3"
             onClick={() => {
               onSelect(place);
+
               setHouseMemo((prev) => ({
                 ...prev,
-                address: {
-                  x: place.x,
-                  y: place.y,
-                  address_name: place.address_name,
-                  place_name: place.place_name,
-                },
+                address: place.address_name,
+                longitude: place.x,
+                latitude: place.y,
               }));
             }}
           >

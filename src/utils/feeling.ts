@@ -11,8 +11,6 @@ const FEELING_TO_KIND: Record<AnyFeeling, NormalizedKind> = {
   GOOD: 'GOOD',
   SOSO: 'SOSO',
   BAD: 'BAD',
-  HAPPY: 'GOOD',
-  ANGRY: 'BAD',
 };
 
 type FeelingMeta = {
