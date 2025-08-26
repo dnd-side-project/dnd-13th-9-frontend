@@ -9,13 +9,20 @@ type Props = {
   index?: number;
   readonly?: boolean;
   imageUrl?: string;
+  storageKey?: string;
 };
 
-export function AddImgButton({ size = 'lg', index, readonly = false, imageUrl }: Props) {
+export function AddImgButton({
+  size = 'lg',
+  index,
+  readonly = false,
+  imageUrl,
+  storageKey,
+}: Props) {
   const isSmall = size === 'sm';
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { preview, handleFileChange } = useImageLocalStorage(index);
+  const { preview, handleFileChange } = useImageLocalStorage(storageKey || index);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
