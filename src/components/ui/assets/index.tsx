@@ -32,6 +32,7 @@ import IcoKakao from './ico-kakao.svg';
 import IcoLogin from './ico-login.svg';
 import IcoSpinnerRight from './ico-spinner-right.svg';
 import IcoSpinnerleft from './ico-spinner-left.svg';
+import IcoCheckList from './ico-checkList.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -68,6 +69,7 @@ export const Icons = {
   login: IcoLogin,
   spinnerRight: IcoSpinnerRight,
   spinnerLeft: IcoSpinnerleft,
+  checkList: IcoCheckList,
 };
 
 export type IconName = keyof typeof Icons;
