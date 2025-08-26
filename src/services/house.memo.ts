@@ -52,7 +52,7 @@ export async function getChecklist(): Promise<ChecklistResponse> {
 }
 
 export async function createHouseMemo(formData: FormData): Promise<HouseMemo> {
-  const res = await apiFormData.post('api/property', {
+  const res = apiFormData.post('api/property', {
     body: formData,
   });
 

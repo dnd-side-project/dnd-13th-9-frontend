@@ -63,11 +63,22 @@ type Props = {
 };
 
 export default function HouseMemoProvider({ children }: Props) {
-  const [houseMemo, setHouseMemo] = useState<HouseMemo>(() => getHouseMemoFromStorage());
+  const [houseMemo, setHouseMemo] = useState<HouseMemo>(initialHouseMemo);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    saveHouseMemoToStorage(houseMemo);
-  }, [houseMemo]);
+    if (!isInitialized) {
+      const storedHouseMemo = getHouseMemoFromStorage();
+      setHouseMemo(storedHouseMemo);
+      setIsInitialized(true);
+    }
+  }, [isInitialized]);
+
+  useEffect(() => {
+    if (isInitialized) {
+      saveHouseMemoToStorage(houseMemo);
+    }
+  }, [houseMemo, isInitialized]);
 
   const clearHouseMemo = () => {
     setHouseMemo(initialHouseMemo);
