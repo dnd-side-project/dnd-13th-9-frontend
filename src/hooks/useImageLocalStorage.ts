@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 
-export function useImageLocalStorage(key?: string | number) {
+export function useImageLocalStorage(key?: string | number, index?: number) {
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof key === 'string') {
       const images = JSON.parse(localStorage.getItem(key) || '[]');
-      if (images.length > 0) {
+      if (images.length > 0 && index !== undefined) {
+        setPreview(images[index] || null);
+      } else if (images.length > 0) {
         setPreview(images[0]);
       }
     } else if (typeof key === 'number') {
@@ -15,7 +17,7 @@ export function useImageLocalStorage(key?: string | number) {
         setPreview(key !== undefined ? images[key] : images[0]);
       }
     }
-  }, [key]);
+  }, [key, index]);
 
   const handleFileChange = (file: File) => {
     const url = URL.createObjectURL(file);
@@ -27,7 +29,11 @@ export function useImageLocalStorage(key?: string | number) {
       if (typeof result === 'string') {
         if (typeof key === 'string') {
           const images = JSON.parse(localStorage.getItem(key) || '[]');
-          images.push(result);
+          if (index !== undefined && index < images.length) {
+            images[index] = result;
+          } else {
+            images.push(result);
+          }
           localStorage.setItem(key, JSON.stringify(images));
         } else if (typeof key === 'number') {
           const images = JSON.parse(localStorage.getItem('images') || '[]');

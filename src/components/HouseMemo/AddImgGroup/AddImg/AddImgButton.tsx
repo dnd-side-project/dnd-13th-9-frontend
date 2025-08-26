@@ -22,7 +22,7 @@ export function AddImgButton({
   const isSmall = size === 'sm';
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { preview, handleFileChange } = useImageLocalStorage(storageKey || index);
+  const { preview, handleFileChange } = useImageLocalStorage(storageKey || index, index);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
