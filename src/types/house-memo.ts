@@ -1,38 +1,39 @@
-export type Feeling = 'HAPPY' | 'SOSO' | 'ANGRY';
+export type Feeling = 'GOOD' | 'SOSO' | 'BAD';
 
-export type ContractType = '월세' | '전세' | '매매';
+export type ContractType = 'MONTHLY_RENT' | 'JEONSE' | 'PURCHASE';
 
 export type HouseType =
-  | '오피스텔'
-  | '원룸'
-  | '아파트'
-  | '빌라'
-  | '코리빙'
-  | '고시원'
-  | '하숙'
-  | '기타';
+  | 'OFFICETEL'
+  | 'ONEROOM'
+  | 'APARTMENT'
+  | 'VILLA'
+  | 'COLIVING'
+  | 'GOSIWON'
+  | 'BOARDING'
+  | 'ETC';
 
-export type Address = {
-  x: string;
-  y: string;
-  address_name: string;
-  place_name: string;
+export type ChecklistMemo = {
+  categoryId: number;
+  memo: string;
 };
 
 export type HouseMemo = {
-  feeling: Feeling;
-  propertyName: string; // 매물명
-  memo: string;
-  referenceLink: string; // 참고링크
-  address: Address | null;
-  detailedAddress: string;
+  feeling?: Feeling;
+  propertyName: string; // 매물명 (1~10자)
+  memo?: string; // 메모 (1~80자)
+  referenceUrl?: string; // 참고 링크 (최대 255자)
+  address: string; // 지번 주소
+  detailAddress?: string; // 상세주소
+  longitude: string; // 경도
+  latitude: string; // 위도
   contractType: ContractType; // 계약 형태
-  houseType: HouseType; // 집 유형
-  depositSmall: string; // 보증금
-  depositBig: string;
-  monthlyRent: string; // 월세
-  maintenanceFee: string; // 관리비
-  availableDate: string; // 입주 가능 시기
+  houseType?: HouseType; // 집 유형
+  depositBig: number; // 0~1000억 (월세: 보증금 억 단위, 전세: 전세가 억 단위, 매매: 매매가 억 단위)
+  depositSmall: number; // 0~9999만원 (월세: 보증금 만원 단위, 전세: 전세가 억 단위, 매매: 매매가 억 단위)
+  managementFee?: number; // 0~10000 관리비
+  moveInInfo?: string; // 입주 가능 시기
+  categoryMemoList?: ChecklistMemo[]; // 각 카테고리별 메모
+  folderId: number; // 폴더 고유 인덱스 값
 };
 
 export type HouseMemoInputField = {

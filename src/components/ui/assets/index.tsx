@@ -29,6 +29,9 @@ import IcoAdd from './ico-add.svg';
 import IcoMapPin from './ico-map-pin.svg';
 import IcoKakao from './ico-kakao.svg';
 import IcoLogin from './ico-login.svg';
+import IcoEdit from './ico-edit.svg';
+import IcoSpinnerRight from './ico-spinner-right.svg';
+import IcoSpinnerleft from './ico-spinner-left.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -62,6 +65,9 @@ export const Icons = {
   mapPin: IcoMapPin,
   kakao: IcoKakao,
   login: IcoLogin,
+  edit: IcoEdit,
+  spinnerRight: IcoSpinnerRight,
+  spinnerLeft: IcoSpinnerleft,
 };
 
 export type IconName = keyof typeof Icons;

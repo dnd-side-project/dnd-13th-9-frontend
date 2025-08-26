@@ -4,7 +4,7 @@ import { MainLayout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import BaseInfo from '@/components/HouseMemo/BaseInfo/BaseInfo';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup';
-import { HouseMemoContext, initialHouseMemo } from '@/contexts/HouseMemoContext';
+import HouseMemoProvider from '@/contexts/HouseMemoContext';
 import CheckList from '@/components/HouseMemo/CheckList/CheckList';
 import { useChecklistInfo } from '@/queries/houseMemo/useChecklistInfo';
 import { Modal } from '@/components/ui/Modal';
@@ -12,9 +12,10 @@ import useModal from '@/hooks/useModal';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { Header } from '@/components/ui/Header';
+import { Icon } from '@/components/ui/Icon';
 
 export default function page() {
-  const [houseMemo, setHouseMemo] = useState(initialHouseMemo);
   const { isOpen, closeModal, openModal } = useModal();
 
   const { data } = useChecklistInfo();
@@ -29,7 +30,20 @@ export default function page() {
 
   return (
     <MainLayout>
-      <HouseMemoContext.Provider value={{ houseMemo, setHouseMemo }}>
+      <HouseMemoProvider>
+        <Header
+          left={
+            <Icon
+              name="arrowLeft"
+              color="neutral"
+              className="cursor-pointer"
+              size={24}
+              padding={10}
+              onClick={() => router.back()}
+            />
+          }
+          title="매물 메모"
+        />
         <AddImgButtonGroup />
         <Tabs defaultValue="baseInfo">
           <div className="px-6">
@@ -46,7 +60,7 @@ export default function page() {
             <CheckList />
           </TabsContent>
         </Tabs>
-      </HouseMemoContext.Provider>
+      </HouseMemoProvider>
 
       <Modal isOpen={isOpen} closeModal={closeModal}>
         <div className="flex flex-col items-center gap-2 rounded-2xl bg-white p-5 shadow-sm">

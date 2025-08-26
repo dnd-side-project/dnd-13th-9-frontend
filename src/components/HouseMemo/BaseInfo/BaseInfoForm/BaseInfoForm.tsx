@@ -30,12 +30,12 @@ export function BaseInfoForm() {
     if (mapRef.current) {
       const info = await mapRef.current.moveToCurrentLocation();
       if (info) {
-        handleFieldChange('address', {
-          address_name: info.address,
-          place_name: info.placeName,
-          x: info.lng,
-          y: info.lat,
-        });
+        setHouseMemo((prev) => ({
+          ...prev,
+          address: info.address,
+          longitude: String(info.lng),
+          latitude: String(info.lat),
+        }));
       }
     }
   };
@@ -109,7 +109,7 @@ export function BaseInfoForm() {
               />
               <Input
                 placeholder={placeholder}
-                value={houseMemo.address?.address_name || houseMemo.address?.place_name || ''}
+                value={houseMemo.address || ''}
                 onChange={() => {}}
                 onClick={open}
                 readOnly
@@ -117,8 +117,12 @@ export function BaseInfoForm() {
               <KakaoMap
                 ref={mapRef}
                 height="130px"
-                x={houseMemo.address?.x}
-                y={houseMemo.address?.y}
+                x={
+                  houseMemo.longitude && houseMemo.longitude !== ''
+                    ? houseMemo.longitude
+                    : undefined
+                }
+                y={houseMemo.latitude && houseMemo.latitude !== '' ? houseMemo.latitude : undefined}
               />
             </>
           ) : (
@@ -134,11 +138,25 @@ export function BaseInfoForm() {
 
       {isOpen && (
         <SearchMapBottomSheet
-          existAddress={houseMemo.address || undefined}
+          existAddress={
+            houseMemo.address
+              ? {
+                  address_name: houseMemo.address,
+                  place_name: houseMemo.address,
+                  x: houseMemo.longitude,
+                  y: houseMemo.latitude,
+                }
+              : undefined
+          }
           isOpen={isOpen}
           closeModal={close}
           onSelect={(address) => {
-            handleFieldChange('address', address);
+            setHouseMemo((prev) => ({
+              ...prev,
+              address: address.address_name,
+              longitude: address.x,
+              latitude: address.y,
+            }));
           }}
         />
       )}
