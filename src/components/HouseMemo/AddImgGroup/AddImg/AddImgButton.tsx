@@ -7,9 +7,11 @@ import { useImageLocalStorage } from '@/hooks/useImageLocalStorage';
 type Props = {
   size?: 'sm' | 'lg';
   index?: number;
+  readonly?: boolean;
+  imageUrl?: string;
 };
 
-export function AddImgButton({ size = 'lg', index }: Props) {
+export function AddImgButton({ size = 'lg', index, readonly = false, imageUrl }: Props) {
   const isSmall = size === 'sm';
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -21,30 +23,35 @@ export function AddImgButton({ size = 'lg', index }: Props) {
   };
 
   const handleClick = () => {
-    fileInputRef.current?.click();
+    if (!readonly) fileInputRef.current?.click();
   };
+
+  const bgImage = readonly ? imageUrl : preview;
 
   return (
     <div>
       <button
         type="button"
+        disabled={readonly}
         className={cn(
           'bg-neutral-30 relative flex shrink-0 items-center justify-center rounded-2xl bg-cover bg-center',
           isSmall ? 'h-[108px] w-[108px]' : 'h-[225px] w-[225px]'
         )}
-        style={{ backgroundImage: preview ? `url(${preview})` : undefined }}
+        style={{ backgroundImage: bgImage ? `url(${bgImage})` : undefined }}
         onClick={handleClick}
       >
-        {!preview && <Icon name="addImage" color="neutral" width={40} height={40} />}
+        {!bgImage && <Icon name="addImage" color="neutral" width={40} height={40} />}
       </button>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        className="hidden"
-        accept=".png, .jpg, .jpeg"
-        onChange={onFileChange}
-      />
+      {!readonly && (
+        <input
+          ref={fileInputRef}
+          type="file"
+          className="hidden"
+          accept=".png, .jpg, .jpeg"
+          onChange={onFileChange}
+        />
+      )}
     </div>
   );
 }
