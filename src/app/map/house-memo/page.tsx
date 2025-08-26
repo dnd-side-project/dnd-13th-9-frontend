@@ -14,6 +14,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
+import { TitleS } from '@/components/ui/Typography';
 
 export default function page() {
   const { isOpen, closeModal, openModal } = useModal();
@@ -43,6 +44,7 @@ export default function page() {
             />
           }
           title="매물 메모"
+          right={<TitleS className="text-primary-50 px-3 whitespace-nowrap">완료</TitleS>}
         />
         <AddImgButtonGroup />
         <Tabs defaultValue="baseInfo">
