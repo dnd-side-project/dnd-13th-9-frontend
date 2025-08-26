@@ -6,8 +6,8 @@ import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
-import { useCreateProperty } from '@/queries/houseMemo/useCreateHouseMemo';
 import { useHouseMemo } from '@/contexts/HouseMemoContext';
+import { useCreateProperty } from '@/queries/houseMemo/useCreateHouseMemo';
 
 export default function page() {
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function page() {
     setSelectedFolderId(folderId);
   };
 
-  const handleSave = async () => {
+  async function handleFormAction(formData: FormData) {
     if (selectedFolderId === undefined) return;
 
     try {
@@ -43,9 +43,9 @@ export default function page() {
 
       router.back();
     } catch (error) {
-      alert('매물 저장 중 오류가 발생했습니다.');
+      console.error('Form action error:', error);
     }
-  };
+  }
 
   return (
     <MainLayout>
@@ -54,23 +54,26 @@ export default function page() {
         left={<Icon name="arrowLeft" width={18} onClick={() => router.back()} />}
         title="저장 폴더 선택"
       />
-      <FolderSelector
-        selectedFolderId={selectedFolderId}
-        onFolderSelect={handleFolderSelect}
-        showCreateButton={true}
-        showActionsMenu={true}
-        showPlanGrid={true}
-      />
 
-      <div className="flex w-full justify-center py-3">
-        <Button
-          label="저장하기"
-          size="large"
-          onClick={handleSave}
-          disabled={!selectedFolderId || createPropertyMutation.isPending}
-          loading={createPropertyMutation.isPending}
+      <form action={handleFormAction}>
+        <FolderSelector
+          selectedFolderId={selectedFolderId}
+          onFolderSelect={handleFolderSelect}
+          showCreateButton={true}
+          showActionsMenu={true}
+          showPlanGrid={true}
         />
-      </div>
+
+        <div className="bottom-0 flex w-full justify-center py-3">
+          <Button
+            label="저장하기"
+            size="large"
+            type="submit"
+            disabled={!selectedFolderId || createPropertyMutation.isPending}
+            loading={createPropertyMutation.isPending}
+          />
+        </div>
+      </form>
     </MainLayout>
   );
 }

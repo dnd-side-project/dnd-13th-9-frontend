@@ -32,7 +32,7 @@ export function BaseInfoForm() {
       if (info) {
         setHouseMemo((prev) => ({
           ...prev,
-          address: info.address,
+          address: info.address || '',
           longitude: String(info.lng),
           latitude: String(info.lat),
         }));
@@ -151,11 +151,12 @@ export function BaseInfoForm() {
           isOpen={isOpen}
           closeModal={close}
           onSelect={(address) => {
+            console.log('지도에서 주소 선택:', address);
             setHouseMemo((prev) => ({
               ...prev,
-              address: address.address_name,
-              longitude: address.x,
-              latitude: address.y,
+              address: address.address_name || '',
+              longitude: String(address.x),
+              latitude: String(address.y),
             }));
           }}
         />

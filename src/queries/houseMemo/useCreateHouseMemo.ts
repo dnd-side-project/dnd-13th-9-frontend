@@ -2,26 +2,64 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createHouseMemo } from '@/services/house.memo';
 import { HouseMemo } from '@/types/house-memo';
 
-interface CreatePropertyParams {
+type CreatePropertyParams = {
   houseMemo: HouseMemo;
   selectedFolderId: number;
   images?: string[];
-}
+  formData?: FormData;
+};
 
 export function useCreateProperty() {
   const queryClient = useQueryClient();
 
   return useMutation<HouseMemo, Error, CreatePropertyParams>({
-    mutationFn: async ({ houseMemo, selectedFolderId, images }) => {
-      const formData = new FormData();
+    mutationFn: async ({ houseMemo, selectedFolderId, images, formData: passedFormData }) => {
+      let formData: FormData;
+      let propertyData: any;
 
-      const propertyData = {
-        ...houseMemo,
-        folderId: selectedFolderId,
-        propertyName: houseMemo.propertyName || '새로운 매물',
-      };
+      if (passedFormData) {
+        formData = passedFormData;
 
-      formData.append('data', JSON.stringify(propertyData));
+        propertyData = {
+          ...houseMemo,
+          folderId: selectedFolderId,
+          propertyName: houseMemo.propertyName || '새로운 매물',
+          latitude: Number(houseMemo.latitude) || 0,
+          longitude: Number(houseMemo.longitude) || 0,
+        };
+
+        const jsonBlob = new Blob([JSON.stringify(propertyData)], {
+          type: 'application/json',
+        });
+        formData.append('data', jsonBlob, 'data.json');
+      } else {
+        const getLatestHouseMemo = () => {
+          if (typeof window === 'undefined') return houseMemo;
+          try {
+            const stored = localStorage.getItem('houseMemo');
+            return stored ? { ...houseMemo, ...JSON.parse(stored) } : houseMemo;
+          } catch (error) {
+            console.error('Failed to parse house memo from localStorage:', error);
+            return houseMemo;
+          }
+        };
+
+        const latestHouseMemo = getLatestHouseMemo();
+        formData = new FormData();
+
+        propertyData = {
+          ...latestHouseMemo,
+          folderId: selectedFolderId,
+          propertyName: latestHouseMemo.propertyName || '새로운 매물',
+          latitude: Number(latestHouseMemo.latitude) || 0,
+          longitude: Number(latestHouseMemo.longitude) || 0,
+        };
+
+        const jsonBlob = new Blob([JSON.stringify(propertyData)], {
+          type: 'application/json',
+        });
+        formData.append('data', jsonBlob, 'data.json');
+      }
 
       if (images && images.length > 0) {
         images.forEach((imageData: string, index: number) => {
@@ -39,14 +77,6 @@ export function useCreateProperty() {
             console.error(`Failed to process image ${index}:`, imageError);
           }
         });
-      }
-
-      for (const [key, value] of formData.entries()) {
-        if (key === 'data') {
-          console.log(`${key}:`, value);
-        } else {
-          console.log(`${key}:`, value instanceof Blob ? `Blob (${value.size} bytes)` : value);
-        }
       }
 
       const result = await createHouseMemo(formData);
