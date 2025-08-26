@@ -79,8 +79,8 @@ export function NearbyInfoForm() {
               <KakaoMap
                 ref={mapRef}
                 height="130px"
-                x={nearbyInfo.address?.x}
-                y={nearbyInfo.address?.y}
+                lat={nearbyInfo.address?.y}
+                lng={nearbyInfo.address?.x}
               />
             </>
           ) : (

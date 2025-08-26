@@ -57,7 +57,12 @@ export default function PlaceSearch({ value, onChange, onSelect }: PlaceSearchPr
 
               setHouseMemo((prev) => ({
                 ...prev,
-                address: place.address_name,
+                address: {
+                  address_name: place.address_name,
+                  place_name: place.place_name,
+                  x: place.x,
+                  y: place.y,
+                },
                 longitude: place.x,
                 latitude: place.y,
               }));

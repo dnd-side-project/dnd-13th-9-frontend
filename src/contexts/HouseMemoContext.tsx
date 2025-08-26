@@ -6,7 +6,12 @@ const STORAGE_KEY = 'houseMemo';
 
 export const initialHouseMemo: HouseMemo = {
   propertyName: '',
-  address: '',
+  address: {
+    address_name: '',
+    place_name: '',
+    x: '',
+    y: '',
+  },
   longitude: '',
   latitude: '',
   contractType: 'MONTHLY_RENT',

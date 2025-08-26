@@ -5,8 +5,8 @@ import { MapPin } from '@/components/ui/Marker';
 
 interface KakaoMapProps {
   height?: string;
-  x?: string | number | undefined;
-  y?: string | number | undefined;
+  lat?: string | number | undefined;
+  lng?: string | number | undefined;
 }
 
 export interface KakaoMapRef {
@@ -19,7 +19,7 @@ export interface KakaoMapRef {
 }
 
 const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
-  const { height = '300px', x, y } = props;
+  const { height = '300px', lat, lng } = props;
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<MapInstance | null>(null);
   const markerRef = useRef<any>(null);
@@ -33,9 +33,9 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
 
         let centerLat, centerLng;
 
-        if (x && y && x !== '' && y !== '') {
-          centerLat = Number(y);
-          centerLng = Number(x);
+        if (lat && lng && lat !== '' && lng !== '') {
+          centerLat = Number(lat);
+          centerLng = Number(lng);
         } else {
           centerLat = 37.5665;
           centerLng = 126.978;
@@ -49,7 +49,8 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
         const kakaoMap = new kakao.maps.Map(container, options);
         setMap(kakaoMap);
 
-        const pinPosition = x && y ? new kakao.maps.LatLng(Number(y), Number(x)) : options.center;
+        const pinPosition =
+          lat && lng ? new kakao.maps.LatLng(Number(lat), Number(lng)) : options.center;
 
         const mapPin = MapPin({ type: 'PROPERTY', size: 48 });
         mapPinRef.current = mapPin;
@@ -78,8 +79,8 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
   }, []);
 
   useEffect(() => {
-    if (map && x != null && y != null && x !== '' && y !== '') {
-      const newCenter = new kakao.maps.LatLng(Number(y), Number(x));
+    if (map && lat != null && lng != null && lat !== '' && lng !== '') {
+      const newCenter = new kakao.maps.LatLng(Number(lat), Number(lng));
       map.setCenter(newCenter);
       if (markerRef.current) {
         markerRef.current.setPosition(newCenter);
@@ -98,7 +99,7 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
         markerRef.current = overlay;
       }
     }
-  }, [map, x, y]);
+  }, [map, lat, lng]);
 
   useImperativeHandle(ref, () => ({
     moveToCurrentLocation: async () => {

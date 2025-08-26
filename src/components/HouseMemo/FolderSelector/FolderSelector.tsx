@@ -302,7 +302,7 @@ export function FolderSelector({
         description={`"${targetFolderName}" 폴더를 삭제하시겠습니까?`}
         confirmLabel="삭제"
         loading={loading}
-        onSubmit={async () => {
+        onConfirm={async () => {
           if (!targetFolderId || !effectivePlanId) return;
           setLoading(true);
           try {

@@ -1,4 +1,4 @@
 export { default } from './CheckList';
 export { useCheckList } from './useCheckList';
-export { CheckListTabs } from './CheckListTabs';
-export { CheckListSection } from './CheckListSection';
+export { default as CheckListTabs } from './CheckListTabs';
+export { default as CheckListSection } from './CheckListSection';

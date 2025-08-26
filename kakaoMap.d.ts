@@ -1,6 +1,6 @@
-type Window = {
+interface Window {
   kakao: typeof kakao;
-};
+}
 
 declare const kakao: {
   maps: {

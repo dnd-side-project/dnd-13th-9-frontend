@@ -78,7 +78,7 @@ export default function Page() {
             setHouseMemo({
               ...houseMemo,
               address: tempAddress,
-              detailedAddress: tempDetailedAddress,
+              detailAddress: tempDetailedAddress,
             });
 
             setTempAddress(null);
