@@ -8,14 +8,22 @@ import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { NearbyMemoProvider, useNearbyMemo } from '@/contexts';
 import { useRouter } from 'next/navigation';
+import { nearbyMemoValidationSchema, validateWithZod } from '@/utils/validation';
 
 function NearbyMemoPageContent() {
   const { nearbyMemo } = useNearbyMemo();
   const router = useRouter();
 
   const handleSave = () => {
-    //TODO :: 에러처리
-    router.push('/map/nearby-memo/select-map-list');
+    const validationData = {
+      title: nearbyMemo.title,
+      address: nearbyMemo.address,
+      placeTag: nearbyMemo.placeTag,
+    };
+
+    validateWithZod(nearbyMemoValidationSchema, validationData, () => {
+      router.push('/map/nearby-memo/select-map-list');
+    });
   };
 
   return (
