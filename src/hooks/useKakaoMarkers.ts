@@ -12,14 +12,14 @@ export function useKakaoMarkers(mapInstanceRef: React.MutableRefObject<any | nul
     // markers: { id, lat, lng, type?: MemoType, active?: boolean, nearTag?: any }
     (
       markers: Array<{
-        id: number;
-        lat: number;
-        lng: number;
+        id: string;
+        lat: number | string;
+        lng: number | string;
         type?: MemoType;
         active?: boolean;
-        nearTag?: any;
+        placeTag?: any;
       }>,
-      onClick: (id: number) => void
+      onClick: (id: string) => void
     ) => {
       if (!mapInstanceRef.current) return;
       const win = window as unknown as { kakao: any };
@@ -30,11 +30,13 @@ export function useKakaoMarkers(mapInstanceRef: React.MutableRefObject<any | nul
       if (!markers || markers.length === 0) return;
       // 신규 마커 생성 및 클릭 핸들러 바인딩
       markers.forEach((m) => {
-        const pos = new kakao.maps.LatLng(m.lat, m.lng);
+        const lat = typeof m.lat === 'string' ? parseFloat(m.lat) : m.lat;
+        const lng = typeof m.lng === 'string' ? parseFloat(m.lng) : m.lng;
+        const pos = new kakao.maps.LatLng(lat, lng);
         // CustomOverlay로 교체: memoType별 핀
         const content = MapPin({
-          type: m.type ?? 'PROPERTY',
-          nearTag: m.nearTag,
+          type: m.type === 'NEARBY' ? 'NEARBY' : 'PROPERTY',
+          placeTag: m.placeTag,
           active: !!m.active,
           onClick: () => onClick(m.id),
         });

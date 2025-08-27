@@ -25,9 +25,8 @@ export default function MapPage() {
 
   const handleListTabActivate = React.useCallback(() => {
     if (selectedProp) {
-      setPlanId(selectedProp.planId);
-      setFolderId(selectedProp.folderId);
-      router.push(`/map/folder/${selectedProp.folderId}`);
+      // ViewModel에는 planId/folderId가 없으므로 현재 스토어 상태를 유지하고 폴더 페이지로 이동만 수행
+      router.push(`/map/folder/${currentFolderId}`);
       return true;
     }
     if (currentFolderId) {
