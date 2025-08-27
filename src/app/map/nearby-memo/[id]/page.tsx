@@ -1,6 +1,6 @@
-'use client';
 import React from 'react';
+import { MainLayout } from '@/components/layout';
 
-export default function Page() {
-  return <div />;
+export default function page() {
+  return <MainLayout></MainLayout>;
 }

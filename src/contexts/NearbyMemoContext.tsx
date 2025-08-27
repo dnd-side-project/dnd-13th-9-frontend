@@ -7,7 +7,7 @@ const STORAGE_KEY = 'nearbyMemo';
 export const initialNearbyMemo: NearbyMemo = {
   title: '',
   description: '',
-  placeTag: 'STRENGTH',
+  placeTag: 'ADVANTAGE',
   address: '',
   latitude: 0,
   longitude: 0,

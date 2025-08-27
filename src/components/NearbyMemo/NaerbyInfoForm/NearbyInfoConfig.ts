@@ -1,11 +1,11 @@
 import { NearbyMemoInputField, PlaceTag } from '@/types/nearby-memo';
 
 export const placeTagOptions: { text: string; value: PlaceTag }[] = [
-  { text: '장점', value: 'STRENGTH' },
-  { text: '단점', value: 'WEAKNESS' },
+  { text: '장점', value: 'ADVANTAGE' },
+  { text: '단점', value: 'DISADVANTAGE' },
   { text: '편의시설', value: 'CONVENIENCE' },
-  { text: '교통', value: 'TRANSPORT' },
-  { text: '치안', value: 'SAFETY' },
+  { text: '교통', value: 'TRANSPORTATION' },
+  { text: '치안', value: 'SECURUTY' },
   { text: '소음', value: 'NOISE' },
 ];
 
