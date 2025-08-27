@@ -40,8 +40,6 @@ export default function page() {
         selectedFolderId,
         images,
       });
-
-      router.back();
     } catch (error) {
       console.error('Save error:', error);
     }
