@@ -1,12 +1,12 @@
-import { NearbyMemoInputField } from '@/types/nearby-memo';
+import { NearbyMemoInputField, PlaceTag } from '@/types/nearby-memo';
 
-export const placeTagOptions: { text: string }[] = [
-  { text: '장점' },
-  { text: '단점' },
-  { text: '편의시설' },
-  { text: '교통' },
-  { text: '치안' },
-  { text: '소음' },
+export const placeTagOptions: { text: string; value: PlaceTag }[] = [
+  { text: '장점', value: 'ADVANTAGE' },
+  { text: '단점', value: 'DISADVANTAGE' },
+  { text: '편의시설', value: 'CONVENIENCE' },
+  { text: '교통', value: 'TRANSPORTATION' },
+  { text: '치안', value: 'SECURITY' },
+  { text: '소음', value: 'NOISE' },
 ];
 
 export const contractOptions: { text: string }[] = [
@@ -17,13 +17,12 @@ export const contractOptions: { text: string }[] = [
 
 export const InputFields: NearbyMemoInputField[] = [
   {
-    key: 'placeName',
+    key: 'title',
     label: '장소명',
     placeholder: '지도에 표시될 제목을 입력하세요.',
     required: true,
   },
-  { key: 'memo', label: '메모', placeholder: '기억해두고 싶은 정보와 느낌을 작성하세요.' },
-
+  { key: 'description', label: '메모', placeholder: '기억해두고 싶은 정보와 느낌을 작성하세요.' },
   {
     key: 'address',
     label: '주소',

@@ -1,24 +1,19 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { LabelContainer } from '@/components/HouseMemo/LabelContainer';
 import { Input } from '@/components/ui/Input';
 import { CurrentLocationButton } from '@/components/ui/CurrentLocationButton';
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { InputFields, placeTagOptions } from './NearbyInfoConfig';
-import { PlaceTag, NearbyMemo } from '@/types/nearby-memo';
+import { PlaceTag } from '@/types/nearby-memo';
 import { ChipGroup } from '@/components/ui/ChipGroup';
 import SearchMapBottomSheet from '@/components/map/Map/SearchMapBottomSheet';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
+import { useNearbyMemo } from '@/contexts';
 
 export function NearbyInfoForm() {
-  const [nearbyInfo, setNearbyInfo] = useState<NearbyMemo>({
-    placeName: '',
-    memo: '',
-    tags: '장점',
-    address: null,
-  });
-
+  const { nearbyMemo, setNearbyMemo } = useNearbyMemo();
   const mapRef = useRef<any>(null);
   const { isOpen, open, close } = useBottomSheet();
 
@@ -26,36 +21,36 @@ export function NearbyInfoForm() {
     if (mapRef.current) {
       const info = await mapRef.current.moveToCurrentLocation();
       if (info) {
-        setNearbyInfo((prev) => ({
+        setNearbyMemo((prev) => ({
           ...prev,
-          address: {
-            address_name: info.address,
-            place_name: info.placeName,
-            x: info.lng,
-            y: info.lat,
-          },
+          address: info.address,
+          latitude: info.lat,
+          longitude: info.lng,
         }));
       }
     }
   };
 
-  const handleFieldChange = <K extends keyof NearbyMemo>(key: K, value: NearbyMemo[K]) => {
-    setNearbyInfo((prev) => ({
+  const handleFieldChange = <K extends keyof typeof nearbyMemo>(
+    key: K,
+    value: (typeof nearbyMemo)[K]
+  ) => {
+    setNearbyMemo((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
 
   return (
-    <div className="flex flex-col gap-8 py-5 pb-24">
+    <div className="flex flex-col gap-8 px-6 py-5 pb-24">
       {/* 장소 태그 선택 */}
       <LabelContainer label="장소 태그" className="w-100 gap-3">
         <ChipGroup
           activeChipColor="secondary"
           options={placeTagOptions}
-          value={nearbyInfo.tags}
+          value={nearbyMemo.placeTag}
           iconName="example"
-          onChange={(val) => handleFieldChange('tags', val as PlaceTag)}
+          onChange={(val) => handleFieldChange('placeTag', val as PlaceTag)}
         />
       </LabelContainer>
 
@@ -71,23 +66,23 @@ export function NearbyInfoForm() {
               />
               <Input
                 placeholder={placeholder}
-                value={nearbyInfo.address?.address_name || nearbyInfo.address?.place_name || ''}
-                onChange={() => {}}
+                value={nearbyMemo.address}
+                onChange={(e) => handleFieldChange('address', e.target.value)}
                 onClick={open}
                 readOnly
               />
               <KakaoMap
                 ref={mapRef}
                 height="130px"
-                lat={nearbyInfo.address?.y}
-                lng={nearbyInfo.address?.x}
+                lat={nearbyMemo.latitude}
+                lng={nearbyMemo.longitude}
               />
             </>
           ) : (
             <Input
               placeholder={placeholder}
-              value={nearbyInfo[key] as string}
-              onChange={(e) => handleFieldChange(key as keyof NearbyMemo, e.target.value)}
+              value={nearbyMemo[key] as string}
+              onChange={(e) => handleFieldChange(key as keyof typeof nearbyMemo, e.target.value)}
               unit={unit}
             />
           )}
@@ -96,11 +91,12 @@ export function NearbyInfoForm() {
 
       {isOpen && (
         <SearchMapBottomSheet
-          existAddress={nearbyInfo.address || undefined}
           isOpen={isOpen}
           closeModal={close}
           onSelect={(address) => {
-            handleFieldChange('address', address);
+            handleFieldChange('address', address.address);
+            handleFieldChange('latitude', Number(address.y));
+            handleFieldChange('longitude', Number(address.x));
           }}
         />
       )}

@@ -4,19 +4,28 @@ import { useParams } from 'next/navigation';
 import { MainLayout } from '@/components/layout';
 import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
-import { TitleS, BodyM, BodyS, BodyL, TitleXl, BodyXs } from '@/components/ui/Typography';
+import {
+  TitleS,
+  BodyM,
+  BodyS,
+  BodyL,
+  TitleXl,
+  BodyXs,
+  Title2xl,
+  TitleL,
+} from '@/components/ui/Typography';
+import type { ChecklistSection } from '@/types/house-memo';
 import { useHouseMemoInfoById } from '@/queries/houseMemo/useHouseMemoInfoById';
 import { Chip } from '@/components/ui/Chip';
 import { getContractLabel, getHouseTypeLabel } from '@/utils/labels';
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
-import { Title2xl } from '@/components/ui/Typography';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup/AddImgButtonGroup';
 
 function feelingToText(feeling: string): string {
   const feelingMap: Record<string, string> = {
     GOOD: '좋음',
     SOSO: '그저 그래요',
-    BAD: '나쁨',
+    BAD: '별로에요',
   };
   return feelingMap[feeling] || feeling;
 }
@@ -87,12 +96,8 @@ export default function Page() {
           />
         </div>
 
-        {/* 매물 제목 */}
-        <Title2xl className="text-xl font-bold">{houseMemo.propertyName}</Title2xl>
-
-        {/* 가격 및 기본 정보 그룹 */}
         <div className="flex flex-col gap-2">
-          {/* 가격 정보 */}
+          <Title2xl className="text-xl font-bold">{houseMemo.propertyName}</Title2xl>
           {houseMemo.depositBig && (
             <div className="flex items-center gap-2">
               <TitleXl className="text-primary-50">
@@ -124,10 +129,10 @@ export default function Page() {
         {/* 메모 */}
         {houseMemo.memo && (
           <>
-            <hr className="border-neutral-20" />
+            <hr className="border-neutral-40" />
             <div>
               <BodyM className="text-neutral-60 mb-2">메모</BodyM>
-              <BodyL className="text-neutral-80 leading-relaxed">{houseMemo.memo}</BodyL>
+              <BodyL className="leading-relaxed text-neutral-100">{houseMemo.memo}</BodyL>
             </div>
           </>
         )}
@@ -137,11 +142,15 @@ export default function Page() {
           <BodyM className="text-neutral-60 mb-2">주소</BodyM>
           <div className="flex items-center justify-between">
             <div>
-              <BodyM className="mb-1">{houseMemo.address}</BodyM>
+              <BodyL className="mb-1 text-neutral-100">{houseMemo.address}</BodyL>
               {houseMemo.detailAddress && <BodyS>{houseMemo.detailAddress}</BodyS>}
             </div>
 
-            <button className="text-neutral-60 px-3 py-1 text-sm">
+            <button
+              className="text-neutral-60 flex items-center gap-0.5 px-3 py-1 text-sm"
+              onClick={() => navigator.clipboard.writeText(houseMemo.address)}
+            >
+              <Icon name="copy" width={14} />
               <BodyXs>복사</BodyXs>
             </button>
           </div>
@@ -149,10 +158,14 @@ export default function Page() {
 
         {/* 지도 */}
         <div>
-          <TitleS className="mb-2">지도</TitleS>
           {houseMemo.longitude && houseMemo.latitude ? (
             <div className="h-48 w-full overflow-hidden rounded-lg">
-              <KakaoMap lat={houseMemo.latitude} lng={houseMemo.longitude} />
+              <KakaoMap
+                type="NEARBY"
+                height="150px"
+                lat={houseMemo.latitude}
+                lng={houseMemo.longitude}
+              />
             </div>
           ) : (
             <div className="bg-neutral-10 flex h-48 w-full items-center justify-center rounded-lg">
@@ -171,11 +184,12 @@ export default function Page() {
 
         {/* 체크 리스트 */}
         <div>
-          <TitleS className="mb-2">체크리스트</TitleS>
+          <hr className="border-neutral-40 pb-4" />
+          <TitleL className="bg-white py-2">체크리스트</TitleL>
 
           {houseMemo.checklist.sections
-            .filter((section) => section.memo)
-            .map((section) => (
+            .filter((section: ChecklistSection) => section.memo)
+            .map((section: ChecklistSection) => (
               <div
                 key={section.categoryId}
                 className="border-neutral-20 mb-4 rounded-lg border bg-white p-4"

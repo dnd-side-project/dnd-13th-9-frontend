@@ -111,8 +111,14 @@ export function BaseInfoForm() {
         <KakaoMap
           ref={mapRef}
           height="130px"
-          lat={houseMemo.latitude && houseMemo.latitude !== '' ? houseMemo.latitude : undefined}
-          lng={houseMemo.longitude && houseMemo.longitude !== '' ? houseMemo.longitude : undefined}
+          lat={
+            houseMemo.latitude && houseMemo.latitude !== '' ? Number(houseMemo.latitude) : undefined
+          }
+          lng={
+            houseMemo.longitude && houseMemo.longitude !== ''
+              ? Number(houseMemo.longitude)
+              : undefined
+          }
         />
       </LabelContainer>
 
@@ -135,7 +141,7 @@ export function BaseInfoForm() {
           existAddress={
             houseMemo.address
               ? {
-                  address_name: houseMemo.address,
+                  address: houseMemo.address,
                   place_name: houseMemo.address,
                   x: houseMemo.longitude,
                   y: houseMemo.latitude,
@@ -148,7 +154,7 @@ export function BaseInfoForm() {
             console.log('지도에서 주소 선택:', address);
             setHouseMemo((prev) => ({
               ...prev,
-              address: address.address_name || '',
+              address: address.address || '',
               longitude: String(address.x),
               latitude: String(address.y),
             }));
