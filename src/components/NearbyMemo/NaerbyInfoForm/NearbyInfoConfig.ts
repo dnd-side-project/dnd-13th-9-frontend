@@ -5,7 +5,7 @@ export const placeTagOptions: { text: string; value: PlaceTag }[] = [
   { text: '단점', value: 'DISADVANTAGE' },
   { text: '편의시설', value: 'CONVENIENCE' },
   { text: '교통', value: 'TRANSPORTATION' },
-  { text: '치안', value: 'SECURUTY' },
+  { text: '치안', value: 'SECURITY' },
   { text: '소음', value: 'NOISE' },
 ];
 

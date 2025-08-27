@@ -92,9 +92,6 @@ export function useCreateNearbyMemo() {
         });
       }
 
-      console.log('Sending nearby memo data:', Object.fromEntries(formData.entries()));
-      console.log('Images count:', imagesToProcess?.length || 0);
-
       const result = await createNearbyMemo(formData);
       return result;
     },

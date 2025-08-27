@@ -3,7 +3,7 @@ export type PlaceTag =
   | 'DISADVANTAGE'
   | 'CONVENIENCE'
   | 'TRANSPORTATION'
-  | 'SECURUTY'
+  | 'SECURITY'
   | 'NOISE';
 
 export type PlaceAddress = {
