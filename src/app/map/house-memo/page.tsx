@@ -24,10 +24,13 @@ function HouseMemoContent() {
   const { data } = useChecklistInfo();
 
   useEffect(() => {
-    if (data?.data.sections?.[0].items?.length === 0) {
+    const hasVisitedBefore = localStorage.getItem('hasVisitedHouseMemo');
+
+    if (data?.data.sections?.[0].items?.length === 0 && !hasVisitedBefore) {
+      openModal();
+      localStorage.setItem('hasVisitedHouseMemo', 'true');
     }
-    openModal();
-  }, [data]);
+  }, [data, openModal]);
 
   const handleComplete = () => {
     const validationData = {
