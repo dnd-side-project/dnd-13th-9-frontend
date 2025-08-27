@@ -1,40 +1,75 @@
 import React from 'react';
 import { useMapStore } from '@/stores/useMapStore';
 
-const ALLOWED_NEAR_TAGS = new Set(['BAD', 'CONVENIENCE', 'GOOD', 'NOISE', 'SECURITY', 'TRAFFIC']);
+// 표준 placeTag 세트 (서버 스키마 기준)
+const ALLOWED_NEAR_TAGS = new Set([
+  'ADVANTAGE',
+  'DISADVANTAGE',
+  'CONVENIENCE',
+  'TRANSPORTATION',
+  'SECURITY',
+  'NOISE',
+]);
+const VIEW_TO_PIN_TAG: Record<
+  string,
+  'ADVANTAGE' | 'DISADVANTAGE' | 'CONVENIENCE' | 'TRANSPORTATION' | 'SECURITY' | 'NOISE'
+> = {
+  ADVANTAGE: 'ADVANTAGE',
+  DISADVANTAGE: 'DISADVANTAGE',
+  CONVENIENCE: 'CONVENIENCE',
+  TRANSPORTATION: 'TRANSPORTATION',
+  SECURITY: 'SECURITY',
+  NOISE: 'NOISE',
+};
 
 export function useMapSelection() {
-  const propsInFolder = useMapStore((s) => s.propsInFolder);
-  const selectedPropId = useMapStore((s) => s.selectedPropId);
+  const memosInFolder = useMapStore((s) => s.memosInFolder);
+  const selectedMemoId = useMapStore((s) => s.selectedMemoId);
 
   const markers = React.useMemo(
     () =>
-      propsInFolder.map((p) => {
-        const type = (p as any).memoType ?? 'PROPERTY';
+      memosInFolder.map((m) => {
+        // 서버 응답에 type이 없으므로 tag(=placeTag 표준화) 존재 시 NEARBY로 간주
+        const type = m.tag ? 'NEARBY' : 'PROPERTY';
 
-        let nearTag: string | undefined;
+        let placeTag: string | undefined;
         if (type === 'NEARBY') {
-          const raw = ((p as any).nearTag ?? (p as any).placeTag) as unknown;
+          const raw = (m.tag ?? undefined) as unknown;
           const tag = typeof raw === 'string' ? raw.trim().toUpperCase() : undefined;
-          if (tag && ALLOWED_NEAR_TAGS.has(tag)) nearTag = tag;
+          const mapped = tag ? (VIEW_TO_PIN_TAG[tag] ?? undefined) : undefined;
+          if (mapped && ALLOWED_NEAR_TAGS.has(mapped)) placeTag = mapped;
         }
 
-        return {
-          id: p.propertyId,
-          lat: p.latitude,
-          lng: p.longitude,
-          type,
-          nearTag,
-          active: selectedPropId === p.propertyId,
-        };
+        const lat = Number(m.lat);
+        const lng = Number(m.lng);
+        const valid =
+          Number.isFinite(lat) &&
+          Math.abs(lat) <= 90 &&
+          Number.isFinite(lng) &&
+          Math.abs(lng) <= 180;
+        return valid
+          ? {
+              id: m.id,
+              lat,
+              lng,
+              type,
+              placeTag,
+              active: selectedMemoId === m.id,
+            }
+          : null;
       }),
-    [propsInFolder, selectedPropId]
+    [memosInFolder, selectedMemoId]
   );
 
   const selectedProp = React.useMemo(
-    () => propsInFolder.find((p) => p.propertyId === selectedPropId) ?? null,
-    [propsInFolder, selectedPropId]
+    () => memosInFolder.find((m) => m.id === selectedMemoId) ?? null,
+    [memosInFolder, selectedMemoId]
   );
 
-  return { markers, selectedProp } as const;
+  const filteredMarkers = React.useMemo(
+    () => (Array.isArray(markers) ? (markers.filter(Boolean) as any) : []),
+    [markers]
+  );
+
+  return { markers: filteredMarkers, selectedProp } as const;
 }

@@ -12,8 +12,8 @@ import { useKakaoMarkers } from '@/hooks/useKakaoMarkers';
 
 type KakaoMapProps = {
   center?: { lat: number; lng: number } | null;
-  markers?: Array<{ id: number; lat: number; lng: number }>; // 최소 스펙
-  onMarkerClick?: (id: number) => void;
+  markers?: Array<{ id: string; lat: number | string; lng: number | string }>;
+  onMarkerClick?: (id: string) => void;
 };
 
 export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
@@ -33,12 +33,31 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
   const { markers: storeMarkers, selectedProp } = useMapSelection();
   const effectiveMarkers = markers ?? storeMarkers;
   const effectiveCenter =
-    center ?? (selectedProp ? { lat: selectedProp.latitude, lng: selectedProp.longitude } : null);
+    center ?? (selectedProp ? { lat: selectedProp.lat, lng: selectedProp.lng } : null);
   const { renderMarkers } = useKakaoMarkers(mapInstanceRef);
-  const setSelectedPropId = useMapStore((s) => s.setSelectedPropId);
+  const setSelectedMemoId = useMapStore((s) => s.setSelectedMemoId);
+  const selectedMemoId = useMapStore((s) => s.selectedMemoId);
   const currentFolderId = useMapStore((s) => s.folderId);
   const suppressClearRef = useRef(false);
   const [folderChangeKey, setFolderChangeKey] = useState(0);
+
+  const panTo = React.useCallback(
+    (lat: number | string, lng: number | string) => {
+      if (!mapInstanceRef.current) return;
+      const latNum = typeof lat === 'string' ? parseFloat(lat) : lat;
+      const lngNum = typeof lng === 'string' ? parseFloat(lng) : lng;
+      if (!Number.isFinite(latNum) || !Number.isFinite(lngNum)) return;
+      const win = window as unknown as { kakao: any };
+      const { kakao } = win;
+      const pos = new kakao.maps.LatLng(latNum, lngNum);
+      if (typeof mapInstanceRef.current.panTo === 'function') {
+        mapInstanceRef.current.panTo(pos);
+      } else {
+        mapInstanceRef.current.setCenter(pos);
+      }
+    },
+    [mapInstanceRef]
+  );
 
   // 폴더가 변경될 때마다 키 증가 (되돌아와도 다시 포커싱 유도)
   useEffect(() => {
@@ -60,9 +79,14 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
 
   const handleMarkerClick =
     onMarkerClick ??
-    ((id: number) => {
+    ((id: string) => {
       suppressClearRef.current = true;
-      setSelectedPropId(id);
+      setSelectedMemoId(id);
+      // 클릭한 마커로 포커싱
+      const m = effectiveMarkers?.find?.(
+        (mk: { id: string; lat: number | string; lng: number | string }) => mk.id === id
+      );
+      if (m) panTo(m.lat, m.lng);
     });
 
   // 외부 마커 렌더링 (훅 사용)
@@ -71,19 +95,14 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
     renderMarkers(effectiveMarkers, handleMarkerClick);
   }, [effectiveMarkers, handleMarkerClick, renderMarkers]);
 
-  // 폴더 전환 시마다 최신 매물로 포커싱 (빈 폴더는 스킵)
+  // 폴더 전환 시마다 첫 매물로 1회 포커싱 (선택된 메모가 있으면 스킵)
   useEffect(() => {
-    if (!mapInstanceRef.current || !effectiveMarkers?.length) return;
-    const latest = effectiveMarkers.reduce((acc, cur) => (acc.id > cur.id ? acc : cur));
-    const win = window as unknown as { kakao: any };
-    const { kakao } = win;
-    const pos = new kakao.maps.LatLng(latest.lat, latest.lng);
-    if (typeof mapInstanceRef.current.panTo === 'function') {
-      mapInstanceRef.current.panTo(pos);
-    } else {
-      mapInstanceRef.current.setCenter(pos);
-    }
-  }, [folderChangeKey, effectiveMarkers, mapInstanceRef]);
+    if (!mapInstanceRef.current) return;
+    const first = effectiveMarkers && effectiveMarkers.length > 0 ? effectiveMarkers[0] : null;
+    if (!first) return;
+    if (!selectedMemoId) panTo(first.lat, first.lng);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [folderChangeKey]);
 
   // 지도 빈 공간 클릭 시 선택 해제 (마커 클릭으로 들어온 경우 한 번 무시)
   useEffect(() => {
@@ -96,16 +115,16 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
         suppressClearRef.current = false;
         return;
       }
-      setSelectedPropId(null);
+      setSelectedMemoId(null);
     };
     kakao.maps.event.addListener(map, 'click', clearSelection);
     return () => {
       kakao.maps.event.removeListener(map, 'click', clearSelection);
     };
-  }, [isReady, setSelectedPropId, mapInstanceRef]);
+  }, [isReady, setSelectedMemoId, mapInstanceRef]);
 
   return (
-    <div className={`relative flex-1 px-0`} onClick={() => setSelectedPropId(null)}>
+    <div className={`relative flex-1 px-0`} onClick={() => setSelectedMemoId(null)}>
       <div ref={mapRef} className="h-full w-full" />
       {mapInstanceRef.current && (
         <CurrentLocationOverlay
@@ -129,7 +148,7 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
       <Fab
         icon="currentLocation"
         onClick={() => {
-          setSelectedPropId(null);
+          setSelectedMemoId(null);
           locate();
         }}
         className="top-6 right-[18px] z-10"

@@ -2,26 +2,26 @@ import { create } from 'zustand';
 import {
   getPlans,
   getFolders,
-  getPropertiesByFolder,
   type PlanSummary,
   type FolderSummary,
-  type PropertySummary,
 } from '@/components/map/mapData';
+import type { ViewModel } from '@/types/memo-view-model';
 
 type State = {
   plans: PlanSummary[];
   planId: number;
   folders: FolderSummary[];
   folderId: number;
-  propsInFolder: PropertySummary[];
-  selectedPropId: number | null;
+  memosInFolder: ViewModel[];
+  selectedMemoId: string | null;
   didInitPlanFromApi: boolean;
 };
 
 type Actions = {
   setPlanId: (planId: number) => void;
   setFolderId: (folderId: number) => void;
-  setSelectedPropId: (propertyId: number | null) => void;
+  setSelectedMemoId: (memoId: string | null) => void;
+  setMemosInFolder: (memos: ViewModel[]) => void;
   initPlanFromApi: (plans: Array<{ planId: number; createdAt: string }>) => void;
 };
 
@@ -29,36 +29,36 @@ const initialPlans = getPlans();
 const initialPlanId = initialPlans[0]?.planId ?? 1;
 const initialFolders = getFolders(initialPlanId);
 const initialFolderId = initialFolders[0]?.folderId ?? 0;
-const initialProps = getPropertiesByFolder(initialFolderId);
+const initialMemos: ViewModel[] = [];
 
 export const useMapStore = create<State & Actions>((set, get) => ({
   plans: initialPlans,
   planId: initialPlanId,
   folders: initialFolders,
   folderId: initialFolderId,
-  propsInFolder: initialProps,
-  selectedPropId: null,
+  memosInFolder: initialMemos,
+  selectedMemoId: null,
   didInitPlanFromApi: false,
 
   setPlanId: (planId) => {
     const folders = getFolders(planId);
     const folderId = folders[0]?.folderId ?? 0;
-    const propsInFolder = getPropertiesByFolder(folderId);
     set({
       planId,
       folders,
       folderId,
-      propsInFolder,
-      selectedPropId: null,
+      memosInFolder: [],
+      selectedMemoId: null,
     });
   },
 
   setFolderId: (folderId) => {
-    const propsInFolder = getPropertiesByFolder(folderId);
-    set({ folderId, propsInFolder, selectedPropId: null });
+    set({ folderId, memosInFolder: [], selectedMemoId: null });
   },
 
-  setSelectedPropId: (propertyId) => set({ selectedPropId: propertyId }),
+  setSelectedMemoId: (memoId) => set({ selectedMemoId: memoId }),
+
+  setMemosInFolder: (memos) => set({ memosInFolder: memos }),
 
   // 최초 한 번만 API의 최신 계획으로 planId 초기화 (스토어 plans 자체는 유지)
   initPlanFromApi: (plansFromApi) => {
@@ -74,17 +74,3 @@ export const useMapStore = create<State & Actions>((set, get) => ({
     set({ didInitPlanFromApi: true });
   },
 }));
-
-export const selectMarkers = (s: State) =>
-  s.propsInFolder.map((p) => ({
-    id: p.propertyId,
-    lat: p.latitude,
-    lng: p.longitude,
-    type: (p as any).memoType ?? 'PROPERTY',
-    active: s.selectedPropId === p.propertyId,
-  }));
-
-export const selectSelectedProp = (s: State) =>
-  s.selectedPropId
-    ? (s.propsInFolder.find((p) => p.propertyId === s.selectedPropId) ?? null)
-    : null;

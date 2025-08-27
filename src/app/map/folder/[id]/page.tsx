@@ -7,7 +7,6 @@ import { Icon } from '@/components/ui/Icon';
 import { MainLayout } from '@/components/layout';
 import { Header } from '@/components/ui/Header';
 import { TabBox, TabBoxList, TabBoxTrigger } from '@/components/ui/TabBox';
-import { getPropertyDetail } from '@/components/map/mapData';
 import { BodyS, BodyXl, TitleS, TitleXs } from '@/components/ui/Typography';
 import { getFeelingColor, getFeelingIconName } from '@/utils/feeling';
 import { getContractLabel } from '@/utils/labels';
@@ -17,6 +16,7 @@ import { MemoOverlay } from '@/components/map/Map/MemoOverlay';
 import { useSelectedPlanName } from '@/hooks/useSelectedPlanName';
 import { usePlansQuery } from '@/queries/plan/usePlansQuery';
 import { useFoldersQuery } from '@/queries/folder/useFoldersQuery';
+import { useFolderMemosQuery } from '@/queries/folder/useFolderMemosQuery';
 import IcoEmpty from '@assets/ico-empty.svg';
 import { Loading } from '@/components/ui/Loading';
 
@@ -46,8 +46,9 @@ export default function FolderDetailPage() {
     isFetching: isFetchingFolders,
   } = useFoldersQuery(effectivePlanId as number, shouldQuery);
   const setFolderId = useMapStore((s) => s.setFolderId);
-  const propsInFolder = useMapStore((s) => s.propsInFolder);
-  const setSelectedPropId = useMapStore((s) => s.setSelectedPropId);
+  const memosInFolder = useMapStore((s) => s.memosInFolder);
+  const setMemosInFolder = useMapStore((s) => (s as any).setMemosInFolder);
+  const setSelectedMemoId = useMapStore((s) => (s as any).setSelectedMemoId);
   const { isOpen, openModal, closeModal } = useModal(false);
 
   React.useEffect(() => {
@@ -64,6 +65,19 @@ export default function FolderDetailPage() {
     }
   }, [searchParams, setPlanId]);
 
+  const {
+    data: memos,
+    isFetching: isFetchingMemos,
+    isLoading: isLoadingMemos,
+    isSuccess: isMemosSuccess,
+  } = useFolderMemosQuery(folderIdFromParams, true);
+
+  React.useEffect(() => {
+    if (isMemosSuccess && memos && useMapStore.getState().memosInFolder !== memos) {
+      setMemosInFolder(memos);
+    }
+  }, [isMemosSuccess, memos, setMemosInFolder]);
+
   const currentFolderName = useMemo(() => {
     const fromApi = foldersFromApi.find((f) => f.folderId === folderIdFromParams)?.name;
     if (fromApi) return fromApi;
@@ -71,7 +85,8 @@ export default function FolderDetailPage() {
     return fromStore ?? '폴더';
   }, [foldersFromApi, storeFolders, folderIdFromParams]);
 
-  const isLoading = isLoadingPlans || (shouldQuery && (isLoadingFolders || isFetchingFolders));
+  const isLoading =
+    isLoadingPlans || (shouldQuery && (isLoadingFolders || isFetchingFolders)) || isLoadingMemos;
 
   return (
     <MainLayout className="flex min-h-0 flex-col">
@@ -130,33 +145,32 @@ export default function FolderDetailPage() {
             />
           )}
           {!isLoading &&
-            propsInFolder.map((p) => {
-              const detail = getPropertyDetail(p.propertyId);
-              const feelingIcon = getFeelingIconName(p.feeling);
-              const feelingColor = getFeelingColor(p.feeling);
+            memosInFolder.map((m) => {
+              const feelingIcon = m.feeling ? getFeelingIconName(m.feeling as any) : 'soSo';
+              const feelingColor = m.feeling ? getFeelingColor(m.feeling) : 'neutral';
               return (
                 <button
-                  key={p.propertyId}
+                  key={m.id}
                   onClick={() => {
-                    setSelectedPropId(p.propertyId);
+                    setSelectedMemoId(m.id);
                     const href =
-                      p.memoType === 'NEARBY'
-                        ? `/map/nearby-memo/${p.propertyId}`
-                        : `/map/house-memo/${p.propertyId}`;
+                      m.type === 'NEARBY'
+                        ? `/map/nearby-memo/${m.id.replace('near_', '')}`
+                        : `/map/house-memo/${m.id.replace('prop_', '')}`;
                     router.push(href);
                   }}
                   className="flex cursor-pointer items-center gap-3 py-[18px] text-left"
                 >
-                  {p.memoType === 'NEARBY' ? (
+                  {m.type === 'NEARBY' ? (
                     <>
                       <div className="bg-secondary-10 flex h-13 w-13 items-center justify-center rounded-2xl">
                         <Icon name="favorite" color="secondary" width={32} height={32} />
                       </div>
                       <div className="flex min-w-0 flex-1 flex-col">
                         <div className="flex items-center gap-1">
-                          <TitleXs>{p.propertyName}</TitleXs>
+                          <TitleXs>{m.title}</TitleXs>
                         </div>
-                        <BodyS className="text-neutral-80 mt-1 line-clamp-1">{p.memo ?? '-'}</BodyS>
+                        <BodyS className="text-neutral-80 mt-1 line-clamp-1">{m.memo ?? '-'}</BodyS>
                       </div>
                     </>
                   ) : (
@@ -172,21 +186,21 @@ export default function FolderDetailPage() {
                             height={18}
                             color={feelingColor}
                           />
-                          <TitleXs>{p.propertyName}</TitleXs>
+                          <TitleXs>{m.title}</TitleXs>
                         </div>
                         <BodyS className="text-neutral-80 mt-1 line-clamp-1">
-                          {getContractLabel(p.contractType)}&nbsp;
+                          {getContractLabel(m.contractType as any)}&nbsp;
                           <span>
                             {[
-                              p.depositBig ? `${p.depositBig}억` : null,
-                              p.depositSmall
-                                ? `${p.depositSmall}${p.depositBig ? '만원' : ''}`
+                              m.depositBig ? `${m.depositBig}억` : null,
+                              m.depositSmall
+                                ? `${m.depositSmall}${m.depositBig ? '만원' : ''}`
                                 : null,
                             ]
                               .filter(Boolean)
                               .join(' ')}
                           </span>
-                          /<span>{p.managementFee ? `${p.managementFee}` : ''}</span>
+                          /<span>{m.managementFee ? `${m.managementFee}` : ''}</span>
                         </BodyS>
                       </div>
                     </>
@@ -195,7 +209,7 @@ export default function FolderDetailPage() {
                 </button>
               );
             })}
-          {!isLoading && propsInFolder.length === 0 && (
+          {!isLoading && memosInFolder.length === 0 && (
             <div className="mb-[168px] flex h-full flex-col items-center justify-center gap-6 text-center text-sm text-black/50">
               <IcoEmpty className="mr-20 h-[200px] w-[200px]" />
               <TitleXs className="text-[20px]">해당 폴더에 매물이 없어요</TitleXs>

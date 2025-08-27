@@ -1,24 +1,24 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { MapPin, type MemoType, type NearbyTag } from './MapPin';
+import { MapPin, type MemoType, type placeTag } from './MapPin';
 
 type PreviewProps = {
   type: MemoType;
-  nearTag?: NearbyTag;
+  placeTag?: placeTag;
   size?: number;
   active?: boolean;
 };
 
-function MapPinPreview({ type, nearTag, size = 64, active = false }: PreviewProps) {
+function MapPinPreview({ type, placeTag, size = 64, active = false }: PreviewProps) {
   const hostRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     if (!hostRef.current) return;
     hostRef.current.innerHTML = '';
-    const node = MapPin({ type, nearTag, size, active });
+    const node = MapPin({ type, placeTag, size, active });
     hostRef.current.appendChild(node);
-  }, [type, nearTag, size, active]);
+  }, [type, placeTag, size, active]);
 
   return (
     <div
@@ -48,7 +48,7 @@ const meta = {
       control: 'inline-radio',
       options: ['PROPERTY', 'NEARBY'],
     },
-    nearTag: {
+    placeTag: {
       control: 'select',
       options: ['BAD', 'CONVENIENCE', 'GOOD', 'NOISE', 'SECURITY', 'TRAFFIC'],
     },
@@ -57,7 +57,7 @@ const meta = {
   },
   args: {
     type: 'PROPERTY',
-    nearTag: 'GOOD',
+    placeTag: 'ADVANTAGE',
     size: 64,
     active: false,
   },
@@ -74,19 +74,26 @@ export const BothTypes: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 16 }}>
       <MapPinPreview type="PROPERTY" size={64} />
-      <MapPinPreview type="NEARBY" size={64} nearTag="GOOD" />
+      <MapPinPreview type="NEARBY" size={64} placeTag="ADVANTAGE" />
     </div>
   ),
 };
 
 export const NearbyTags: Story = {
   render: () => {
-    const tags: NearbyTag[] = ['BAD', 'CONVENIENCE', 'GOOD', 'NOISE', 'SECURITY', 'TRAFFIC'];
+    const tags: placeTag[] = [
+      'DISADVANTAGE',
+      'CONVENIENCE',
+      'ADVANTAGE',
+      'NOISE',
+      'SECURITY',
+      'TRANSPORTATION',
+    ];
     return (
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
         {tags.map((t) => (
           <div key={t} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <MapPinPreview type="NEARBY" size={64} nearTag={t} />
+            <MapPinPreview type="NEARBY" size={64} placeTag={t} />
             <div style={{ marginTop: 8, fontSize: 12, color: '#666' }}>{t}</div>
           </div>
         ))}

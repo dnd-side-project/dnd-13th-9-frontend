@@ -11,6 +11,7 @@ import type { Swiper as SwiperClass } from 'swiper';
 import { useMapStore } from '@/stores/useMapStore';
 import { usePlansQuery } from '@/queries/plan/usePlansQuery';
 import { useFoldersQuery } from '@/queries/folder/useFoldersQuery';
+import { useFolderMemosQuery } from '@/queries/folder/useFolderMemosQuery';
 
 function pickLatestByCreatedAt<T extends { createdAt: string }>(items: T[]): T | undefined {
   if (!items || items.length === 0) return undefined;
@@ -33,6 +34,13 @@ export function MapChips() {
   }, [didInit, planId, plans]);
   const shouldQuery = Boolean(effectivePlanId);
   const { data: folders = [] } = useFoldersQuery(effectivePlanId as number, shouldQuery);
+  const folderIdForQuery = folderId || (folders[0]?.folderId ?? null);
+  const { data: memos, isSuccess: isMemosSuccess } = useFolderMemosQuery(
+    folderIdForQuery as number,
+    Boolean(folderIdForQuery)
+  );
+  const setMemosInFolder = useMapStore((s) => (s as any).setMemosInFolder);
+  const memosInStore = useMapStore((s) => s.memosInFolder);
 
   const planOptions = useMemo(() => plans.map((p) => ({ id: p.planId, label: p.name })), [plans]);
   const selectedPlanId = planId;
@@ -44,6 +52,11 @@ export function MapChips() {
       (useMapStore.getState().initPlanFromApi as any)(plansFromApi);
     }
   }, [plansFromApi]);
+
+  // 폴더 변경되거나 쿼리 응답 오면 스토어 업데이트
+  useEffect(() => {
+    if (isMemosSuccess && memos && memos !== memosInStore) setMemosInFolder(memos);
+  }, [isMemosSuccess, memos, memosInStore, setMemosInFolder]);
 
   // 스와이퍼/칩 포커스 제어를 위한 ref
   const folderSwiperRef = useRef<SwiperClass | null>(null);
