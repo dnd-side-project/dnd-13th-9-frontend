@@ -12,12 +12,18 @@ import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { TitleS } from '@/components/ui/Typography';
 import { ChecklistGuideModal } from '@/components/HouseMemo/ChecklistGuideModal';
+import { DeleteDataModal } from '@/components/ui/DeleteDataModal';
 import { useRouter } from 'next/navigation';
 import { useHouseMemo } from '@/contexts/HouseMemoContext';
 import { houseMemoValidationSchema, validateWithZod } from '@/utils/validation';
 
 function HouseMemoContent() {
   const { isOpen, closeModal, openModal } = useModal();
+  const {
+    isOpen: isDeleteModalOpen,
+    closeModal: closeDeleteModal,
+    openModal: openDeleteModal,
+  } = useModal();
   const router = useRouter();
   const { houseMemo } = useHouseMemo();
 
@@ -44,6 +50,17 @@ function HouseMemoContent() {
     });
   };
 
+  const handleBackClick = () => {
+    openDeleteModal();
+  };
+
+  const handleDeleteConfirm = () => {
+    closeDeleteModal();
+    localStorage.removeItem('houseMemo');
+    localStorage.removeItem('images');
+    router.back();
+  };
+
   return (
     <>
       <Header
@@ -54,7 +71,7 @@ function HouseMemoContent() {
             className="cursor-pointer"
             size={24}
             padding={10}
-            onClick={() => window.history.back()}
+            onClick={handleBackClick}
           />
         }
         title="매물 메모"
@@ -85,6 +102,11 @@ function HouseMemoContent() {
       </Tabs>
 
       <ChecklistGuideModal isOpen={isOpen} closeModal={closeModal} />
+      <DeleteDataModal
+        isOpen={isDeleteModalOpen}
+        closeModal={closeDeleteModal}
+        onConfirm={handleDeleteConfirm}
+      />
     </>
   );
 }
