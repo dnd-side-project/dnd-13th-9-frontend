@@ -91,13 +91,12 @@ export function NearbyInfoForm() {
 
       {isOpen && (
         <SearchMapBottomSheet
-          existAddress={nearbyMemo.address ? { address: nearbyMemo.address } : undefined}
           isOpen={isOpen}
           closeModal={close}
           onSelect={(address) => {
             handleFieldChange('address', address.address);
-            handleFieldChange('latitude', address.y);
-            handleFieldChange('longitude', address.x);
+            handleFieldChange('latitude', Number(address.y));
+            handleFieldChange('longitude', Number(address.x));
           }}
         />
       )}

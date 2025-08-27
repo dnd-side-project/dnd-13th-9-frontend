@@ -135,7 +135,7 @@ export function BaseInfoForm() {
           existAddress={
             houseMemo.address
               ? {
-                  address_name: houseMemo.address,
+                  address: houseMemo.address,
                   place_name: houseMemo.address,
                   x: houseMemo.longitude,
                   y: houseMemo.latitude,
@@ -148,7 +148,7 @@ export function BaseInfoForm() {
             console.log('지도에서 주소 선택:', address);
             setHouseMemo((prev) => ({
               ...prev,
-              address: address.address_name || '',
+              address: address.address || '',
               longitude: String(address.x),
               latitude: String(address.y),
             }));

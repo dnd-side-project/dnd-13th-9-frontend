@@ -12,12 +12,7 @@ type Props = {
   closeModal: () => void;
 };
 
-export default function SearchMapBottomSheet({
-  existAddress,
-  onSelect,
-  isOpen,
-  closeModal,
-}: Props) {
+export default function SearchMapBottomSheet({ onSelect, isOpen, closeModal }: Props) {
   const [searchValue, setSearchValue] = useState('');
 
   return (
@@ -40,7 +35,7 @@ export default function SearchMapBottomSheet({
             onSelect({
               x: place.x,
               y: place.y,
-              address_name: place.address_name,
+              address: place.address_name,
               place_name: place.place_name,
             });
             closeModal();
