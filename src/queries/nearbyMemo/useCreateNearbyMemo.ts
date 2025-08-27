@@ -67,8 +67,6 @@ export function useCreateNearbyMemo() {
       return result;
     },
     onSuccess: (data) => {
-      console.log('주변메모 생성 성공:', data);
-
       queryClient.invalidateQueries({
         queryKey: ['nearby-memo'],
       });
