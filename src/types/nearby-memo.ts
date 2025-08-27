@@ -41,3 +41,11 @@ export type ApiResponse<T> = {
   message: string;
   data: T;
 };
+
+export type CreateNearbyMemoResponse = {
+  code: string;
+  message: string;
+  data: {
+    placeMemoId: number;
+  };
+};

@@ -21,6 +21,11 @@ export const doubleInputFields: { key: DoubleInputFieldKey; placeholder: string;
 
 export const InputFields: HouseMemoInputField[] = [
   {
+    key: 'detailAddress',
+    label: '상세 주소',
+    placeholder: '동/호수 등 상세 주소를 입력하세요.',
+  },
+  {
     key: 'propertyName',
     label: '매물명',
     placeholder: '지도에 표시될 제목을 입력하세요.',
@@ -38,11 +43,7 @@ export const InputFields: HouseMemoInputField[] = [
     placeholder: '현재 위치 버튼을 클릭하거나 지도를 터치하여 주소를 선택하세요.',
     required: true,
   },
-  {
-    key: 'detailAddress',
-    label: '상세 주소',
-    placeholder: '동/호수 등 상세 주소를 입력하세요.',
-  },
+
   { key: 'managementFee', label: '관리비', placeholder: '예) 9', unit: '만원' },
   { key: 'moveInInfo', label: '입주 가능 시기', placeholder: '예) 9월 초' },
 ];

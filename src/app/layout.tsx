@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { HouseMemoProvider } from '@/components/providers/house-memo-provider';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -23,7 +24,10 @@ export default function RootLayout({
       </head>
       <body className="h-dvh overflow-hidden bg-gray-100 antialiased" suppressHydrationWarning>
         <HouseMemoProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <Toaster position="top-center" reverseOrder={false} />
+          </QueryProvider>
         </HouseMemoProvider>
       </body>
     </html>

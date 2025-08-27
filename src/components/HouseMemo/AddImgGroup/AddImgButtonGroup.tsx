@@ -30,7 +30,7 @@ export function AddImgButtonGroup({
   const displayImages = storageKey ? localImages : images.map((img) => img.url);
 
   return (
-    <div className="flex min-h-[225px] max-w-[720px] gap-2 overflow-x-auto px-1">
+    <div className="scrollbar-hidden flex min-h-[225px] max-w-[720px] gap-2 overflow-x-auto px-1">
       <AddImgButton
         size="lg"
         index={0}

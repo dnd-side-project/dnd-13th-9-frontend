@@ -70,6 +70,24 @@ export function BaseInfoForm() {
         </div>
       </LabelContainer>
 
+      {/* 보증금 */}
+      {houseMemo.contractType === 'MONTHLY_RENT' && (
+        <LabelContainer label="보증금">
+          <div className="flex gap-2">
+            {doubleInputFields.map(({ key, placeholder, unit }) => (
+              <Input
+                key={key}
+                placeholder={placeholder}
+                value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
+                onChange={(e) => handleFieldChange(key, Number(e.target.value))}
+                unit={unit}
+                className="w-30 max-w-47"
+              />
+            ))}
+          </div>
+        </LabelContainer>
+      )}
+
       {/* 집 유형 */}
       <LabelContainer label="집 유형">
         <div className="flex flex-wrap gap-2">
@@ -79,22 +97,6 @@ export function BaseInfoForm() {
             onChange={(val) => handleFieldChange('houseType', val as HouseType)}
             activeChipColor="primary"
           />
-        </div>
-      </LabelContainer>
-
-      {/* 보증금 */}
-      <LabelContainer label="보증금">
-        <div className="flex gap-2">
-          {doubleInputFields.map(({ key, placeholder, unit }) => (
-            <Input
-              key={key}
-              placeholder={placeholder}
-              value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
-              onChange={(e) => handleFieldChange(key, Number(e.target.value))}
-              unit={unit}
-              className="w-30 max-w-47"
-            />
-          ))}
         </div>
       </LabelContainer>
 

@@ -13,10 +13,13 @@ import { Icon } from '@/components/ui/Icon';
 import { TitleS } from '@/components/ui/Typography';
 import { ChecklistGuideModal } from '@/components/HouseMemo/ChecklistGuideModal';
 import { useRouter } from 'next/navigation';
+import { useHouseMemo } from '@/contexts/HouseMemoContext';
+import { houseMemoValidationSchema, validateWithZod } from '@/utils/validation';
 
-export default function page() {
+function HouseMemoContent() {
   const { isOpen, closeModal, openModal } = useModal();
   const router = useRouter();
+  const { houseMemo } = useHouseMemo();
 
   const { data } = useChecklistInfo();
 
@@ -26,49 +29,69 @@ export default function page() {
     openModal();
   }, [data]);
 
+  const handleComplete = () => {
+    const validationData = {
+      contractType: houseMemo.contractType,
+      address: houseMemo.address,
+      propertyName: houseMemo.propertyName,
+    };
+
+    validateWithZod(houseMemoValidationSchema, validationData, () => {
+      router.push('house-memo/select-map-list');
+    });
+  };
+
+  return (
+    <>
+      <Header
+        left={
+          <Icon
+            name="arrowLeft"
+            color="neutral"
+            className="cursor-pointer"
+            size={24}
+            padding={10}
+            onClick={() => window.history.back()}
+          />
+        }
+        title="매물 메모"
+        right={
+          <TitleS
+            className="text-primary-50 cursor-pointer px-3 whitespace-nowrap"
+            onClick={handleComplete}
+          >
+            완료
+          </TitleS>
+        }
+      />
+      <AddImgButtonGroup />
+      <Tabs defaultValue="baseInfo">
+        <div className="px-6">
+          <TabsList>
+            <TabsTrigger.Bar value="baseInfo">기본 정보</TabsTrigger.Bar>
+            <TabsTrigger.Bar value="checkList">체크 리스트</TabsTrigger.Bar>
+          </TabsList>
+        </div>
+
+        <TabsContent value="baseInfo">
+          <BaseInfo />
+        </TabsContent>
+        <TabsContent value="checkList">
+          <CheckList />
+        </TabsContent>
+      </Tabs>
+
+      <ChecklistGuideModal isOpen={isOpen} closeModal={closeModal} />
+    </>
+  );
+}
+
+export default function page() {
   return (
     <MainLayout>
       <HouseMemoProvider>
-        <Header
-          left={
-            <Icon
-              name="arrowLeft"
-              color="neutral"
-              className="cursor-pointer"
-              size={24}
-              padding={10}
-              onClick={() => window.history.back()}
-            />
-          }
-          title="매물 메모"
-          right={
-            <TitleS
-              className="text-primary-50 px-3 whitespace-nowrap"
-              onClick={() => router.push('house-memo/select-map-list')}
-            >
-              완료
-            </TitleS>
-          }
-        />
-        <AddImgButtonGroup />
-        <Tabs defaultValue="baseInfo">
-          <div className="px-6">
-            <TabsList>
-              <TabsTrigger.Bar value="baseInfo">기본 정보</TabsTrigger.Bar>
-              <TabsTrigger.Bar value="checkList">체크 리스트</TabsTrigger.Bar>
-            </TabsList>
-          </div>
-
-          <TabsContent value="baseInfo">
-            <BaseInfo />
-          </TabsContent>
-          <TabsContent value="checkList">
-            <CheckList />
-          </TabsContent>
-        </Tabs>
+        <HouseMemoContent />
       </HouseMemoProvider>
-
-      <ChecklistGuideModal isOpen={isOpen} closeModal={closeModal} />
     </MainLayout>
   );
 }

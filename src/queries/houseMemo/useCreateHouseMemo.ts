@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createHouseMemo } from '@/services/house.memo';
 import { HouseMemo } from '@/types/house-memo';
+import toast from 'react-hot-toast';
 
 type CreatePropertyParams = {
   houseMemo: HouseMemo;
@@ -86,6 +87,7 @@ export function useCreateProperty() {
       queryClient.invalidateQueries({
         queryKey: ['house-memo'],
       });
+      toast.success('매물 정보가 저장되었습니다!');
     },
     onError: (error: any) => {
       console.error('Error creating property:', error);
