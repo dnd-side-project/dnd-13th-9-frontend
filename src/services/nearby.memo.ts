@@ -4,11 +4,11 @@ import { api } from '@/lib/api/ky';
 import { NearbyMemoById, ApiResponse } from '@/types/nearby-memo';
 
 export async function createNearbyMemo(formData: FormData): Promise<NearbyMemo> {
-  const res = apiFormData.post('api/placeMemo', {
+  const res = await apiFormData.post('api/placeMemo', {
     body: formData,
   });
 
-  return res.json<NearbyMemo>();
+  return await res.json<NearbyMemo>();
 }
 
 export async function getNearbyMemoById(id: string): Promise<ApiResponse<NearbyMemoById>> {
