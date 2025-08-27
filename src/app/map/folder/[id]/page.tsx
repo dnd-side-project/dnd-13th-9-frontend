@@ -8,7 +8,7 @@ import { MainLayout } from '@/components/layout';
 import { Header } from '@/components/ui/Header';
 import { TabBox, TabBoxList, TabBoxTrigger } from '@/components/ui/TabBox';
 import { getPropertyDetail } from '@/components/map/mapData';
-import { BodyS, BodyXl, TitleXs } from '@/components/ui/Typography';
+import { BodyS, BodyXl, TitleS, TitleXs } from '@/components/ui/Typography';
 import { getFeelingColor, getFeelingIconName } from '@/utils/feeling';
 import { getContractLabel } from '@/utils/labels';
 import useModal from '@/hooks/useModal';
@@ -17,6 +17,8 @@ import { MemoOverlay } from '@/components/map/Map/MemoOverlay';
 import { useSelectedPlanName } from '@/hooks/useSelectedPlanName';
 import { usePlansQuery } from '@/queries/plan/usePlansQuery';
 import { useFoldersQuery } from '@/queries/folder/useFoldersQuery';
+import IcoEmpty from '@assets/ico-empty.svg';
+import { Loading } from '@/components/ui/Loading';
 
 export default function FolderDetailPage() {
   const params = useParams<{ id: string }>();
@@ -29,7 +31,7 @@ export default function FolderDetailPage() {
   const storeFolders = useMapStore((s) => s.folders);
   const planName = useSelectedPlanName();
   const setPlanId = useMapStore((s) => s.setPlanId);
-  const { data: plansFromApi } = usePlansQuery();
+  const { data: plansFromApi, isLoading: isLoadingPlans } = usePlansQuery();
   const plans = plansFromApi ?? [];
   const effectivePlanId = useMemo(() => {
     if (didInit) return planId;
@@ -38,7 +40,11 @@ export default function FolderDetailPage() {
     )[0]?.planId;
   }, [didInit, planId, plans]);
   const shouldQuery = Boolean(effectivePlanId);
-  const { data: foldersFromApi = [] } = useFoldersQuery(effectivePlanId as number, shouldQuery);
+  const {
+    data: foldersFromApi = [],
+    isLoading: isLoadingFolders,
+    isFetching: isFetchingFolders,
+  } = useFoldersQuery(effectivePlanId as number, shouldQuery);
   const setFolderId = useMapStore((s) => s.setFolderId);
   const propsInFolder = useMapStore((s) => s.propsInFolder);
   const setSelectedPropId = useMapStore((s) => s.setSelectedPropId);
@@ -65,6 +71,8 @@ export default function FolderDetailPage() {
     return fromStore ?? '폴더';
   }, [foldersFromApi, storeFolders, folderIdFromParams]);
 
+  const isLoading = isLoadingPlans || (shouldQuery && (isLoadingFolders || isFetchingFolders));
+
   return (
     <MainLayout className="flex min-h-0 flex-col">
       <Header
@@ -73,7 +81,6 @@ export default function FolderDetailPage() {
             name="arrowLeft"
             className="cursor-pointer"
             size={24}
-            padding={10}
             onClick={() => router.push('/map?tab=list')}
           />
         }
@@ -96,84 +103,102 @@ export default function FolderDetailPage() {
             </TabBoxList>
           </TabBox>
         }
+        right={
+          <Icon
+            name="house"
+            color="coolGray-50"
+            className="cursor-pointer"
+            size={24}
+            onClick={() => router.push('/')}
+          />
+        }
       />
 
-      <div className="min-h-0 grow overflow-auto px-6 py-3">
+      <div className="min-h-0 grow overflow-hidden px-6 py-3">
         <div className="flex items-center gap-2 text-sm text-black">
           <TitleXs>{planName ?? '계획'}</TitleXs>
           <BodyXl className="text-neutral-60">›</BodyXl>
           <BodyXl className="font-semibold text-black">{currentFolderName}</BodyXl>
         </div>
 
-        <div className="mt-1 flex min-h-0 flex-col divide-y divide-black/5 rounded-xl bg-white">
-          {propsInFolder.map((p) => {
-            const detail = getPropertyDetail(p.propertyId);
-            const feelingIcon = getFeelingIconName(p.feeling);
-            const feelingColor = getFeelingColor(p.feeling);
-            return (
-              <button
-                key={p.propertyId}
-                onClick={() => {
-                  setSelectedPropId(p.propertyId);
-                  const href =
-                    p.memoType === 'NEARBY'
-                      ? `/map/nearby-memo/${p.propertyId}`
-                      : `/map/house-memo/${p.propertyId}`;
-                  router.push(href);
-                }}
-                className="flex cursor-pointer items-center gap-3 py-[18px] text-left"
-              >
-                {p.memoType === 'NEARBY' ? (
-                  <>
-                    <div className="bg-secondary-10 flex h-13 w-13 items-center justify-center rounded-2xl">
-                      <Icon name="favorite" color="secondary" width={32} height={32} />
-                    </div>
-                    <div className="flex min-w-0 flex-1 flex-col">
-                      <div className="flex items-center gap-1">
-                        <TitleXs>{p.propertyName}</TitleXs>
+        <div className="mt-1 flex h-full flex-col divide-y divide-black/5 rounded-xl bg-white">
+          {isLoading && (
+            <Loading
+              className="flex h-full items-center justify-center"
+              size="large"
+              color="primary"
+            />
+          )}
+          {!isLoading &&
+            propsInFolder.map((p) => {
+              const detail = getPropertyDetail(p.propertyId);
+              const feelingIcon = getFeelingIconName(p.feeling);
+              const feelingColor = getFeelingColor(p.feeling);
+              return (
+                <button
+                  key={p.propertyId}
+                  onClick={() => {
+                    setSelectedPropId(p.propertyId);
+                    const href =
+                      p.memoType === 'NEARBY'
+                        ? `/map/nearby-memo/${p.propertyId}`
+                        : `/map/house-memo/${p.propertyId}`;
+                    router.push(href);
+                  }}
+                  className="flex cursor-pointer items-center gap-3 py-[18px] text-left"
+                >
+                  {p.memoType === 'NEARBY' ? (
+                    <>
+                      <div className="bg-secondary-10 flex h-13 w-13 items-center justify-center rounded-2xl">
+                        <Icon name="favorite" color="secondary" width={32} height={32} />
                       </div>
-                      <BodyS className="text-neutral-80 mt-1 line-clamp-1">{p.memo ?? '-'}</BodyS>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="bg-coolGray-20 flex h-13 w-13 items-center justify-center rounded-2xl">
-                      <Icon name="house" color="primary-50" width={32} height={32} />
-                    </div>
-                    <div className="flex min-w-0 flex-1 flex-col">
-                      <div className="flex items-center gap-1">
-                        <Icon
-                          name={feelingIcon as any}
-                          width={18}
-                          height={18}
-                          color={feelingColor}
-                        />
-                        <TitleXs>{p.propertyName}</TitleXs>
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        <div className="flex items-center gap-1">
+                          <TitleXs>{p.propertyName}</TitleXs>
+                        </div>
+                        <BodyS className="text-neutral-80 mt-1 line-clamp-1">{p.memo ?? '-'}</BodyS>
                       </div>
-                      <BodyS className="text-neutral-80 mt-1 line-clamp-1">
-                        {getContractLabel(p.contractType)}&nbsp;
-                        <span>
-                          {[
-                            p.depositBig ? `${p.depositBig}억` : null,
-                            p.depositSmall
-                              ? `${p.depositSmall}${p.depositBig ? '만원' : ''}`
-                              : null,
-                          ]
-                            .filter(Boolean)
-                            .join(' ')}
-                        </span>
-                        /<span>{p.managementFee ? `${p.managementFee}` : ''}</span>
-                      </BodyS>
-                    </div>
-                  </>
-                )}
-                <Icon name="more" color="coolGray-50" />
-              </button>
-            );
-          })}
-          {propsInFolder.length === 0 && (
-            <div className="p-6 text-center text-sm text-black/50">
-              해당 폴더에 매물이 없습니다.
+                    </>
+                  ) : (
+                    <>
+                      <div className="bg-coolGray-20 flex h-13 w-13 items-center justify-center rounded-2xl">
+                        <Icon name="house" color="primary-50" width={32} height={32} />
+                      </div>
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        <div className="flex items-center gap-1">
+                          <Icon
+                            name={feelingIcon as any}
+                            width={18}
+                            height={18}
+                            color={feelingColor}
+                          />
+                          <TitleXs>{p.propertyName}</TitleXs>
+                        </div>
+                        <BodyS className="text-neutral-80 mt-1 line-clamp-1">
+                          {getContractLabel(p.contractType)}&nbsp;
+                          <span>
+                            {[
+                              p.depositBig ? `${p.depositBig}억` : null,
+                              p.depositSmall
+                                ? `${p.depositSmall}${p.depositBig ? '만원' : ''}`
+                                : null,
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                          </span>
+                          /<span>{p.managementFee ? `${p.managementFee}` : ''}</span>
+                        </BodyS>
+                      </div>
+                    </>
+                  )}
+                  <Icon name="more" color="coolGray-50" />
+                </button>
+              );
+            })}
+          {!isLoading && propsInFolder.length === 0 && (
+            <div className="mb-[168px] flex h-full flex-col items-center justify-center gap-6 text-center text-sm text-black/50">
+              <IcoEmpty className="mr-20 h-[200px] w-[200px]" />
+              <TitleXs className="text-[20px]">해당 폴더에 매물이 없어요</TitleXs>
             </div>
           )}
         </div>
