@@ -30,3 +30,14 @@ export type NearbyMemoInputField = {
   required?: boolean;
   unit?: string;
 };
+
+export type NearbyMemoById = NearbyMemo & {
+  id: number;
+  imageUrls: string[];
+};
+
+export type ApiResponse<T> = {
+  code: string;
+  message: string;
+  data: T;
+};
