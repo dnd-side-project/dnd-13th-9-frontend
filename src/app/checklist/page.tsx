@@ -15,6 +15,7 @@ import { checkListData } from '@/app/checklist/checkListData';
 import { Button } from '@/components/ui/Button';
 import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
+import { useSendRequiredItems } from '@/queries/checkList/useSendRequiredItems';
 
 export default function page() {
   const [sections, setSections] = useState(checkListData.sections);
@@ -32,6 +33,17 @@ export default function page() {
           : section
       )
     );
+  };
+
+  const { mutate, isPending } = useSendRequiredItems();
+
+  const handleClick = () => {
+    const filledIds = sections
+      .flatMap((section) => section.items)
+      .filter((item) => item.isFill)
+      .map((item) => item.id);
+
+    mutate({ itemIdList: filledIds });
   };
 
   return (
@@ -136,6 +148,8 @@ export default function page() {
       </div>
       <Button
         label="저장하기"
+        onClick={handleClick}
+        disabled={isPending}
         size="large"
         className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2"
       />
