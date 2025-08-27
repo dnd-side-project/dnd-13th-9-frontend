@@ -1,4 +1,10 @@
-export type PlaceTag = 'STRENGTH' | 'WEAKNESS' | 'CONVENIENCE' | 'TRANSPORT' | 'SAFETY' | 'NOISE';
+export type PlaceTag =
+  | 'ADVANTAGE'
+  | 'DISADVANTAGE'
+  | 'CONVENIENCE'
+  | 'TRANSPORTATION'
+  | 'SECURUTY'
+  | 'NOISE';
 
 export type NearbyMemo = {
   title: string;
