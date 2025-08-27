@@ -13,7 +13,7 @@ export default function Page() {
   const params = useParams();
   const id = params.id as string;
   const { data, isLoading, error } = useNearbyMemoInfoById(id);
-
+  //TODO :: suspense 적용 , 컴포넌트화
   if (isLoading) {
     return (
       <MainLayout>

@@ -111,8 +111,14 @@ export function BaseInfoForm() {
         <KakaoMap
           ref={mapRef}
           height="130px"
-          lat={houseMemo.latitude && houseMemo.latitude !== '' ? houseMemo.latitude : undefined}
-          lng={houseMemo.longitude && houseMemo.longitude !== '' ? houseMemo.longitude : undefined}
+          lat={
+            houseMemo.latitude && houseMemo.latitude !== '' ? Number(houseMemo.latitude) : undefined
+          }
+          lng={
+            houseMemo.longitude && houseMemo.longitude !== ''
+              ? Number(houseMemo.longitude)
+              : undefined
+          }
         />
       </LabelContainer>
 

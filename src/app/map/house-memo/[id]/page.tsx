@@ -14,6 +14,7 @@ import {
   Title2xl,
   TitleL,
 } from '@/components/ui/Typography';
+import type { ChecklistSection } from '@/types/house-memo';
 import { useHouseMemoInfoById } from '@/queries/houseMemo/useHouseMemoInfoById';
 import { Chip } from '@/components/ui/Chip';
 import { getContractLabel, getHouseTypeLabel } from '@/utils/labels';
@@ -187,8 +188,8 @@ export default function Page() {
           <TitleL className="bg-white py-2">체크리스트</TitleL>
 
           {houseMemo.checklist.sections
-            .filter((section) => section.memo)
-            .map((section) => (
+            .filter((section: ChecklistSection) => section.memo)
+            .map((section: ChecklistSection) => (
               <div
                 key={section.categoryId}
                 className="border-neutral-20 mb-4 rounded-lg border bg-white p-4"
