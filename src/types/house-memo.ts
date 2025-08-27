@@ -81,30 +81,6 @@ export type HouseMemoInputField = {
   unit?: string;
 };
 
-export type HouseMemoByIdData = {
-  images: Image[];
-  propertyId: number;
-  planId: number;
-  planName: string;
-  folderId: number;
-  folderName: string;
-  feeling: Feeling;
-  propertyName: string;
-  memo?: string;
-  referenceUrl?: string | null;
-  address: string;
-  detailAddress?: string;
-  latitude: number;
-  longitude: number;
-  contractType: ContractType;
-  houseType: HouseType;
-  depositBig?: number;
-  depositSmall?: number;
-  managementFee?: number | null;
-  moveInInfo?: string;
-  checklist: Checklist;
-};
-
 export type HouseMemoDataById = {
   images: Image[];
   propertyId: number;
