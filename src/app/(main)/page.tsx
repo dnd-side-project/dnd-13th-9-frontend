@@ -10,6 +10,9 @@ import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { useRouter } from 'next/navigation';
 import { useMyInfo } from '@/queries/user/useMyInfo';
+import { colors } from '@/utils/style/colors';
+import IcoZipText from '@assets/ico-zipzip-text.svg';
+import IcoZip from '@assets/ico-zipzip.svg';
 
 export default function HomePage() {
   const router = useRouter();
@@ -28,14 +31,11 @@ export default function HomePage() {
     <MainLayout>
       <Header
         left={
-          <Icon
-            name="house"
-            color="primary-50"
-            className="cursor-pointer"
-            size={24}
-            padding={10}
-            onClick={() => router.push('/')}
-          />
+          // <IcoZipText
+          //   className="h-[34px] w-[114px] cursor-pointer"
+          //   onClick={() => router.push('/')}
+          // />
+          <IcoZip className="h-10 w-10 cursor-pointer" onClick={() => router.push('/')} />
         }
         right={
           !isLoading && (
@@ -44,59 +44,69 @@ export default function HomePage() {
               color="coolGray-50"
               className="cursor-pointer"
               size={24}
-              padding={10}
               onClick={handleRightIconClick}
             />
           )
         }
       />
 
-      <div className="w-full px-6">
+      <div className="w-full px-6 pt-6">
         <VerticalSlider />
 
-        <div className="flex w-full flex-row justify-center gap-4 py-4">
+        <div className="flex w-full flex-row gap-[14px] py-5">
           <RouteBox
             routePath="/map"
             title="매물 지도"
             description="지도 위에 메모해둬야지"
-            bgColor="#669AFF"
+            bgColor={colors.primary[50]}
+            bgImageSrc="/assets/bg-main-map.svg"
+            bgImageClassName="min-[440px]:-bottom-15 -bottom-18"
+            overlayImageSrc="/assets/ico-main-map-pen.svg"
+            overlayClassName="min-[440px]:bottom-20 bottom-16 left-3 animate-float-slow"
             size="large"
           />
-          <div className="flex flex-col gap-4">
+          <div className="flex basis-1/2 flex-col gap-4">
             <RouteBox
               routePath="/checklist"
               title="체크리스트"
-              description="집 볼 땐 어떤걸 확인해야돼?"
-              bgColor="#FBA907"
+              description="집 볼 땐 어떤걸 확인해?"
+              bgColor={colors.secondary[50]}
+              bgImageSrc="/assets/bg-checklist.svg"
+              bgImageClassName="top-8 -right-1 rotate-30"
+              overlayImageSrc="/assets/ico-checklist-search.svg"
+              overlayClassName="animate-tilt-swing min-[440px]:left-[50%] left-[43%] -translate-x-1/2 bottom-4 rotate-50"
               size="small"
             />
             <RouteBox
               routePath="/vote"
-              title="최종 후보지 투표"
+              title="매물 비교 투표"
               description="친구야! 넌 어떻게 생각해?"
-              bgColor="#F4F4F4"
+              bgColor={colors.neutral[40]}
+              bgImageSrc="/assets/bg-main-vote.svg"
+              overlayImageSrc="/assets/ico-main-vote.svg"
+              overlayClassName="bottom-0 left-0 h-full animate-electric-jitter"
               size="small"
               textColor="#000000"
             />
           </div>
         </div>
 
-        <div className="flex py-3">
+        <div className="flex">
           <IconTextRouter
             label="바로 메모"
             routePath="map/house-memo"
             icoPath="/assets/ico-memo.svg"
           />
-          <IconTextRouter label="매물 리스트" routePath="/map" icoPath="/assets/ico-house.svg" />
+          <IconTextRouter label="내 메모.zip" routePath="/map" icoPath="/assets/ico-list.svg" />
           <IconTextRouter
             label="에티켓"
             routePath="/etiquette"
             icoPath="/assets/ico-etiquette.svg"
           />
-          <IconTextRouter label="자취팁 영상" routePath="/tip" icoPath="/assets/ico-video.svg" />
+          <IconTextRouter label="자취팁 영상" routePath="/tip" icoPath="/assets/ico-tip.svg" />
         </div>
 
-        <div className="py-6">
+        <div className="py-12">
           <TitleL>최근에 본 집</TitleL>
         </div>
       </div>

@@ -15,6 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
+          defer
+        ></script>
+      </head>
       <body className="h-dvh overflow-hidden bg-gray-100 antialiased" suppressHydrationWarning>
         <HouseMemoProvider>
           <QueryProvider>{children}</QueryProvider>

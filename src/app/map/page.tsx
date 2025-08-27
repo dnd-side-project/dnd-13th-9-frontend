@@ -64,7 +64,6 @@ export default function MapPage() {
               color="coolGray-50"
               className="cursor-pointer"
               size={24}
-              padding={10}
               onClick={() => router.push('/')}
             />
           }
