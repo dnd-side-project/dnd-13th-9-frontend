@@ -16,43 +16,6 @@ export function useCreateNearbyMemo() {
     mutationFn: async ({ selectedFolderId, images }) => {
       let formData = new FormData();
 
-      const getLatestNearbyMemo = (): NearbyMemo => {
-        if (nearbyMemo && nearbyMemo.title && nearbyMemo.address) {
-          return nearbyMemo;
-        }
-
-        if (typeof window === 'undefined') {
-          return {
-            title: '',
-            description: '',
-            placeTag: 'ADVANTAGE',
-            address: '',
-            latitude: 0,
-            longitude: 0,
-            folderId: 0,
-          };
-        }
-
-        try {
-          const stored = localStorage.getItem('nearbyMemo');
-          if (stored) {
-            return JSON.parse(stored);
-          }
-        } catch (error) {
-          console.error('Failed to parse nearby memo from localStorage:', error);
-        }
-
-        return {
-          title: '',
-          description: '',
-          placeTag: 'ADVANTAGE',
-          address: '',
-          latitude: 0,
-          longitude: 0,
-          folderId: 0,
-        };
-      };
-
       const getImagesFromStorage = (): string[] => {
         if (typeof window === 'undefined') return [];
         try {
@@ -63,7 +26,7 @@ export function useCreateNearbyMemo() {
         }
       };
 
-      const latestNearbyMemo = getLatestNearbyMemo();
+      const latestNearbyMemo = nearbyMemo;
 
       formData.append('title', latestNearbyMemo.title || '새로운 장소 메모');
       formData.append('description', latestNearbyMemo.description || '');
@@ -77,15 +40,20 @@ export function useCreateNearbyMemo() {
       if (imagesToProcess && imagesToProcess.length > 0) {
         imagesToProcess.forEach((imageData: string, index: number) => {
           try {
-            const byteCharacters = atob(imageData.split(',')[1]);
+            const [header, data] = imageData.split(',');
+            const mimeMatch = header.match(/data:([^;]+)/);
+            const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+            const byteCharacters = atob(data);
             const byteNumbers = new Array(byteCharacters.length);
             for (let i = 0; i < byteCharacters.length; i++) {
               byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: 'image/jpeg' });
+            const blob = new Blob([byteArray], { type: mimeType });
+            const extension = mimeType.split('/')[1] || 'jpg';
 
             formData.append('images', blob, `image_${index}.jpg`);
+            formData.append('images', blob, `image_${index}.${extension}`);
           } catch (imageError) {
             console.error(`Failed to process image ${index}:`, imageError);
           }
