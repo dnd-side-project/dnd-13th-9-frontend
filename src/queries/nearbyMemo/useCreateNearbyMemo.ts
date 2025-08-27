@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNearbyMemo } from '@/services/nearby.memo';
-import { NearbyMemo } from '@/types/nearby-memo';
+import { NearbyMemo, CreateNearbyMemoResponse } from '@/types/nearby-memo';
 import { useNearbyMemo } from '@/contexts';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 type CreateNearbyMemoParams = {
   selectedFolderId: number;
@@ -11,9 +13,10 @@ type CreateNearbyMemoParams = {
 export function useCreateNearbyMemo() {
   const queryClient = useQueryClient();
   const { nearbyMemo } = useNearbyMemo();
+  const router = useRouter();
 
-  return useMutation<NearbyMemo, Error, CreateNearbyMemoParams>({
-    mutationFn: async ({ selectedFolderId, images }) => {
+  return useMutation<CreateNearbyMemoResponse, Error, CreateNearbyMemoParams>({
+    mutationFn: async ({ selectedFolderId, images }: CreateNearbyMemoParams) => {
       let formData = new FormData();
 
       const getImagesFromStorage = (): string[] => {
@@ -63,10 +66,19 @@ export function useCreateNearbyMemo() {
       const result = await createNearbyMemo(formData);
       return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('주변메모 생성 성공:', data);
+
       queryClient.invalidateQueries({
         queryKey: ['nearby-memo'],
       });
+      toast.success('주변메모 장소 저장을 성공했습니다');
+
+      if (data.data?.placeMemoId) {
+        router.push(`/map/nearby-memo/${data.data.placeMemoId}`);
+      } else {
+        console.log('placeMemoId가 없습니다:', data);
+      }
     },
     onError: (error: any) => {
       console.error('Error creating nearby memo:', error);

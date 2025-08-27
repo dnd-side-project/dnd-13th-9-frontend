@@ -25,8 +25,6 @@ function SelectMapListContent() {
       await createNearbyMemoMutation.mutateAsync({
         selectedFolderId,
       });
-
-      router.back();
     } catch (error) {
       console.error('Save error:', error);
     }
