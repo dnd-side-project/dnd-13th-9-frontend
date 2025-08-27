@@ -29,7 +29,7 @@ export default function page() {
     setSelectedFolderId(folderId);
   };
 
-  async function handleFormAction(formData: FormData) {
+  const handleSave = async () => {
     if (selectedFolderId === undefined) return;
 
     try {
@@ -43,9 +43,9 @@ export default function page() {
 
       router.back();
     } catch (error) {
-      console.error('Form action error:', error);
+      console.error('Save error:', error);
     }
-  }
+  };
 
   return (
     <MainLayout>
@@ -55,7 +55,7 @@ export default function page() {
         title="저장 폴더 선택"
       />
 
-      <form action={handleFormAction}>
+      <div>
         <FolderSelector
           selectedFolderId={selectedFolderId}
           onFolderSelect={handleFolderSelect}
@@ -64,16 +64,16 @@ export default function page() {
           showPlanGrid={true}
         />
 
-        <div className="bottom-0 flex w-full justify-center py-3">
+        <div className="fixed bottom-4 flex items-center justify-center">
           <Button
             label="저장하기"
             size="large"
-            type="submit"
+            onClick={handleSave}
             disabled={!selectedFolderId || createPropertyMutation.isPending}
             loading={createPropertyMutation.isPending}
           />
         </div>
-      </form>
+      </div>
     </MainLayout>
   );
 }
