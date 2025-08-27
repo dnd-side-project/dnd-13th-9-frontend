@@ -46,7 +46,7 @@ TabsTrigger.Bar = function ({ value, children, className }: BarProps) {
       {isActive && (
         <motion.div
           layoutId="tabs-underline"
-          className="absolute bottom-0 left-0 h-1 w-full bg-blue-500"
+          className="bg-primary-50 absolute bottom-0 left-0 h-1 w-full"
           transition={{ type: 'spring', stiffness: 500, damping: 30 }}
         />
       )}
