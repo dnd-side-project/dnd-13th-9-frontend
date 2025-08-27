@@ -5,6 +5,7 @@ import { IconName } from '../assets';
 
 type Option = {
   text: string;
+  value?: string;
 };
 
 type ChipGroupProps<T extends string> = {
@@ -24,15 +25,20 @@ export function ChipGroup<T extends string>({
 }: ChipGroupProps<T>) {
   return (
     <div className="flex flex-wrap gap-2">
-      {options.map((item) => (
-        <Chip
-          key={item.text}
-          text={item.text}
-          variant={value === item.text ? activeChipColor : 'neutral'}
-          onClick={() => onChange(item.text as T)}
-          iconName={iconName}
-        />
-      ))}
+      {options.map((item) => {
+        const optionValue = item.value || item.text;
+        const isActive = value === optionValue;
+
+        return (
+          <Chip
+            key={item.text}
+            text={item.text}
+            variant={isActive ? activeChipColor : 'neutral'}
+            onClick={() => onChange(optionValue as T)}
+            iconName={iconName}
+          />
+        );
+      })}
     </div>
   );
 }

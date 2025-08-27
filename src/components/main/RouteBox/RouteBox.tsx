@@ -12,6 +12,10 @@ type RouteBoxProps = {
   description?: string;
   size?: 'small' | 'large';
   bgColor?: string;
+  bgImageSrc?: string;
+  overlayImageSrc?: string;
+  bgImageClassName?: string;
+  overlayClassName?: string;
   router?: { push: (path: string) => void }; // Storybook용 모킹 타입
 };
 
@@ -22,6 +26,10 @@ export function RouteBox({
   size = 'large',
   bgColor = '#669AFF',
   textColor = '#FFFFFF',
+  bgImageSrc,
+  overlayImageSrc,
+  bgImageClassName,
+  overlayClassName,
   router,
 }: RouteBoxProps) {
   const nextRouter = router ?? useNextRouter();
@@ -38,14 +46,36 @@ export function RouteBox({
       role={routePath ? 'button' : undefined}
       tabIndex={routePath ? 0 : undefined}
       className={cn(
-        'flex flex-col items-start rounded-2xl p-4 select-none',
-        size === 'large' ? 'h-68 w-1/2' : 'h-32',
+        'relative flex flex-col items-start overflow-hidden rounded-2xl p-4 select-none',
+        size === 'large' ? 'h-68 basis-1/2' : 'h-32',
         routePath && 'cursor-pointer'
       )}
       style={{ backgroundColor: bgColor, color: textColor }}
     >
-      <TitleS>{title}</TitleS>
-      <Body2xs>{description}</Body2xs>
+      <div className="relative z-10">
+        <TitleS>{title}</TitleS>
+        <Body2xs className="mt-1 text-[13px]">{description}</Body2xs>
+      </div>
+      {bgImageSrc && (
+        <img
+          src={bgImageSrc}
+          alt=""
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute right-0 bottom-0 z-0 select-none',
+            size === 'large' ? 'h-full' : '',
+            bgImageClassName
+          )}
+        />
+      )}
+      {overlayImageSrc && (
+        <img
+          src={overlayImageSrc}
+          alt=""
+          aria-hidden
+          className={cn('pointer-events-none absolute z-[5] select-none', overlayClassName)}
+        />
+      )}
     </div>
   );
 }

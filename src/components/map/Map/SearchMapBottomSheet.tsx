@@ -4,7 +4,6 @@ import { BottomSheet } from '@/components/ui/BottomSheet';
 import { TitleM, BodyXl } from '@/components/ui/Typography';
 import PlaceSearch from '@/components/HouseMemo/BaseInfo/Map/PlaceSearch';
 import { PlaceAddress } from '@/types/nearby-memo';
-import { CurrentLocationButton } from '@/components/ui/CurrentLocationButton';
 
 type Props = {
   existAddress?: PlaceAddress;
@@ -13,12 +12,7 @@ type Props = {
   closeModal: () => void;
 };
 
-export default function SearchMapBottomSheet({
-  existAddress,
-  onSelect,
-  isOpen,
-  closeModal,
-}: Props) {
+export default function SearchMapBottomSheet({ onSelect, isOpen, closeModal }: Props) {
   const [searchValue, setSearchValue] = useState('');
 
   return (
@@ -41,7 +35,7 @@ export default function SearchMapBottomSheet({
             onSelect({
               x: place.x,
               y: place.y,
-              address_name: place.address_name,
+              address: place.address_name,
               place_name: place.place_name,
             });
             closeModal();

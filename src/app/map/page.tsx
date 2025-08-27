@@ -1,42 +1,82 @@
+'use client';
+
 import React from 'react';
-import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MainLayout } from '@/components/layout';
 import { TabBox, TabBoxList, TabBoxTrigger, TabBoxContent } from '@/components/ui/TabBox';
-import { Icon } from '@/components/ui/Icon/Icon';
-import { MapChips } from '@/components/map/Map/MapChips';
+import { MapChips } from '@/components/map/MapTab/MapChips';
 import { KakaoMap } from '@/components/map/Map/KakaoMap';
+import { MapList } from '@/components/map/ListTab/MapList';
+import { Icon } from '@/components/ui/Icon/Icon';
+import { Header } from '@/components/ui/Header';
+import { useMapSelection } from '@/hooks/useMapSelection';
+import { useMapStore } from '@/stores/useMapStore';
+import { SelectedPropertyCard } from '@/components/map/MapTab/SelectedPropertyCard';
 
 export default function MapPage() {
+  const { selectedProp } = useMapSelection();
+  const searchParams = useSearchParams();
+  const defaultTab = searchParams.get('tab') === 'list' ? 'list' : 'map';
+  const router = useRouter();
+  const setPlanId = useMapStore((s) => s.setPlanId);
+  const setFolderId = useMapStore((s) => s.setFolderId);
+  const currentPlanId = useMapStore((s) => s.planId);
+  const currentFolderId = useMapStore((s) => s.folderId);
+
+  const handleListTabActivate = React.useCallback(() => {
+    if (selectedProp) {
+      setPlanId(selectedProp.planId);
+      setFolderId(selectedProp.folderId);
+      router.push(`/map/folder/${selectedProp.folderId}`);
+      return true;
+    }
+    if (currentFolderId) {
+      setPlanId(currentPlanId);
+      setFolderId(currentFolderId);
+      router.push(`/map/folder/${currentFolderId}`);
+      return true;
+    }
+    return false;
+  }, [selectedProp, setPlanId, setFolderId, router, currentPlanId, currentFolderId]);
+
   return (
     <MainLayout>
-      <TabBox defaultValue="map" className="flex min-h-0 grow flex-col">
-        <header className="flex w-full items-center justify-between px-2 py-2">
-          <Link href="/">
-            <Icon name="arrowLeft" size={24} padding={10} />
-          </Link>
-          <TabBoxList className="fit-content">
-            <TabBoxTrigger value="map" leadingIcon={<Icon name="map" size={18} />}>
-              맵
-            </TabBoxTrigger>
-            <TabBoxTrigger value="list" leadingIcon={<Icon name="list" size={18} />}>
-              리스트
-            </TabBoxTrigger>
-          </TabBoxList>
-          <button>
-            <Icon name="search" size={24} padding={10} />
-          </button>
-        </header>
+      <TabBox defaultValue={defaultTab} className="flex min-h-0 grow flex-col">
+        <Header
+          leftBack
+          center={
+            <TabBoxList className="fit-content">
+              <TabBoxTrigger value="map" leadingIcon={<Icon name="map" size={18} />}>
+                맵
+              </TabBoxTrigger>
+              <TabBoxTrigger
+                value="list"
+                leadingIcon={<Icon name="list" size={18} />}
+                onActivate={handleListTabActivate}
+              >
+                리스트
+              </TabBoxTrigger>
+            </TabBoxList>
+          }
+          right={
+            <Icon
+              name="house"
+              color="coolGray-50"
+              className="cursor-pointer"
+              size={24}
+              onClick={() => router.push('/')}
+            />
+          }
+        />
 
-        <MapChips />
-
-        <TabBoxContent value="map" className="relative flex min-h-0 grow">
-          <KakaoMap className="flex-1 px-0" fitParent />
+        <TabBoxContent value="map" className="relative flex min-h-0 grow flex-col">
+          <MapChips />
+          <KakaoMap />
+          <SelectedPropertyCard />
         </TabBoxContent>
 
-        <TabBoxContent value="list">
-          <div className="text-neutral-60 flex items-center justify-center py-20">
-            리스트는 준비 중입니다.
-          </div>
+        <TabBoxContent value="list" className="min-h-0 grow overflow-auto">
+          <MapList />
         </TabBoxContent>
       </TabBox>
     </MainLayout>

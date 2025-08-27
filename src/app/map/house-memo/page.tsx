@@ -1,33 +1,97 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { MainLayout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import BaseInfo from '@/components/HouseMemo/BaseInfo/BaseInfo';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup';
-import { HouseMemoContext, initialHouseMemo } from '@/contexts/HouseMemoContext';
+import HouseMemoProvider from '@/contexts/HouseMemoContext';
 import CheckList from '@/components/HouseMemo/CheckList/CheckList';
+import { useChecklistInfo } from '@/queries/houseMemo/useChecklistInfo';
+import useModal from '@/hooks/useModal';
+import { Header } from '@/components/ui/Header';
+import { Icon } from '@/components/ui/Icon';
+import { TitleS } from '@/components/ui/Typography';
+import { ChecklistGuideModal } from '@/components/HouseMemo/ChecklistGuideModal';
+import { useRouter } from 'next/navigation';
+import { useHouseMemo } from '@/contexts/HouseMemoContext';
+import { houseMemoValidationSchema, validateWithZod } from '@/utils/validation';
 
-export default function page() {
-  const [houseMemo, setHouseMemo] = useState(initialHouseMemo);
+function HouseMemoContent() {
+  const { isOpen, closeModal, openModal } = useModal();
+  const router = useRouter();
+  const { houseMemo } = useHouseMemo();
+
+  const { data } = useChecklistInfo();
+
+  useEffect(() => {
+    if (data?.data.sections?.[0].items?.length === 0) {
+    }
+    openModal();
+  }, [data]);
+
+  const handleComplete = () => {
+    const validationData = {
+      contractType: houseMemo.contractType,
+      address: houseMemo.address,
+      propertyName: houseMemo.propertyName,
+    };
+
+    validateWithZod(houseMemoValidationSchema, validationData, () => {
+      router.push('house-memo/select-map-list');
+    });
+  };
 
   return (
-    <MainLayout className="px-6">
-      <HouseMemoContext.Provider value={{ houseMemo, setHouseMemo }}>
-        <AddImgButtonGroup />
-        <Tabs defaultValue="baseInfo">
+    <>
+      <Header
+        left={
+          <Icon
+            name="arrowLeft"
+            color="neutral"
+            className="cursor-pointer"
+            size={24}
+            padding={10}
+            onClick={() => window.history.back()}
+          />
+        }
+        title="매물 메모"
+        right={
+          <TitleS
+            className="text-primary-50 cursor-pointer px-3 whitespace-nowrap"
+            onClick={handleComplete}
+          >
+            완료
+          </TitleS>
+        }
+      />
+      <AddImgButtonGroup />
+      <Tabs defaultValue="baseInfo">
+        <div className="px-6">
           <TabsList>
             <TabsTrigger.Bar value="baseInfo">기본 정보</TabsTrigger.Bar>
             <TabsTrigger.Bar value="checkList">체크 리스트</TabsTrigger.Bar>
           </TabsList>
+        </div>
 
-          <TabsContent value="baseInfo">
-            <BaseInfo />
-          </TabsContent>
-          <TabsContent value="checkList">
-            <CheckList />
-          </TabsContent>
-        </Tabs>
-      </HouseMemoContext.Provider>
+        <TabsContent value="baseInfo">
+          <BaseInfo />
+        </TabsContent>
+        <TabsContent value="checkList">
+          <CheckList />
+        </TabsContent>
+      </Tabs>
+
+      <ChecklistGuideModal isOpen={isOpen} closeModal={closeModal} />
+    </>
+  );
+}
+
+export default function page() {
+  return (
+    <MainLayout>
+      <HouseMemoProvider>
+        <HouseMemoContent />
+      </HouseMemoProvider>
     </MainLayout>
   );
 }

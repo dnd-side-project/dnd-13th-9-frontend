@@ -23,6 +23,17 @@ import IcoTrash from './ico-trash.svg';
 import IcoAngryFill from './ico-angry-fill.svg';
 import IcoGps from './ico-gps.svg';
 import IcoExample from './ico-example.svg';
+import IcoMore from './ico-more.svg';
+import IcoFolder from './ico-folder.svg';
+import IcoAdd from './ico-add.svg';
+import IcoMapPin from './ico-map-pin.svg';
+import IcoEdit from './ico-edit.svg';
+import IcoKakao from './ico-kakao.svg';
+import IcoLogin from './ico-login.svg';
+import IcoSpinnerRight from './ico-spinner-right.svg';
+import IcoSpinnerleft from './ico-spinner-left.svg';
+import IcoCheckList from './ico-checkList.svg';
+import IcoCopy from './ico-copy.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -50,6 +61,17 @@ export const Icons = {
   angryFill: IcoAngryFill,
   gps: IcoGps,
   example: IcoExample,
+  more: IcoMore,
+  folder: IcoFolder,
+  add: IcoAdd,
+  mapPin: IcoMapPin,
+  edit: IcoEdit,
+  kakao: IcoKakao,
+  login: IcoLogin,
+  spinnerRight: IcoSpinnerRight,
+  spinnerLeft: IcoSpinnerleft,
+  checkList: IcoCheckList,
+  copy: IcoCopy,
 };
 
 export type IconName = keyof typeof Icons;

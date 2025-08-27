@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'swiper/css';
 
 @font-face {
   font-family: 'Pretendard';
@@ -21,6 +22,7 @@
   --color-primary-50: #669aff;
   --color-primary-55: #4b8bff;
   --color-secondary-50: #fba907;
+  --color-secondary-10: #fff3d9;
   --color-static-black: #000000;
   --color-static-white: #ffffff;
   --color-status-red: #ff6648;
@@ -54,5 +56,170 @@
 
   .font-poppins {
     font-family: var(--font-poppins);
+  }
+
+  /* Hide scrollbar but enable scrolling */
+  .scrollbar-hidden {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  /* Dropdown reveal animation utilities */
+  .reveal-panel {
+    will-change: transform, opacity, clip-path;
+    transform-origin: top center;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease,
+      clip-path 220ms ease;
+  }
+  .reveal-panel-closed {
+    opacity: 0;
+    transform: translateY(-6px);
+    clip-path: inset(0 0 100% 0);
+    pointer-events: none;
+  }
+  .reveal-panel-open {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+  }
+
+  .icon-rotate {
+    transition: transform 200ms ease;
+  }
+  .icon-rotate-open {
+    transform: rotate(180deg);
+  }
+}
+
+@layer utilities {
+  /* 매물 지도 */
+  @keyframes float-slow {
+    0% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-6px) rotate(-0.4deg);
+    }
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+  }
+
+  .animate-float-slow {
+    animation: float-slow 5s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float-slow {
+      animation: none;
+    }
+  }
+
+  /* 체크리스트 */
+  @keyframes tilt-swing {
+    0% {
+      transform: rotate(30deg);
+    }
+    50% {
+      transform: rotate(-10deg);
+    }
+    100% {
+      transform: rotate(30deg);
+    }
+  }
+
+  .animate-tilt-swing {
+    animation: tilt-swing 5s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  /* 에티켓 인터렉션 */
+  @keyframes slide-up-in {
+    0% {
+      transform: translateY(12px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-up-in {
+    animation: slide-up-in 300ms ease-out both;
+  }
+
+  @keyframes slide-up-out {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-12px);
+      opacity: 0;
+    }
+  }
+
+  .animate-slide-up-out {
+    animation: slide-up-out 300ms ease-in both;
+  }
+
+  /* 번개 지지직 느낌의 좌우 잔진동 */
+  @keyframes electric-jitter {
+    0%,
+    100% {
+      transform: translateX(0) skewX(0deg);
+      filter: brightness(1);
+    }
+    8% {
+      transform: translateX(-1px) skewX(-0.4deg);
+      filter: brightness(1.05);
+    }
+    10% {
+      transform: translateX(1px) skewX(0.4deg);
+      filter: brightness(0.95);
+    }
+    12% {
+      transform: translateX(0) skewX(0deg);
+      filter: brightness(1);
+    }
+    20% {
+      transform: translateX(0) skewX(0deg);
+    }
+    28% {
+      transform: translateX(1px) skewX(0.3deg);
+    }
+    30% {
+      transform: translateX(-1px) skewX(-0.3deg);
+    }
+    32% {
+      transform: translateX(0) skewX(0deg);
+    }
+    60% {
+      transform: translateX(0) skewX(0deg);
+      filter: brightness(1);
+    }
+    62% {
+      transform: translateX(-1px) skewX(-0.4deg);
+      filter: brightness(1.06);
+    }
+    64% {
+      transform: translateX(1px) skewX(0.4deg);
+      filter: brightness(0.94);
+    }
+    66% {
+      transform: translateX(0) skewX(0deg);
+      filter: brightness(1);
+    }
+  }
+
+  .animate-electric-jitter {
+    animation: electric-jitter 3s ease-in-out infinite;
+    will-change: transform, filter;
   }
 }

@@ -32,7 +32,7 @@ export const Button = ({
   const sizeClass: Record<Size, string> = {
     small: 'px-7 py-3 max-w-[120px]',
     medium: 'px-12 py-3 min-w-[150px]',
-    large: 'px-36 py-4 min-w-[310px]',
+    large: 'px-36 py-4 min-w-[310px] md:w-92',
   };
 
   const variantClass: Record<Variant, string> = {
@@ -57,12 +57,21 @@ export const Button = ({
       )}
       {...props}
     >
-      <TitleXs className="inline-flex items-center gap-2 whitespace-nowrap">
-        {loading && (
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-        )}
-        {children ?? label}
-      </TitleXs>
+      {children ? (
+        <div className="inline-flex items-center gap-2">
+          {loading && (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          )}
+          {children}
+        </div>
+      ) : (
+        <TitleXs className="inline-flex items-center gap-2 whitespace-nowrap">
+          {loading && (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          )}
+          {label}
+        </TitleXs>
+      )}
     </button>
   );
 };

@@ -30,12 +30,12 @@ export function BaseInfoForm() {
     if (mapRef.current) {
       const info = await mapRef.current.moveToCurrentLocation();
       if (info) {
-        handleFieldChange('address', {
-          address_name: info.address,
-          place_name: info.placeName,
-          x: info.lng,
-          y: info.lat,
-        });
+        setHouseMemo((prev) => ({
+          ...prev,
+          address: info.address || '',
+          longitude: String(info.lng),
+          latitude: String(info.lat),
+        }));
       }
     }
   };
@@ -70,72 +70,96 @@ export function BaseInfoForm() {
         </div>
       </LabelContainer>
 
+      {/* 보증금 */}
+      {houseMemo.contractType === 'MONTHLY_RENT' && (
+        <LabelContainer label="보증금">
+          <div className="flex gap-2">
+            {doubleInputFields.map(({ key, placeholder, unit }) => (
+              <Input
+                key={key}
+                placeholder={placeholder}
+                value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
+                onChange={(e) => handleFieldChange(key, Number(e.target.value))}
+                unit={unit}
+                className="w-30 max-w-47"
+              />
+            ))}
+          </div>
+        </LabelContainer>
+      )}
+
       {/* 집 유형 */}
       <LabelContainer label="집 유형">
         <div className="flex flex-wrap gap-2">
           <ChipGroup
             options={houseOptions}
-            value={houseMemo.houseType}
+            value={houseMemo.houseType || ''}
             onChange={(val) => handleFieldChange('houseType', val as HouseType)}
             activeChipColor="primary"
           />
         </div>
       </LabelContainer>
 
-      {/* 보증금 */}
-      <LabelContainer label="보증금">
-        <div className="flex gap-2">
-          {doubleInputFields.map(({ key, placeholder, unit }) => (
-            <Input
-              key={key}
-              placeholder={placeholder}
-              value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
-              onChange={(e) => handleFieldChange(key, e.target.value)}
-              unit={unit}
-              className="max-w-47"
-            />
-          ))}
-        </div>
+      {/* 주소 */}
+      <LabelContainer label="주소" required>
+        <CurrentLocationButton className="-translate-x-12" onClick={handleMoveToCurrentLocation} />
+        <Input
+          placeholder="현재 위치 버튼을 클릭하거나 지도를 터치하여 주소를 선택하세요."
+          value={houseMemo.address || ''}
+          onChange={() => {}}
+          onClick={open}
+          readOnly
+        />
+        <KakaoMap
+          ref={mapRef}
+          height="130px"
+          lat={
+            houseMemo.latitude && houseMemo.latitude !== '' ? Number(houseMemo.latitude) : undefined
+          }
+          lng={
+            houseMemo.longitude && houseMemo.longitude !== ''
+              ? Number(houseMemo.longitude)
+              : undefined
+          }
+        />
       </LabelContainer>
 
-      {/* 주소 */}
-      {InputFields.map(({ key, label, placeholder, required, unit }) => (
-        <LabelContainer key={key} label={label} required={required}>
-          {key === 'address' ? (
-            <>
-              <CurrentLocationButton onClick={handleMoveToCurrentLocation} />
-              <Input
-                placeholder={placeholder}
-                value={houseMemo.address?.address_name || houseMemo.address?.place_name || ''}
-                onChange={() => {}}
-                onClick={open}
-                readOnly
-              />
-              <KakaoMap
-                ref={mapRef}
-                height="130px"
-                x={houseMemo.address?.x}
-                y={houseMemo.address?.y}
-              />
-            </>
-          ) : (
+      {/* 나머지 입력 필드들 */}
+      {InputFields.filter((field) => field.key !== 'address').map(
+        ({ key, label, placeholder, required, unit }) => (
+          <LabelContainer key={key} label={label} required={required}>
             <Input
               placeholder={placeholder}
               value={houseMemo[key] as string}
               onChange={(e) => handleFieldChange(key, e.target.value)}
               unit={unit}
             />
-          )}
-        </LabelContainer>
-      ))}
+          </LabelContainer>
+        )
+      )}
 
       {isOpen && (
         <SearchMapBottomSheet
-          existAddress={houseMemo.address || undefined}
+          existAddress={
+            houseMemo.address
+              ? {
+                  address: houseMemo.address,
+                  place_name: houseMemo.address,
+                  x: houseMemo.longitude,
+                  y: houseMemo.latitude,
+                }
+              : undefined
+          }
           isOpen={isOpen}
           closeModal={close}
           onSelect={(address) => {
-            handleFieldChange('address', address);
+            console.log('지도에서 주소 선택:', address);
+            setHouseMemo((prev) => ({
+              ...prev,
+              address: address.address || '',
+              longitude: String(address.x),
+              latitude: String(address.y),
+            }));
           }}
         />
       )}
