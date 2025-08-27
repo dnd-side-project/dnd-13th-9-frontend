@@ -70,6 +70,24 @@ export function BaseInfoForm() {
         </div>
       </LabelContainer>
 
+      {/* 보증금 */}
+      {houseMemo.contractType === 'MONTHLY_RENT' && (
+        <LabelContainer label="보증금">
+          <div className="flex gap-2">
+            {doubleInputFields.map(({ key, placeholder, unit }) => (
+              <Input
+                key={key}
+                placeholder={placeholder}
+                value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
+                onChange={(e) => handleFieldChange(key, Number(e.target.value))}
+                unit={unit}
+                className="w-30 max-w-47"
+              />
+            ))}
+          </div>
+        </LabelContainer>
+      )}
+
       {/* 집 유형 */}
       <LabelContainer label="집 유형">
         <div className="flex flex-wrap gap-2">
@@ -79,22 +97,6 @@ export function BaseInfoForm() {
             onChange={(val) => handleFieldChange('houseType', val as HouseType)}
             activeChipColor="primary"
           />
-        </div>
-      </LabelContainer>
-
-      {/* 보증금 */}
-      <LabelContainer label="보증금">
-        <div className="flex gap-2">
-          {doubleInputFields.map(({ key, placeholder, unit }) => (
-            <Input
-              key={key}
-              placeholder={placeholder}
-              value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
-              onChange={(e) => handleFieldChange(key, Number(e.target.value))}
-              unit={unit}
-              className="w-30 max-w-47"
-            />
-          ))}
         </div>
       </LabelContainer>
 
@@ -111,8 +113,14 @@ export function BaseInfoForm() {
         <KakaoMap
           ref={mapRef}
           height="130px"
-          lat={houseMemo.latitude && houseMemo.latitude !== '' ? houseMemo.latitude : undefined}
-          lng={houseMemo.longitude && houseMemo.longitude !== '' ? houseMemo.longitude : undefined}
+          lat={
+            houseMemo.latitude && houseMemo.latitude !== '' ? Number(houseMemo.latitude) : undefined
+          }
+          lng={
+            houseMemo.longitude && houseMemo.longitude !== ''
+              ? Number(houseMemo.longitude)
+              : undefined
+          }
         />
       </LabelContainer>
 
@@ -135,7 +143,7 @@ export function BaseInfoForm() {
           existAddress={
             houseMemo.address
               ? {
-                  address_name: houseMemo.address,
+                  address: houseMemo.address,
                   place_name: houseMemo.address,
                   x: houseMemo.longitude,
                   y: houseMemo.latitude,
@@ -148,7 +156,7 @@ export function BaseInfoForm() {
             console.log('지도에서 주소 선택:', address);
             setHouseMemo((prev) => ({
               ...prev,
-              address: address.address_name || '',
+              address: address.address || '',
               longitude: String(address.x),
               latitude: String(address.y),
             }));

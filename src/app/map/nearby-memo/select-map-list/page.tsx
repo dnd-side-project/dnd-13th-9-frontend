@@ -6,24 +6,13 @@ import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
-import { useHouseMemo } from '@/contexts/HouseMemoContext';
-import { useCreateProperty } from '@/queries/houseMemo/useCreateHouseMemo';
+import { NearbyMemoProvider } from '@/contexts';
+import { useCreateNearbyMemo } from '@/queries/nearbyMemo/useCreateNearbyMemo';
 
-export default function page() {
+function SelectMapListContent() {
   const router = useRouter();
   const [selectedFolderId, setSelectedFolderId] = useState<number | undefined>(undefined);
-  const { houseMemo } = useHouseMemo();
-  const createPropertyMutation = useCreateProperty();
-
-  const getImagesFromStorage = () => {
-    if (typeof window === 'undefined') return [];
-    try {
-      return JSON.parse(localStorage.getItem('images') || '[]');
-    } catch (error) {
-      console.error('Failed to parse images from localStorage:', error);
-      return [];
-    }
-  };
+  const createNearbyMemoMutation = useCreateNearbyMemo();
 
   const handleFolderSelect = (folderId: number) => {
     setSelectedFolderId(folderId);
@@ -33,15 +22,9 @@ export default function page() {
     if (selectedFolderId === undefined) return;
 
     try {
-      const images = getImagesFromStorage();
-
-      await createPropertyMutation.mutateAsync({
-        houseMemo,
+      await createNearbyMemoMutation.mutateAsync({
         selectedFolderId,
-        images,
       });
-
-      router.back();
     } catch (error) {
       console.error('Save error:', error);
     }
@@ -69,11 +52,19 @@ export default function page() {
             label="저장하기"
             size="large"
             onClick={handleSave}
-            disabled={!selectedFolderId || createPropertyMutation.isPending}
-            loading={createPropertyMutation.isPending}
+            disabled={!selectedFolderId || createNearbyMemoMutation.isPending}
+            loading={createNearbyMemoMutation.isPending}
           />
         </div>
       </div>
     </MainLayout>
+  );
+}
+
+export default function page() {
+  return (
+    <NearbyMemoProvider>
+      <SelectMapListContent />
+    </NearbyMemoProvider>
   );
 }

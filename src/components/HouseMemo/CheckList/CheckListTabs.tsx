@@ -67,7 +67,7 @@ export default function CheckListTabs({
   return (
     <div>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="overflow-scroll py-4">
+        <TabsList className="scrollbar-hidden overflow-scroll py-4">
           {categories.map((category) => (
             <TabsTrigger.Chip
               iconName="example"
