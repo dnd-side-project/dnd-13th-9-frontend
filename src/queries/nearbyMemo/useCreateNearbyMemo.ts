@@ -72,11 +72,9 @@ export function useCreateNearbyMemo() {
       });
       toast.success('주변메모 장소 저장을 성공했습니다');
 
-      if (data.data?.placeMemoId) {
-        router.push(`/map/nearby-memo/${data.data.placeMemoId}`);
-      } else {
-        console.log('placeMemoId가 없습니다:', data);
-      }
+      router.push('/map');
+      localStorage.removeItem('nearbyMemo');
+      localStorage.removeItem('nearbyInfoImg');
     },
     onError: (error: any) => {
       console.error('Error creating nearby memo:', error);
