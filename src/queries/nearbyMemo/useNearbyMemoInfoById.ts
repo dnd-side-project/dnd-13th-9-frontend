@@ -3,7 +3,7 @@ import { getNearbyMemoById } from '@/services/nearby.memo';
 
 export function useNearbyMemoInfoById(id: string) {
   return useQuery({
-    queryKey: ['house-memo', id],
+    queryKey: ['nearby-memo', id],
     queryFn: () => getNearbyMemoById(id),
   });
 }
