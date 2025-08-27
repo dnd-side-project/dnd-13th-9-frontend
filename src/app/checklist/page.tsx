@@ -40,7 +40,7 @@ export default function page() {
       </div>
 
       <Tabs defaultValue="필수 확인">
-        <TabsList className="overflow-scroll py-3">
+        <TabsList className="scrollbar-hidden overflow-scroll py-3">
           {checkListData.categories.map((category) => (
             <TabsTrigger.Chip
               key={category.order}
