@@ -8,7 +8,7 @@ import { CurrentLocationButton } from '@/components/ui/CurrentLocationButton';
 import { KakaoMap } from '../Map';
 import { useHouseMemo } from '@/contexts/HouseMemoContext';
 import { feelingOptions, contractOptions, houseOptions, doubleInputFields } from './BaseInfoConfig';
-import { ContractType, HouseType } from '@/types/house-memo';
+import { ContractType, HouseType, Feeling } from '@/types/house-memo';
 import { createFieldUpdater } from '@/contexts/updateHouseMemoField';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
 import SearchMapBottomSheet from '@/components/map/Map/SearchMapBottomSheet';
@@ -16,9 +16,21 @@ import SearchMapBottomSheet from '@/components/map/Map/SearchMapBottomSheet';
 export function BaseInfoForm() {
   const { houseMemo, setHouseMemo } = useHouseMemo();
   const handleFieldChange = createFieldUpdater(houseMemo, setHouseMemo);
+  const [animatingIcon, setAnimatingIcon] = React.useState<Feeling | null>(null);
 
   const mapRef = useRef<any>(null);
   const { isOpen, open, close } = useBottomSheet();
+
+  // 아이콘 클릭 시 애니메이션 적용
+  const handleIconClick = (type: Feeling) => {
+    setAnimatingIcon(type);
+    handleFieldChange('feeling', type);
+
+    // 애니메이션 완료 후 상태 초기화
+    setTimeout(() => {
+      setAnimatingIcon(null);
+    }, 600);
+  };
 
   // API로 보내는 데이터를 콘솔로 출력하는 함수 (지울예정)
   const logApiData = () => {
@@ -51,13 +63,14 @@ export function BaseInfoForm() {
       {/* 1. 전반적인 느낌 */}
       <LabelContainer label="전반적인 느낌">
         <div className="flex max-w-20 gap-2">
-          {feelingOptions.map(({ type, iconName }) => (
+          {feelingOptions.map(({ type, iconName, unselectedIconName }) => (
             <Icon
               key={type}
-              onClick={() => handleFieldChange('feeling', type)}
-              width={40}
-              height={40}
-              name={iconName}
+              onClick={() => handleIconClick(type)}
+              width={35}
+              height={35}
+              name={houseMemo.feeling === type ? iconName : unselectedIconName}
+              className={animatingIcon === type ? 'animate-select' : ''}
             />
           ))}
         </div>
