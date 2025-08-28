@@ -13,7 +13,13 @@ export type KakaoMapCore = {
   locate: () => void;
 };
 
-export function useKakaoMapCore(): KakaoMapCore {
+type UseKakaoMapCoreOptions = {
+  /** SDK 준비 시 사용자 위치로 자동 이동 여부 (기본: true) */
+  autoLocateOnReady?: boolean;
+};
+
+export function useKakaoMapCore(options?: UseKakaoMapCoreOptions): KakaoMapCore {
+  const { autoLocateOnReady = true } = options ?? {};
   // Kakao SDK 로드 여부 확인 훅
   const isReady = useKakaoLoader();
   const mapRef = React.useRef<HTMLDivElement | null>(null);
@@ -68,7 +74,7 @@ export function useKakaoMapCore(): KakaoMapCore {
     const map = new kakao.maps.Map(mapRef.current, { center: defaultCenter, level: 5 });
     mapInstanceRef.current = map;
 
-    locate();
+    if (autoLocateOnReady) locate();
 
     // 지도 중심과 내 위치의 거리를 재계산하여 버튼 색상 등에 활용
     const recalcAwayState = () => {
@@ -103,7 +109,7 @@ export function useKakaoMapCore(): KakaoMapCore {
         navigator.geolocation.clearWatch(watchIdRef.current);
       }
     };
-  }, [isReady, locate]);
+  }, [isReady, locate, autoLocateOnReady]);
 
   return {
     isReady,

@@ -98,7 +98,7 @@ export default function HomePage() {
           />
           <IconTextRouter
             label="내 메모.zip"
-            routePath="/map"
+            routePath="/map?tab=list"
             icoPath="/assets/main/ico-memo-list.svg"
           />
           <IconTextRouter

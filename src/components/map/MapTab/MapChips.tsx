@@ -117,6 +117,8 @@ export function MapChips() {
                 }}
                 tabIndex={f.folderId === folderId ? 0 : -1}
                 aria-selected={f.folderId === folderId}
+                className="ring-0 outline-none focus:ring-0 focus:outline-none focus-visible:outline-none"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                 onClick={() => {
                   setFolderId(f.folderId);
                 }}

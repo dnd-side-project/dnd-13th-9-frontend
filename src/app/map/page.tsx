@@ -24,28 +24,42 @@ export default function MapPage() {
   const currentFolderId = useMapStore((s) => s.folderId);
 
   const handleListTabActivate = React.useCallback(() => {
-    if (selectedProp) {
-      // ViewModel에는 planId/folderId가 없으므로 현재 스토어 상태를 유지하고 폴더 페이지로 이동만 수행
-      router.push(`/map/folder/${currentFolderId}`);
-      return true;
-    }
-    if (currentFolderId) {
-      setPlanId(currentPlanId);
-      setFolderId(currentFolderId);
-      router.push(`/map/folder/${currentFolderId}`);
-      return true;
-    }
-    return false;
-  }, [selectedProp, setPlanId, setFolderId, router, currentPlanId, currentFolderId]);
+    if (currentPlanId) setPlanId(currentPlanId);
+    if (currentFolderId) setFolderId(currentFolderId);
+    router.push('/map?tab=list');
+    return true;
+  }, [setPlanId, setFolderId, router, currentPlanId, currentFolderId]);
+
+  const [focusKey, setFocusKey] = React.useState(0);
+
+  const handleMapTabActivate = React.useCallback(() => {
+    if (currentPlanId) setPlanId(currentPlanId);
+    if (currentFolderId) setFolderId(currentFolderId);
+    setFocusKey((k) => k + 1);
+    router.push('/map?tab=map');
+    return true;
+  }, [setPlanId, setFolderId, router, currentPlanId, currentFolderId]);
 
   return (
     <MainLayout>
-      <TabBox defaultValue={defaultTab} className="flex min-h-0 grow flex-col">
+      <TabBox key={defaultTab} defaultValue={defaultTab} className="flex min-h-0 grow flex-col">
         <Header
-          leftBack
+          left={
+            <Icon
+              name="house"
+              color="primary-50"
+              className="cursor-pointer"
+              size={24}
+              onClick={() => router.push('/')}
+            />
+          }
           center={
             <TabBoxList className="fit-content">
-              <TabBoxTrigger value="map" leadingIcon={<Icon name="map" size={18} />}>
+              <TabBoxTrigger
+                value="map"
+                leadingIcon={<Icon name="map" size={18} />}
+                onActivate={handleMapTabActivate}
+              >
                 맵
               </TabBoxTrigger>
               <TabBoxTrigger
@@ -57,20 +71,11 @@ export default function MapPage() {
               </TabBoxTrigger>
             </TabBoxList>
           }
-          right={
-            <Icon
-              name="house"
-              color="coolGray-50"
-              className="cursor-pointer"
-              size={24}
-              onClick={() => router.push('/')}
-            />
-          }
         />
 
         <TabBoxContent value="map" className="relative flex min-h-0 grow flex-col">
           <MapChips />
-          <KakaoMap />
+          <KakaoMap focusKey={focusKey} />
           <SelectedPropertyCard />
         </TabBoxContent>
 

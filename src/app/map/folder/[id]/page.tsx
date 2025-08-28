@@ -106,6 +106,8 @@ export default function FolderDetailPage() {
                 value="map"
                 leadingIcon={<Icon name="map" size={18} />}
                 onActivate={() => {
+                  if (effectivePlanId) setPlanId(effectivePlanId as number);
+                  if (!Number.isNaN(folderIdFromParams)) setFolderId(folderIdFromParams);
                   router.push('/map?tab=map');
                   return true;
                 }}
@@ -117,15 +119,6 @@ export default function FolderDetailPage() {
               </TabBoxTrigger>
             </TabBoxList>
           </TabBox>
-        }
-        right={
-          <Icon
-            name="house"
-            color="coolGray-50"
-            className="cursor-pointer"
-            size={24}
-            onClick={() => router.push('/')}
-          />
         }
       />
 
