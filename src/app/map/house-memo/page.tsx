@@ -91,7 +91,7 @@ function HouseMemoContent() {
       />
       <AddImgButtonGroup storageKey="images" />
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <div className="px-6">
+        <div className="sticky top-0 z-50 w-full bg-white px-6">
           <TabsList>
             <TabsTrigger.Bar value="baseInfo">기본 정보</TabsTrigger.Bar>
             <TabsTrigger.Bar value="checkList">체크리스트</TabsTrigger.Bar>
