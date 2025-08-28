@@ -51,13 +51,12 @@ export function BaseInfoForm() {
       {/* 1. 전반적인 느낌 */}
       <LabelContainer label="전반적인 느낌">
         <div className="flex max-w-20 gap-2">
-          {feelingOptions.map(({ type, iconName, activeColor }) => (
+          {feelingOptions.map(({ type, iconName }) => (
             <Icon
               key={type}
               onClick={() => handleFieldChange('feeling', type)}
               width={40}
               height={40}
-              color={houseMemo.feeling === type ? activeColor : 'neutral'}
               name={iconName}
             />
           ))}

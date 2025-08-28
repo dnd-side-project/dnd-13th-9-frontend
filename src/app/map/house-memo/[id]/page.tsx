@@ -81,8 +81,20 @@ export default function Page() {
           />
 
           <Chip
-            iconName="angryFill"
-            variant="secondary"
+            iconName={
+              houseMemo.feeling === 'GOOD'
+                ? 'happyFill'
+                : houseMemo.feeling === 'SOSO'
+                  ? 'soSoFill'
+                  : 'angryFill'
+            }
+            variant={
+              houseMemo.feeling === 'GOOD'
+                ? 'primary'
+                : houseMemo.feeling === 'SOSO'
+                  ? 'secondary'
+                  : 'neutral'
+            }
             size="sm"
             text={feelingToText(houseMemo.feeling)}
           />

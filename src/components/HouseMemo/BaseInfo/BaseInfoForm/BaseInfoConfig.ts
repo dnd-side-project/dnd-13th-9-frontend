@@ -4,11 +4,10 @@ import { IconName } from '@/components/ui/assets';
 export const feelingOptions: {
   type: Feeling;
   iconName: IconName;
-  activeColor: 'primary' | 'secondary' | 'status-red';
 }[] = [
-  { type: 'GOOD', iconName: 'happyFill', activeColor: 'primary' },
-  { type: 'SOSO', iconName: 'soSoFill', activeColor: 'secondary' },
-  { type: 'BAD', iconName: 'angryFill', activeColor: 'status-red' },
+  { type: 'GOOD', iconName: 'happyFill' },
+  { type: 'SOSO', iconName: 'soSoFill' },
+  { type: 'BAD', iconName: 'angryFill' },
 ];
 
 type DoubleInputFieldKey = 'depositBig' | 'depositSmall';
