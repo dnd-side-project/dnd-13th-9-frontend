@@ -47,11 +47,7 @@ export default function CheckListSection({
       <div className="flex flex-col gap-4 px-4 py-4 pt-3">
         {items.map((item: any) => (
           <React.Fragment key={item.id}>
-            {isRequiredCategory ? (
-              <CheckListBoxFavoriteItem question={item.question} description={item.description} />
-            ) : (
-              <CheckListBoxItem question={item.question} description={item.description} />
-            )}
+            <CheckListBoxItem question={item.question} description={item.description} />
             {!isLastItem(item.id, items) && <CheckListBoxSeparator />}
           </React.Fragment>
         ))}
