@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MainLayout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import BaseInfo from '@/components/HouseMemo/BaseInfo/BaseInfo';
@@ -26,6 +26,7 @@ function HouseMemoContent() {
   } = useModal();
   const router = useRouter();
   const { houseMemo } = useHouseMemo();
+  const [activeTab, setActiveTab] = useState('baseInfo');
 
   const { data } = useChecklistInfo();
 
@@ -61,6 +62,10 @@ function HouseMemoContent() {
     router.back();
   };
 
+  const handleNextClick = () => {
+    setActiveTab('checkList');
+  };
+
   return (
     <>
       <Header
@@ -85,7 +90,7 @@ function HouseMemoContent() {
         }
       />
       <AddImgButtonGroup storageKey="images" />
-      <Tabs defaultValue="baseInfo">
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
         <div className="px-6">
           <TabsList>
             <TabsTrigger.Bar value="baseInfo">기본 정보</TabsTrigger.Bar>
@@ -94,7 +99,7 @@ function HouseMemoContent() {
         </div>
 
         <TabsContent value="baseInfo">
-          <BaseInfo />
+          <BaseInfo onNextClick={handleNextClick} />
         </TabsContent>
         <TabsContent value="checkList">
           <CheckList />
