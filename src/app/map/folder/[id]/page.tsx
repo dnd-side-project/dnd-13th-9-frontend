@@ -51,6 +51,15 @@ export default function FolderDetailPage() {
   const setSelectedMemoId = useMapStore((s) => (s as any).setSelectedMemoId);
   const { isOpen, openModal, closeModal } = useModal(false);
 
+  const placeTagToIcon: Record<string, any> = {
+    ADVANTAGE: 'mapNearbyGood',
+    DISADVANTAGE: 'mapNearbyBad',
+    CONVENIENCE: 'mapNearbyConvenience',
+    TRANSPORTATION: 'mapNearbyTransportation',
+    SECURITY: 'mapNearbySecurity',
+    NOISE: 'mapNearbyNoise',
+  };
+
   React.useEffect(() => {
     if (!Number.isNaN(folderIdFromParams)) {
       setFolderId(folderIdFromParams);
@@ -106,6 +115,8 @@ export default function FolderDetailPage() {
                 value="map"
                 leadingIcon={<Icon name="map" size={18} />}
                 onActivate={() => {
+                  if (effectivePlanId) setPlanId(effectivePlanId as number);
+                  if (!Number.isNaN(folderIdFromParams)) setFolderId(folderIdFromParams);
                   router.push('/map?tab=map');
                   return true;
                 }}
@@ -118,15 +129,6 @@ export default function FolderDetailPage() {
             </TabBoxList>
           </TabBox>
         }
-        right={
-          <Icon
-            name="house"
-            color="coolGray-50"
-            className="cursor-pointer"
-            size={24}
-            onClick={() => router.push('/')}
-          />
-        }
       />
 
       <div className="min-h-0 grow overflow-hidden px-6 py-3">
@@ -136,7 +138,7 @@ export default function FolderDetailPage() {
           <BodyXl className="font-semibold text-black">{currentFolderName}</BodyXl>
         </div>
 
-        <div className="mt-1 flex h-full flex-col divide-y divide-black/5 rounded-xl bg-white">
+        <div className="scrollbar-hidden mt-1 flex h-full flex-col divide-y divide-black/5 overflow-y-auto rounded-xl bg-white">
           {isLoading && (
             <Loading
               className="flex h-full items-center justify-center"
@@ -164,7 +166,12 @@ export default function FolderDetailPage() {
                   {m.type === 'NEARBY' ? (
                     <>
                       <div className="bg-secondary-10 flex h-13 w-13 items-center justify-center rounded-2xl">
-                        <Icon name="favorite" color="secondary" width={32} height={32} />
+                        <Icon
+                          name={(placeTagToIcon[m.tag ?? ''] ?? 'mapNearbyGood') as any}
+                          width={32}
+                          height={32}
+                          color="secondary"
+                        />
                       </div>
                       <div className="flex min-w-0 flex-1 flex-col">
                         <div className="flex items-center gap-1">
@@ -176,7 +183,7 @@ export default function FolderDetailPage() {
                   ) : (
                     <>
                       <div className="bg-coolGray-20 flex h-13 w-13 items-center justify-center rounded-2xl">
-                        <Icon name="house" color="primary-50" width={32} height={32} />
+                        <Icon name="mapHouse" color="primary-50" width={32} height={32} />
                       </div>
                       <div className="flex min-w-0 flex-1 flex-col">
                         <div className="flex items-center gap-1">
@@ -200,7 +207,7 @@ export default function FolderDetailPage() {
                               .filter(Boolean)
                               .join(' ')}
                           </span>
-                          /<span>{m.managementFee ? `${m.managementFee}` : ''}</span>
+                          <span>{m.managementFee ? `/ ${m.managementFee}` : ''}</span>
                         </BodyS>
                       </div>
                     </>

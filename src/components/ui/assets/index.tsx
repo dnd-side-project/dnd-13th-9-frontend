@@ -58,6 +58,13 @@ import IcoBathroom from './checklist-icon/ico-bathroom.svg';
 import IcoBathroomFill from './checklist-icon/ico-bathroom-fill.svg';
 import IcoRequired from './checklist-icon/ico-required.svg';
 import IcoRequiredFill from './checklist-icon/ico-required-fill.svg';
+import IcoMapHouse from './ico-map-house.svg';
+import IcoMapNearbyBad from './ico-map-nearby-bad.svg';
+import IcoMapNearbyConvenience from './ico-map-nearby-convenience.svg';
+import IcoMapNearbyGood from './ico-map-nearby-good.svg';
+import IcoMapNearbyNoise from './ico-map-nearby-noise.svg';
+import IcoMapNearbySecurity from './ico-map-nearby-security.svg';
+import IcoMapNearbyTraffic from './ico-map-nearby-traffic.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -120,6 +127,13 @@ export const Icons = {
   bathroomFill: IcoBathroomFill,
   required: IcoRequired,
   requiredFill: IcoRequiredFill,
+  mapHouse: IcoMapHouse,
+  mapNearbyBad: IcoMapNearbyBad,
+  mapNearbyConvenience: IcoMapNearbyConvenience,
+  mapNearbyGood: IcoMapNearbyGood,
+  mapNearbyNoise: IcoMapNearbyNoise,
+  mapNearbySecurity: IcoMapNearbySecurity,
+  IcoMapNearbyTraffic: IcoMapNearbyTraffic,
 };
 
 export type IconName = keyof typeof Icons;

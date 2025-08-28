@@ -9,10 +9,11 @@ import { Fab } from '@/components/ui/Fab';
 import { useMapSelection } from '@/hooks/useMapSelection';
 import { useMapStore } from '@/stores/useMapStore';
 import { useKakaoMarkers } from '@/hooks/useKakaoMarkers';
+import Loading from '@/app/loading';
 
 type KakaoMapProps = {
   center?: { lat: number; lng: number } | null;
-  markers?: Array<{ id: string; lat: number | string; lng: number | string }>;
+  markers?: Array<{ id: string; lat: number; lng: number }>;
   onMarkerClick?: (id: string) => void;
 };
 
@@ -140,8 +141,8 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
         />
       )}
       {!isReady && (
-        <div className="text-neutral-60 flex items-center justify-center py-6">
-          지도를 불러오는 중...
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/60 backdrop-blur-[2px]">
+          <Loading />
         </div>
       )}
 
