@@ -2,6 +2,7 @@
 import React, { Suspense } from 'react';
 import { useCheckList } from './useCheckList';
 import CheckListTabs from './CheckListTabs';
+import Loading from '@/app/loading';
 //todo : 로딩 컴포넌트
 
 function CheckListContent() {
@@ -20,16 +21,12 @@ function CheckListContent() {
 
 export default function CheckList() {
   return (
-    <div className="bg-coolGray-20 h-fit min-h-120 px-6 py-1 pb-4">
-      <Suspense
-        fallback={
-          <div className="flex h-32 items-center justify-center">
-            <span>로딩 중...</span>
-          </div>
-        }
-      >
-        <CheckListContent />
-      </Suspense>
+    <div className="bg-coolGray-20 flex flex-col px-6 py-1 pb-4">
+      <div className="flex-1">
+        <Suspense fallback={<Loading />}>
+          <CheckListContent />
+        </Suspense>
+      </div>
     </div>
   );
 }

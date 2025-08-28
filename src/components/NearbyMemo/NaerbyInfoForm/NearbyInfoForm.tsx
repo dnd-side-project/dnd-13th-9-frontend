@@ -49,7 +49,43 @@ export function NearbyInfoForm() {
           activeChipColor="secondary"
           options={placeTagOptions}
           value={nearbyMemo.placeTag}
-          iconName="example"
+          iconName={(optionValue, isActive) => {
+            if (isActive) {
+              switch (optionValue) {
+                case 'ADVANTAGE':
+                  return 'advantageFill';
+                case 'DISADVANTAGE':
+                  return 'disadvantageFill';
+                case 'CONVENIENCE':
+                  return 'convenienceFill';
+                case 'TRANSPORTATION':
+                  return 'transportationFill';
+                case 'SECURITY':
+                  return 'security';
+                case 'NOISE':
+                  return 'noiseFill';
+                default:
+                  return 'example';
+              }
+            } else {
+              switch (optionValue) {
+                case 'ADVANTAGE':
+                  return 'advantage';
+                case 'DISADVANTAGE':
+                  return 'disadvantage';
+                case 'CONVENIENCE':
+                  return 'convenience';
+                case 'TRANSPORTATION':
+                  return 'transportation';
+                case 'SECURITY':
+                  return 'securityOutline';
+                case 'NOISE':
+                  return 'noise';
+                default:
+                  return 'example';
+              }
+            }
+          }}
           onChange={(val) => handleFieldChange('placeTag', val as PlaceTag)}
         />
       </LabelContainer>
