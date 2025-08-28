@@ -75,7 +75,7 @@ export default function MapPage() {
 
         <TabBoxContent value="map" className="relative flex min-h-0 grow flex-col">
           <MapChips />
-          <KakaoMap focusKey={focusKey} />
+          <KakaoMap />
           <SelectedPropertyCard />
         </TabBoxContent>
 

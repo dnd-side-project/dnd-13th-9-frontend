@@ -34,6 +34,13 @@ import IcoSpinnerRight from './ico-spinner-right.svg';
 import IcoSpinnerleft from './ico-spinner-left.svg';
 import IcoCheckList from './ico-checkList.svg';
 import IcoCopy from './ico-copy.svg';
+import IcoMapHouse from './ico-map-house.svg';
+import IcoMapNearbyBad from './ico-map-nearby-bad.svg';
+import IcoMapNearbyConvenience from './ico-map-nearby-convenience.svg';
+import IcoMapNearbyGood from './ico-map-nearby-good.svg';
+import IcoMapNearbyNoise from './ico-map-nearby-noise.svg';
+import IcoMapNearbySecurity from './ico-map-nearby-security.svg';
+import IcoMapNearbyTraffic from './ico-map-nearby-traffic.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -72,6 +79,13 @@ export const Icons = {
   spinnerLeft: IcoSpinnerleft,
   checkList: IcoCheckList,
   copy: IcoCopy,
+  mapHouse: IcoMapHouse,
+  mapNearbyBad: IcoMapNearbyBad,
+  mapNearbyConvenience: IcoMapNearbyConvenience,
+  mapNearbyGood: IcoMapNearbyGood,
+  mapNearbyNoise: IcoMapNearbyNoise,
+  mapNearbySecurity: IcoMapNearbySecurity,
+  IcoMapNearbyTraffic: IcoMapNearbyTraffic,
 };
 
 export type IconName = keyof typeof Icons;

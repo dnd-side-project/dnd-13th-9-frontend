@@ -1,5 +1,6 @@
 import React from 'react';
 import { useMapStore } from '@/stores/useMapStore';
+import { getContractLabel } from '@/utils/labels';
 
 // 표준 placeTag 세트 (서버 스키마 기준)
 const ALLOWED_NEAR_TAGS = new Set([
@@ -47,6 +48,24 @@ export function useMapSelection() {
           Math.abs(lat) <= 90 &&
           Number.isFinite(lng) &&
           Math.abs(lng) <= 180;
+        // 라벨(핀 위 텍스트) 구성
+        let labelTop: string | undefined;
+        let labelBottom: string | undefined;
+        labelTop = m.title ?? '';
+        if (type === 'NEARBY') {
+          labelBottom = m.memo ?? '';
+        } else {
+          const contract = m.contractType ? getContractLabel(m.contractType as any) : '';
+          const deposit = [
+            m.depositBig ? `${m.depositBig}억` : null,
+            m.depositSmall ? `${m.depositSmall}${m.depositBig ? '만원' : ''}` : null,
+          ]
+            .filter(Boolean)
+            .join(' ');
+          const fee = m.managementFee ? `/ ${m.managementFee}` : '';
+          labelBottom = `${contract}${contract ? ' ' : ''}${deposit}${fee}`.trim();
+        }
+
         return valid
           ? {
               id: m.id,
@@ -55,6 +74,8 @@ export function useMapSelection() {
               type,
               placeTag,
               active: selectedMemoId === m.id,
+              labelTop,
+              labelBottom,
             }
           : null;
       }),

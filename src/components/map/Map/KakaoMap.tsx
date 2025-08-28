@@ -9,17 +9,15 @@ import { Fab } from '@/components/ui/Fab';
 import { useMapSelection } from '@/hooks/useMapSelection';
 import { useMapStore } from '@/stores/useMapStore';
 import { useKakaoMarkers } from '@/hooks/useKakaoMarkers';
-import { Loading } from '@/components/ui/Loading';
+import Loading from '@/app/loading';
 
 type KakaoMapProps = {
   center?: { lat: number; lng: number } | null;
-  markers?: Array<{ id: string; lat: number | string; lng: number | string }>;
+  markers?: Array<{ id: string; lat: number; lng: number }>;
   onMarkerClick?: (id: string) => void;
-  /** 탭 전환 등 외부 트리거로 최신 매물에 1회 포커싱하기 위한 키 */
-  focusKey?: number;
 };
 
-export function KakaoMap({ center, markers, onMarkerClick, focusKey }: KakaoMapProps) {
+export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
   // 지도/현재위치/권한 등 코어 로직은 훅으로 관리
   const {
     isReady,
@@ -29,7 +27,7 @@ export function KakaoMap({ center, markers, onMarkerClick, focusKey }: KakaoMapP
     isAwayFromUser,
     permissionDenied,
     locate,
-  } = useKakaoMapCore({ autoLocateOnReady: false });
+  } = useKakaoMapCore();
 
   // mini popup
   const { isOpen, openModal, closeModal } = useModal(false);
@@ -98,38 +96,14 @@ export function KakaoMap({ center, markers, onMarkerClick, focusKey }: KakaoMapP
     renderMarkers(effectiveMarkers, handleMarkerClick);
   }, [effectiveMarkers, handleMarkerClick, renderMarkers]);
 
-  // 폴더 전환 시마다 최신 매물로 1회 포커싱 (선택된 메모가 있으면 스킵)
+  // 폴더 전환 시마다 첫 매물로 1회 포커싱 (선택된 메모가 있으면 스킵)
   useEffect(() => {
     if (!mapInstanceRef.current) return;
-    const latest =
-      effectiveMarkers && effectiveMarkers.length > 0
-        ? effectiveMarkers[effectiveMarkers.length - 1]
-        : null;
-    if (!latest) {
-      // 매물이 없으면 현재 위치로 이동
-      locate();
-      return;
-    }
-    if (!selectedMemoId) panTo(latest.lat, latest.lng);
+    const first = effectiveMarkers && effectiveMarkers.length > 0 ? effectiveMarkers[0] : null;
+    if (!first) return;
+    if (!selectedMemoId) panTo(first.lat, first.lng);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folderChangeKey]);
-
-  // 외부에서 포커싱을 명시적으로 요청한 경우(탭 전환 시 등) 최신 매물로 포커싱
-  useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    if (focusKey === undefined) return;
-    const latest =
-      effectiveMarkers && effectiveMarkers.length > 0
-        ? effectiveMarkers[effectiveMarkers.length - 1]
-        : null;
-    if (!latest) {
-      // 매물이 없으면 현재 위치로 이동
-      locate();
-      return;
-    }
-    if (!selectedMemoId) panTo(latest.lat, latest.lng);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusKey]);
 
   // 지도 빈 공간 클릭 시 선택 해제 (마커 클릭으로 들어온 경우 한 번 무시)
   useEffect(() => {
@@ -168,7 +142,7 @@ export function KakaoMap({ center, markers, onMarkerClick, focusKey }: KakaoMapP
       )}
       {!isReady && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/60 backdrop-blur-[2px]">
-          <Loading size="large" />
+          <Loading />
         </div>
       )}
 

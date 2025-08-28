@@ -67,6 +67,14 @@
     display: none; /* Chrome, Safari */
   }
 
+  /* KakaoMap: prevent oversized internal SVG overlays from intercepting/poking out */
+  .kakao-map-root svg {
+    pointer-events: none;
+  }
+  .kakao-map-root {
+    overflow: hidden;
+  }
+
   /* Dropdown reveal animation utilities */
   .reveal-panel {
     will-change: transform, opacity, clip-path;

@@ -15,9 +15,19 @@ export type MapPinOptions = {
   size?: number; // px, default 48
   active?: boolean; // emphasize selected
   onClick?: () => void;
+  labelTop?: string;
+  labelBottom?: string;
 };
 
-export function MapPin({ type, placeTag, size = 48, active, onClick }: MapPinOptions): HTMLElement {
+export function MapPin({
+  type,
+  placeTag,
+  size = 48,
+  active,
+  onClick,
+  labelTop,
+  labelBottom,
+}: MapPinOptions): HTMLElement {
   const PRIMARY = '#669AFF';
   const SECONDARY = '#FBA907';
 
@@ -38,14 +48,15 @@ export function MapPin({ type, placeTag, size = 48, active, onClick }: MapPinOpt
   const circleTop = Math.round(BASE_CIRCLE_TOP * scale);
 
   const wrapper = document.createElement('div');
+  wrapper.className = 'k-map-pin';
   wrapper.style.position = 'relative';
   wrapper.style.width = `${svgW}px`;
   wrapper.style.height = `${svgH}px`;
   wrapper.style.cursor = 'pointer';
   // 기본 섀도우
   wrapper.style.filter = 'drop-shadow(0 2px 8px rgba(0,0,0,0.15))';
-  // 부모 영역을 벗어나지 않도록 방지
-  wrapper.style.overflow = 'hidden';
+  // 라벨이 핀 위로 떠야 하므로 overflow는 보이도록 설정
+  wrapper.style.overflow = 'visible';
   wrapper.style.lineHeight = '0';
   wrapper.style.display = 'inline-block';
 
@@ -60,6 +71,15 @@ export function MapPin({ type, placeTag, size = 48, active, onClick }: MapPinOpt
       <!-- 내부 아이콘 컨테이너 -->
       <div id="pin-inner-icon" style="position:absolute; left:50%; top:${circleTop}px; transform:translate(-50%, -50%);"></div>
     </div>
+    <!-- 라벨 컨테이너 (고정 100x54, 패딩 적용 위해 border-box) -->
+    ${
+      labelTop || labelBottom
+        ? `<div style="position:absolute; left:50%; top:-8px; transform:translate(-50%, -100%); width:100px; height:54px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:2px; background:rgba(255,255,255,0.96); border:1px solid rgba(0,0,0,0.06); border-radius:16px; pointer-events:none; box-shadow:0 1px 2px rgba(0,0,0,0.08); padding:10px 12px; text-align:center; font-family: Pretendard;">
+           <div style="width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:14px; line-height:16px; color:#111111; font-weight: 600;">${labelTop ?? ''}</div>
+           <div style="width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:12px; line-height:14px; color:#818181; font-weight: 400;">${labelBottom ?? ''}</div>
+         </div>`
+        : ''
+    }
   `;
 
   // 내부 아이콘 SVG 매핑 (파일 SVG 그대로 사용)
