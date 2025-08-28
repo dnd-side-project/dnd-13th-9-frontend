@@ -49,7 +49,7 @@ export default function page() {
     <MainLayout>
       <Header
         className="px-3"
-        left={<Icon name="arrowLeft" width={18} onClick={() => router.back()} />}
+        left={<Icon name="arrowLeft" width={24} onClick={() => router.back()} />}
         title="저장 폴더 선택"
       />
 
@@ -62,8 +62,8 @@ export default function page() {
           showPlanGrid={true}
         />
 
-        <div className="fixed bottom-4 flex items-center justify-center">
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 transform">
+        <div className="fixed bottom-0 left-0 z-10 flex w-full items-center justify-center bg-white pb-[env(safe-area-inset-bottom)]">
+          <div className="px-6 py-4">
             <Button
               label="저장하기"
               size="large"

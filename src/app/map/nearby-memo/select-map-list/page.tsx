@@ -47,14 +47,16 @@ function SelectMapListContent() {
           showPlanGrid={true}
         />
 
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 transform">
-          <Button
-            label="저장하기"
-            size="large"
-            onClick={handleSave}
-            disabled={!selectedFolderId || createNearbyMemoMutation.isPending}
-            loading={createNearbyMemoMutation.isPending}
-          />
+        <div className="fixed bottom-0 left-0 z-10 flex w-full items-center justify-center bg-white pb-[env(safe-area-inset-bottom)]">
+          <div className="px-6 py-4">
+            <Button
+              label="저장하기"
+              size="large"
+              onClick={handleSave}
+              disabled={!selectedFolderId || createNearbyMemoMutation.isPending}
+              loading={createNearbyMemoMutation.isPending}
+            />
+          </div>
         </div>
       </div>
     </MainLayout>

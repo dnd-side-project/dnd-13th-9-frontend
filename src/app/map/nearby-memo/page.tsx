@@ -63,12 +63,16 @@ function NearbyMemoPageContent() {
       </div>
       <NearbyInfoForm />
 
-      <Button
-        size="large"
-        label="저장하기"
-        className="bg-secondary-50 fixed bottom-5 left-1/2 w-full max-w-[390px] -translate-x-1/2 hover:bg-amber-500"
-        onClick={handleSave}
-      />
+      <div className="fixed bottom-0 left-1/2 z-10 w-full max-w-110 -translate-x-1/2 pb-[env(safe-area-inset-bottom)]">
+        <div className="flex justify-center bg-white py-3">
+          <Button
+            size="large"
+            label="저장하기"
+            className="bg-secondary-50 w-[360px] hover:bg-amber-500"
+            onClick={handleSave}
+          />
+        </div>
+      </div>
 
       <DeleteDataModal
         isOpen={isDeleteModalOpen}
