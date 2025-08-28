@@ -55,7 +55,7 @@ export default function page() {
             name="arrowLeft"
             color="neutral"
             className="cursor-pointer"
-            size={24}
+            size={22}
             onClick={() => window.history.back()}
           />
         }

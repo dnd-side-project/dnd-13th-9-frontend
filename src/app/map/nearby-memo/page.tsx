@@ -53,13 +53,14 @@ function NearbyMemoPageContent() {
             color="neutral"
             className="cursor-pointer"
             size={22}
-            padding={10}
             onClick={handleBackClick}
           />
         }
         title="장소 메모"
       />
-      <AddImgButtonGroup storageKey="nearbyInfoImg" readonly={false} />
+      <div className="px-4">
+        <AddImgButtonGroup storageKey="nearbyInfoImg" readonly={false} />
+      </div>
       <NearbyInfoForm />
 
       <Button

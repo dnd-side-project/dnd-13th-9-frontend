@@ -20,6 +20,7 @@ import { Chip } from '@/components/ui/Chip';
 import { getContractLabel, getHouseTypeLabel } from '@/utils/labels';
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup/AddImgButtonGroup';
+import Loading from '@/app/loading';
 
 function feelingToText(feeling: string): string {
   const feelingMap: Record<string, string> = {
@@ -36,18 +37,10 @@ export default function Page() {
   const id = params.id as string;
   const { data, isLoading, error } = useHouseMemoInfoById(id);
 
-  if (isLoading) {
+  if (error || !data?.data || isLoading) {
     return (
       <MainLayout>
-        <div className="flex h-screen items-center justify-center"></div>
-      </MainLayout>
-    );
-  }
-
-  if (error || !data?.data) {
-    return (
-      <MainLayout>
-        <div className="flex h-screen items-center justify-center"></div>
+        <Loading />
       </MainLayout>
     );
   }
@@ -63,7 +56,6 @@ export default function Page() {
             color="black"
             className="cursor-pointer"
             size={24}
-            padding={10}
             onClick={() => window.history.back()}
           />
         }

@@ -8,24 +8,18 @@ import { BodyM, BodyL, Title2xl, BodyXs } from '@/components/ui/Typography';
 import { useNearbyMemoInfoById } from '@/queries/nearbyMemo/useNearbyMemoInfoById';
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup/AddImgButtonGroup';
+import Loading from '@/app/loading';
 
 export default function Page() {
   const params = useParams();
   const id = params.id as string;
   const { data, isLoading, error } = useNearbyMemoInfoById(id);
   //TODO :: suspense 적용 , 컴포넌트화
-  if (isLoading) {
-    return (
-      <MainLayout>
-        <div className="flex h-screen items-center justify-center">로딩중...</div>
-      </MainLayout>
-    );
-  }
 
-  if (error || !data?.data) {
+  if (error || !data?.data || isLoading) {
     return (
       <MainLayout>
-        <div className="flex h-screen items-center justify-center">데이터가 없습니다</div>
+        <Loading />
       </MainLayout>
     );
   }
@@ -40,8 +34,7 @@ export default function Page() {
             name="arrowLeft"
             color="black"
             className="cursor-pointer"
-            size={24}
-            padding={10}
+            size={22}
             onClick={() => window.history.back()}
           />
         }

@@ -75,21 +75,24 @@ function HouseMemoContent() {
             color="neutral"
             className="cursor-pointer"
             size={24}
-            padding={10}
             onClick={handleBackClick}
           />
         }
         title="매물 메모"
         right={
-          <TitleS
-            className="text-primary-50 cursor-pointer px-3 whitespace-nowrap"
-            onClick={handleComplete}
-          >
-            완료
-          </TitleS>
+          activeTab == 'checkList' && (
+            <TitleS
+              className="text-primary-50 cursor-pointer px-3 whitespace-nowrap"
+              onClick={handleComplete}
+            >
+              저장
+            </TitleS>
+          )
         }
       />
-      <AddImgButtonGroup storageKey="images" />
+      <div className="px-4">
+        <AddImgButtonGroup storageKey="images" />
+      </div>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <div className="sticky top-0 z-20 w-full bg-white px-6">
           <TabsList>
