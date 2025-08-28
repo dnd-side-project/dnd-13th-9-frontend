@@ -71,6 +71,7 @@ export type HouseMemo = {
   moveInInfo?: string; // 입주 가능 시기
   categoryMemoList?: ChecklistMemo[]; // 각 카테고리별 메모
   folderId: number; // 폴더 고유 인덱스 값
+  monthlyFee?: number;
 };
 
 export type HouseMemoInputField = {
@@ -103,7 +104,10 @@ export type HouseMemoDataById = {
   managementFee?: number | null;
   moveInInfo?: string;
   checklist: Checklist;
-};
+} & (
+  | { contractType: 'MONTHLY_RENT'; monthlyFee: number }
+  | { contractType: 'JEONSE' | 'PURCHASE'; monthlyFee?: never }
+);
 
 export type ApiResponse<T = HouseMemoDataById> = {
   code: string;

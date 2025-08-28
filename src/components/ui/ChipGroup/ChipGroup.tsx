@@ -13,7 +13,8 @@ type ChipGroupProps<T extends string> = {
   value: T;
   onChange: (val: T) => void;
   activeChipColor: 'primary' | 'secondary';
-  iconName?: IconName;
+  iconName?: IconName | ((optionValue: string, isActive: boolean) => IconName);
+  className?: string;
 };
 
 export function ChipGroup<T extends string>({
@@ -22,12 +23,17 @@ export function ChipGroup<T extends string>({
   onChange,
   activeChipColor,
   iconName,
+  className,
 }: ChipGroupProps<T>) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className={`flex flex-wrap gap-2 ${className || ''}`}>
       {options.map((item) => {
         const optionValue = item.value || item.text;
         const isActive = value === optionValue;
+
+        // iconName이 함수인지 확인하고 적절한 아이콘 결정
+        const finalIconName =
+          typeof iconName === 'function' ? iconName(optionValue, isActive) : iconName;
 
         return (
           <Chip
@@ -35,7 +41,7 @@ export function ChipGroup<T extends string>({
             text={item.text}
             variant={isActive ? activeChipColor : 'neutral'}
             onClick={() => onChange(optionValue as T)}
-            iconName={iconName}
+            iconName={finalIconName}
           />
         );
       })}

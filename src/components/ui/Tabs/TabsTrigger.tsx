@@ -18,10 +18,10 @@ type ChipProps = {
   text?: string;
   chipVariant?: 'primary' | 'secondary';
   className?: string;
-  iconName?: IconName;
+  iconName?: IconName | ((isActive: boolean) => IconName);
 };
 
-function TabsTrigger() {
+export function TabsTrigger() {
   throw new Error(
     'Direct use of TabsTrigger is not allowed. Use TabsTrigger.Bar or TabsTrigger.Chip.'
   );
@@ -46,7 +46,7 @@ TabsTrigger.Bar = function ({ value, children, className }: BarProps) {
       {isActive && (
         <motion.div
           layoutId="tabs-underline"
-          className="absolute bottom-0 left-0 h-1 w-full bg-blue-500"
+          className="bg-primary-50 absolute bottom-0 left-0 h-1 w-full"
           transition={{ type: 'spring', stiffness: 500, damping: 30 }}
         />
       )}
@@ -61,6 +61,8 @@ TabsTrigger.Chip = function ({ iconName, value, text, className }: ChipProps) {
 
   const badgeStyle = isActive ? 'bg-[#669AFF] text-white' : 'bg-white text-[#707070]';
 
+  const finalIconName = typeof iconName === 'function' ? iconName(isActive) : iconName;
+
   return (
     <div
       onClick={() => setActiveTab(value)}
@@ -70,10 +72,8 @@ TabsTrigger.Chip = function ({ iconName, value, text, className }: ChipProps) {
         className
       )}
     >
-      {iconName && <Icon name={iconName} width={20} />}
+      {finalIconName && <Icon name={finalIconName} width={20} />}
       <BodyS className="text-center whitespace-nowrap">{text}</BodyS>
     </div>
   );
 };
-
-export { TabsTrigger };

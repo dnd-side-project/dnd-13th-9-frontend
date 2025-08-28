@@ -12,20 +12,54 @@ export function AddImgButtonGroup({
   readonly = false,
   storageKey,
 }: AddImgButtonGroupProps) {
-  const [localImages, setLocalImages] = useState<string[]>([]);
+  const [localImages, setLocalImages] = useState<string[]>(['', '', '', '', '', '']);
 
   useEffect(() => {
     if (storageKey && typeof window !== 'undefined') {
       try {
         const stored = localStorage.getItem(storageKey);
         if (stored) {
-          setLocalImages(JSON.parse(stored));
+          const storedImages = JSON.parse(stored);
+
+          if (Array.isArray(storedImages)) {
+            const newArray = ['', '', '', '', '', ''];
+            storedImages.forEach((img: string, idx: number) => {
+              if (idx < 6) {
+                newArray[idx] = img || '';
+              }
+            });
+            setLocalImages(newArray);
+          }
         }
       } catch (error) {
         console.error('Failed to parse images from localStorage:', error);
       }
     }
   }, [storageKey]);
+
+  const addImageAtIndex = (index: number, imageData: string) => {
+    if (index >= 0 && index < 6) {
+      const newArray = [...localImages];
+      newArray[index] = imageData;
+      setLocalImages(newArray);
+
+      if (storageKey) {
+        localStorage.setItem(storageKey, JSON.stringify(newArray));
+      }
+    }
+  };
+
+  const removeImageAtIndex = (index: number) => {
+    if (index >= 0 && index < 6) {
+      const newArray = [...localImages];
+      newArray[index] = '';
+      setLocalImages(newArray);
+
+      if (storageKey) {
+        localStorage.setItem(storageKey, JSON.stringify(newArray));
+      }
+    }
+  };
 
   const displayImages = storageKey ? localImages : images.map((img) => img.url);
 
@@ -37,6 +71,8 @@ export function AddImgButtonGroup({
         readonly={readonly}
         imageUrl={displayImages[0]}
         storageKey={storageKey}
+        onImageAdd={(imageData) => addImageAtIndex(0, imageData)}
+        onImageRemove={() => removeImageAtIndex(0)}
       />
 
       <div className="flex shrink-0 flex-col items-center gap-2">
@@ -46,6 +82,8 @@ export function AddImgButtonGroup({
           readonly={readonly}
           imageUrl={displayImages[1]}
           storageKey={storageKey}
+          onImageAdd={(imageData) => addImageAtIndex(1, imageData)}
+          onImageRemove={() => removeImageAtIndex(1)}
         />
         <AddImgButton
           size="sm"
@@ -53,6 +91,8 @@ export function AddImgButtonGroup({
           readonly={readonly}
           imageUrl={displayImages[2]}
           storageKey={storageKey}
+          onImageAdd={(imageData) => addImageAtIndex(2, imageData)}
+          onImageRemove={() => removeImageAtIndex(2)}
         />
       </div>
 
@@ -62,6 +102,8 @@ export function AddImgButtonGroup({
         readonly={readonly}
         imageUrl={displayImages[3]}
         storageKey={storageKey}
+        onImageAdd={(imageData) => addImageAtIndex(3, imageData)}
+        onImageRemove={() => removeImageAtIndex(3)}
       />
 
       <div className="flex shrink-0 flex-col items-center gap-2">
@@ -71,6 +113,8 @@ export function AddImgButtonGroup({
           readonly={readonly}
           imageUrl={displayImages[4]}
           storageKey={storageKey}
+          onImageAdd={(imageData) => addImageAtIndex(4, imageData)}
+          onImageRemove={() => removeImageAtIndex(4)}
         />
         <AddImgButton
           size="sm"
@@ -78,6 +122,8 @@ export function AddImgButtonGroup({
           readonly={readonly}
           imageUrl={displayImages[5]}
           storageKey={storageKey}
+          onImageAdd={(imageData) => addImageAtIndex(5, imageData)}
+          onImageRemove={() => removeImageAtIndex(5)}
         />
       </div>
     </div>

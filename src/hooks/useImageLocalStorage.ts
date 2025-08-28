@@ -45,5 +45,9 @@ export function useImageLocalStorage(key?: string | number, index?: number) {
     reader.readAsDataURL(file);
   };
 
-  return { preview, handleFileChange };
+  const clearPreview = () => {
+    setPreview(null);
+  };
+
+  return { preview, handleFileChange, clearPreview };
 }

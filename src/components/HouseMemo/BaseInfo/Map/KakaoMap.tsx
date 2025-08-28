@@ -22,11 +22,21 @@ export interface KakaoMapRef {
 }
 
 const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
-  const { height = '300px', x, y } = props;
+  const { height = '300px', x, y, lat, lng } = props;
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<MapInstance | null>(null);
   const markerRef = useRef<any>(null);
   const mapPinRef = useRef<HTMLElement | null>(null);
+
+  const getCoordinates = () => {
+    if (lat != null && lng != null) {
+      return { lat: Number(lat), lng: Number(lng) };
+    }
+    if (x != null && y != null && x !== '' && y !== '') {
+      return { lat: Number(y), lng: Number(x) };
+    }
+    return null;
+  };
 
   useEffect(() => {
     const loadKakaoMap = () => {
@@ -34,11 +44,12 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
         const container = mapRef.current;
         if (!container) return;
 
+        const coordinates = getCoordinates();
         let centerLat, centerLng;
 
-        if (x && y && x !== '' && y !== '') {
-          centerLat = Number(y);
-          centerLng = Number(x);
+        if (coordinates) {
+          centerLat = coordinates.lat;
+          centerLng = coordinates.lng;
         } else {
           centerLat = 37.5665;
           centerLng = 126.978;
@@ -52,10 +63,11 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
         const kakaoMap = new kakao.maps.Map(container, options);
         setMap(kakaoMap);
 
-        const pinPosition = x && y ? new kakao.maps.LatLng(Number(y), Number(x)) : options.center;
+        const pinPosition = coordinates
+          ? new kakao.maps.LatLng(coordinates.lat, coordinates.lng)
+          : options.center;
 
         const mapPin = MapPin({ type: props.type || 'PROPERTY', size: 48 });
-
         mapPinRef.current = mapPin;
 
         const overlay = new kakao.maps.CustomOverlay({
@@ -82,12 +94,19 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
   }, []);
 
   useEffect(() => {
-    if (map && x != null && y != null && x !== '' && y !== '') {
-      const newCenter = new kakao.maps.LatLng(Number(y), Number(x));
-      map.setCenter(newCenter);
-      if (markerRef.current) {
-        markerRef.current.setPosition(newCenter);
-      } else {
+    if (map) {
+      const coordinates = getCoordinates();
+      if (coordinates) {
+        const newCenter = new kakao.maps.LatLng(coordinates.lat, coordinates.lng);
+        map.setCenter(newCenter);
+
+        if (markerRef.current) {
+          markerRef.current.setMap(null);
+        }
+        if (mapPinRef.current) {
+          mapPinRef.current.remove();
+        }
+
         const mapPin = MapPin({ type: 'PROPERTY', size: 48 });
         mapPinRef.current = mapPin;
 
@@ -102,7 +121,7 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
         markerRef.current = overlay;
       }
     }
-  }, [map, x, y]);
+  }, [map, lat, lng, x, y]);
 
   useImperativeHandle(ref, () => ({
     moveToCurrentLocation: async () => {
