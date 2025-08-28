@@ -119,7 +119,7 @@ export default function page() {
                       case '건물':
                         return 'buildingFill';
                       default:
-                        return 'exampleFill';
+                        return 'example';
                     }
                   })()}
                 />
