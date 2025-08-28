@@ -84,7 +84,7 @@ function HouseMemoContent() {
           </TitleS>
         }
       />
-      <AddImgButtonGroup />
+      <AddImgButtonGroup storageKey="images" />
       <Tabs defaultValue="baseInfo">
         <div className="px-6">
           <TabsList>

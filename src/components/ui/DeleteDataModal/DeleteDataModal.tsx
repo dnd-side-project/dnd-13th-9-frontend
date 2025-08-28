@@ -8,9 +8,17 @@ type Props = {
   isOpen: boolean;
   closeModal: () => void;
   onConfirm?: () => void;
+  title?: string;
+  confirmText?: string;
 };
 
-export function DeleteDataModal({ isOpen, closeModal, onConfirm }: Props) {
+export function DeleteDataModal({
+  isOpen,
+  closeModal,
+  onConfirm,
+  title = '작성 중인 메모를',
+  confirmText = '삭제',
+}: Props) {
   const router = useRouter();
 
   const handleDelete = () => {
@@ -25,9 +33,9 @@ export function DeleteDataModal({ isOpen, closeModal, onConfirm }: Props) {
       <div className="flex flex-col items-center gap-2 rounded-2xl bg-white p-5 shadow-sm">
         <Image src="/assets/trash.svg" alt="alert 아이콘" width={60} height={60} />
         <div className="flex flex-col items-center justify-center pb-4">
-          <span className="text-xl font-semibold">작성 중인 메모를</span>
+          <span className="text-xl font-semibold">{title}</span>
           <div className="flex flex-row">
-            <span className="text-xl font-semibold text-[#669AFF]">삭제</span>
+            <span className="text-xl font-semibold text-[#669AFF]">{confirmText}</span>
             <span className="text-xl font-semibold">하고 나가시겠어요?</span>
           </div>
         </div>

@@ -59,7 +59,7 @@ function NearbyMemoPageContent() {
         }
         title="장소 메모"
       />
-      <AddImgButtonGroup storageKey="nearbyInfoImg" />
+      <AddImgButtonGroup storageKey="nearbyInfoImg" readonly={false} />
       <NearbyInfoForm />
 
       <Button
