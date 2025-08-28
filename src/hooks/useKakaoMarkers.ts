@@ -18,6 +18,8 @@ export function useKakaoMarkers(mapInstanceRef: React.MutableRefObject<any | nul
         type?: MemoType;
         active?: boolean;
         placeTag?: any;
+        labelTop?: string;
+        labelBottom?: string;
       }>,
       onClick: (id: string) => void
     ) => {
@@ -39,6 +41,8 @@ export function useKakaoMarkers(mapInstanceRef: React.MutableRefObject<any | nul
           placeTag: m.placeTag,
           active: !!m.active,
           onClick: () => onClick(m.id),
+          labelTop: m.labelTop,
+          labelBottom: m.labelBottom,
         });
         const overlay = new kakao.maps.CustomOverlay({ position: pos, yAnchor: 1, content });
         overlay.setMap(mapInstanceRef.current);

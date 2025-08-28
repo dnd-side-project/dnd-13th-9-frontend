@@ -15,32 +15,55 @@ export type MapPinOptions = {
   size?: number; // px, default 48
   active?: boolean; // emphasize selected
   onClick?: () => void;
+  labelTop?: string;
+  labelBottom?: string;
 };
 
-export function MapPin({ type, placeTag, size = 48, active, onClick }: MapPinOptions): HTMLElement {
+export function MapPin({
+  type,
+  placeTag,
+  size = 48,
+  active,
+  onClick,
+  labelTop,
+  labelBottom,
+}: MapPinOptions): HTMLElement {
   const PRIMARY = '#669AFF';
   const SECONDARY = '#FBA907';
 
   const baseFill = type === 'NEARBY' ? SECONDARY : PRIMARY; // 핀 배경 색
 
+  // === 기준 치수(원본 SVG) ===
+  const BASE_W = 38;
+  const BASE_H = 46; // viewBox 높이와 동일하게!
+  const BASE_CIRCLE_DIA = 32;
+  const BASE_CIRCLE_TOP = 0.42 * BASE_H; // 비율로 계산 (원래 19.32)
+
+  // === 스케일 ===
+  const scale = size / 48; // 48을 기본 사이즈로 가정
+  const svgW = Math.round(BASE_W * scale);
+  const svgH = Math.round(BASE_H * scale);
+
+  const circleDia = Math.round(BASE_CIRCLE_DIA * scale);
+  const circleTop = Math.round(BASE_CIRCLE_TOP * scale);
+
   const wrapper = document.createElement('div');
+  wrapper.className = 'k-map-pin';
   wrapper.style.position = 'relative';
-  wrapper.style.width = `38px`;
-  wrapper.style.height = `45px`;
-  wrapper.style.transform = 'translate(-50%, -100%)';
+  wrapper.style.width = `${svgW}px`;
+  wrapper.style.height = `${svgH}px`;
   wrapper.style.cursor = 'pointer';
   // 기본 섀도우
   wrapper.style.filter = 'drop-shadow(0 2px 8px rgba(0,0,0,0.15))';
-
-  const svgW = 38; // 배경 핀: 38
-  const svgH = 45; // 배경 핀: 45
-  const circleDia = 32; // 중앙 원: 32
-  const circleTop = Math.round(svgH * 0.42); // 중앙 위치 근사치
+  // 라벨이 핀 위로 떠야 하므로 overflow는 보이도록 설정
+  wrapper.style.overflow = 'visible';
+  wrapper.style.lineHeight = '0';
+  wrapper.style.display = 'inline-block';
 
   wrapper.innerHTML = `
     <div style="position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center;">
       <!-- 배경 핀 (ico-map-pin.svg path 사용) -->
-      <svg width="${svgW}" height="${svgH}" viewBox="0 0 38 46" style="display:block">
+      <svg width="${svgW}" height="${svgH}" viewBox="0 0 ${BASE_W} ${BASE_H}" style="display:block">
         <path d="M18.991 0.804688C29.4795 0.804688 37.9821 9.30726 37.9821 19.7957C37.9821 23.0663 37.1551 26.1435 35.699 28.8299C32.0649 35.5344 24.95 39.6869 19.8961 45.3979C19.4162 45.9402 18.5699 45.9403 18.09 45.3981C13.0369 39.6891 5.92423 35.5401 2.28781 28.8392C0.828721 26.1505 0 23.07 0 19.7957C0 9.30726 8.50257 0.804688 18.991 0.804688Z" fill="${baseFill}"/>
       </svg>
       <!-- 중앙 흰색 원 -->
@@ -48,6 +71,15 @@ export function MapPin({ type, placeTag, size = 48, active, onClick }: MapPinOpt
       <!-- 내부 아이콘 컨테이너 -->
       <div id="pin-inner-icon" style="position:absolute; left:50%; top:${circleTop}px; transform:translate(-50%, -50%);"></div>
     </div>
+    <!-- 라벨 컨테이너 (고정 100x54, 패딩 적용 위해 border-box) -->
+    ${
+      labelTop || labelBottom
+        ? `<div style="position:absolute; left:50%; top:-8px; transform:translate(-50%, -100%); width:100px; height:54px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:2px; background:rgba(255,255,255,0.96); border:1px solid rgba(0,0,0,0.06); border-radius:16px; pointer-events:none; box-shadow:0 1px 2px rgba(0,0,0,0.08); padding:10px 12px; text-align:center; font-family: Pretendard;">
+           <div style="width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:14px; line-height:16px; color:#111111; font-weight: 600;">${labelTop ?? ''}</div>
+           <div style="width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:12px; line-height:14px; color:#818181; font-weight: 400;">${labelBottom ?? ''}</div>
+         </div>`
+        : ''
+    }
   `;
 
   // 내부 아이콘 SVG 매핑 (파일 SVG 그대로 사용)
