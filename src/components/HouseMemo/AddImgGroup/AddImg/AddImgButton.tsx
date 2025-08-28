@@ -56,6 +56,7 @@ export function AddImgButton({
           type="file"
           className="hidden"
           accept=".png, .jpg, .jpeg"
+          multiple={false}
           onChange={onFileChange}
         />
       )}
