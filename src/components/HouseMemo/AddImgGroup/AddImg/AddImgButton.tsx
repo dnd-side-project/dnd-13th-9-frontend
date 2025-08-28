@@ -1,8 +1,8 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/utils/utils';
-import { useImageLocalStorage } from '@/hooks/useImageLocalStorage';
+import { DeleteDataModal } from '@/components/ui/DeleteDataModal';
 
 type Props = {
   size?: 'sm' | 'lg';
@@ -10,6 +10,8 @@ type Props = {
   readonly?: boolean;
   imageUrl?: string;
   storageKey?: string;
+  onImageAdd?: (imageData: string) => void;
+  onImageRemove?: () => void;
 };
 
 export function AddImgButton({
@@ -18,22 +20,45 @@ export function AddImgButton({
   readonly = false,
   imageUrl,
   storageKey,
+  onImageAdd,
+  onImageRemove,
 }: Props) {
   const isSmall = size === 'sm';
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const { preview, handleFileChange } = useImageLocalStorage(storageKey || index, index);
+  const bgImage = imageUrl && imageUrl.trim() !== '' ? imageUrl : null;
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) handleFileChange(file);
+    if (file && onImageAdd) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const result = event.target?.result;
+        if (typeof result === 'string') {
+          onImageAdd(result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleClick = () => {
-    if (!readonly) fileInputRef.current?.click();
+    if (readonly) return;
+
+    if (bgImage) {
+      setIsDeleteModalOpen(true);
+    } else {
+      fileInputRef.current?.click();
+    }
   };
 
-  const bgImage = readonly ? imageUrl : preview;
+  const handleDeleteImage = () => {
+    if (onImageRemove) {
+      onImageRemove();
+    }
+    setIsDeleteModalOpen(false);
+  };
 
   return (
     <div>
@@ -56,9 +81,18 @@ export function AddImgButton({
           type="file"
           className="hidden"
           accept=".png, .jpg, .jpeg"
+          multiple={false}
           onChange={onFileChange}
         />
       )}
+
+      <DeleteDataModal
+        isOpen={isDeleteModalOpen}
+        closeModal={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteImage}
+        title="선택한 이미지를"
+        confirmText="삭제"
+      />
     </div>
   );
 }

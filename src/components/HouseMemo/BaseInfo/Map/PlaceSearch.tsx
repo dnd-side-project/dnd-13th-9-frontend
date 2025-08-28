@@ -54,13 +54,6 @@ export default function PlaceSearch({ value, onChange, onSelect }: PlaceSearchPr
             className="hover:bg-coolGray-20 cursor-pointer rounded-lg p-3"
             onClick={() => {
               onSelect(place);
-
-              setHouseMemo((prev) => ({
-                ...prev,
-                address: place.address_name,
-                longitude: place.x,
-                latitude: place.y,
-              }));
             }}
           >
             <div className="font-semibold">{place.place_name}</div>

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createHouseMemo } from '@/services/house.memo';
 import { HouseMemo } from '@/types/house-memo';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 type CreatePropertyParams = {
   houseMemo: HouseMemo;
@@ -12,6 +13,7 @@ type CreatePropertyParams = {
 
 export function useCreateProperty() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation<HouseMemo, Error, CreatePropertyParams>({
     mutationFn: async ({ houseMemo, selectedFolderId, images, formData: passedFormData }) => {
@@ -88,6 +90,9 @@ export function useCreateProperty() {
         queryKey: ['house-memo'],
       });
       toast.success('매물 정보가 저장되었습니다!');
+      router.push('/map');
+      localStorage.removeItem('houseMemo');
+      localStorage.removeItem('images');
     },
     onError: (error: any) => {
       console.error('Error creating property:', error);

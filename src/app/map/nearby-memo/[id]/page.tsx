@@ -8,24 +8,19 @@ import { BodyM, BodyL, Title2xl, BodyXs } from '@/components/ui/Typography';
 import { useNearbyMemoInfoById } from '@/queries/nearbyMemo/useNearbyMemoInfoById';
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup/AddImgButtonGroup';
+import { Chip } from '@/components/ui/Chip';
+import Loading from '@/app/loading';
 
 export default function Page() {
   const params = useParams();
   const id = params.id as string;
   const { data, isLoading, error } = useNearbyMemoInfoById(id);
   //TODO :: suspense 적용 , 컴포넌트화
-  if (isLoading) {
-    return (
-      <MainLayout>
-        <div className="flex h-screen items-center justify-center">로딩중...</div>
-      </MainLayout>
-    );
-  }
 
-  if (error || !data?.data) {
+  if (error || !data?.data || isLoading) {
     return (
       <MainLayout>
-        <div className="flex h-screen items-center justify-center">데이터가 없습니다</div>
+        <Loading />
       </MainLayout>
     );
   }
@@ -40,8 +35,7 @@ export default function Page() {
             name="arrowLeft"
             color="black"
             className="cursor-pointer"
-            size={24}
-            padding={10}
+            size={22}
             onClick={() => window.history.back()}
           />
         }
@@ -60,6 +54,45 @@ export default function Page() {
           images={memo.imageUrls.map((url, index) => ({ url, order: index + 1 }))}
           readonly={true}
         />
+
+        <div className="flex flex-wrap gap-2">
+          <Chip iconName="folder" variant="secondary" size="sm" text={`폴더 ${memo.folderId}`} />
+
+          <Chip
+            variant="secondary"
+            iconName={
+              memo.placeTag === 'ADVANTAGE'
+                ? 'advantageFill'
+                : memo.placeTag === 'DISADVANTAGE'
+                  ? 'disadvantageFill'
+                  : memo.placeTag === 'CONVENIENCE'
+                    ? 'convenienceFill'
+                    : memo.placeTag === 'TRANSPORTATION'
+                      ? 'transportationFill'
+                      : memo.placeTag === 'SECURITY'
+                        ? 'security'
+                        : memo.placeTag === 'NOISE'
+                          ? 'noiseFill'
+                          : 'example'
+            }
+            size="sm"
+            text={
+              memo.placeTag === 'ADVANTAGE'
+                ? '장점'
+                : memo.placeTag === 'DISADVANTAGE'
+                  ? '단점'
+                  : memo.placeTag === 'CONVENIENCE'
+                    ? '편의'
+                    : memo.placeTag === 'TRANSPORTATION'
+                      ? '교통'
+                      : memo.placeTag === 'SECURITY'
+                        ? '안전'
+                        : memo.placeTag === 'NOISE'
+                          ? '소음'
+                          : '기타'
+            }
+          />
+        </div>
 
         {/* 메모 제목 */}
         <Title2xl className="text-xl font-bold">{memo.title}</Title2xl>
