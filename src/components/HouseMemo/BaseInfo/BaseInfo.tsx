@@ -3,30 +3,27 @@ import { Icon } from '@/components/ui/Icon';
 import { Button } from '@/components/ui/Button';
 import { TitleXs } from '@/components/ui/Typography';
 import { BaseInfoForm } from './BaseInfoForm';
-import { useHouseMemo } from '@/contexts/HouseMemoContext';
-import { formatHouseMemoForAPI } from '@/utils/houseMemoStorage';
+import { MainLayout } from '@/components/layout';
 
-export default function BaseInfo() {
-  const { houseMemo } = useHouseMemo();
+type Props = {
+  onNextClick: () => void;
+};
 
-  const handleSave = () => {
-    const formattedData = formatHouseMemoForAPI(houseMemo);
-  };
-
+export default function BaseInfo({ onNextClick }: Props) {
   return (
     <div className="relative px-6">
       <BaseInfoForm />
 
-      <Button
-        size="large"
-        className="fixed bottom-4 mx-auto flex w-96 items-center justify-center md:w-82"
-        onClick={handleSave}
-      >
-        <div className="bottom-2 flex">
-          <TitleXs className="whitespace-nowrap">아래로 내리기</TitleXs>
-          <Icon name="arrowDown" width={20} height={20} />
+      <div className="fixed bottom-0 left-1/2 z-10 w-full max-w-110 -translate-x-1/2 bg-white pb-[env(safe-area-inset-bottom)]">
+        <div className="flex justify-center px-6 py-4">
+          <Button size="large" className="w-86 shadow-sm md:w-96" onClick={onNextClick}>
+            <div className="flex items-center justify-center gap-2">
+              <TitleXs className="whitespace-nowrap">다음으로</TitleXs>
+              <Icon name="arrowDown" width={20} height={20} />
+            </div>
+          </Button>
         </div>
-      </Button>
+      </div>
     </div>
   );
 }

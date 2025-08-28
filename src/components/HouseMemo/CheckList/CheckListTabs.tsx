@@ -70,7 +70,27 @@ export default function CheckListTabs({
         <TabsList className="scrollbar-hidden overflow-scroll py-4">
           {categories.map((category) => (
             <TabsTrigger.Chip
-              iconName="example"
+              iconName={(isActive) => {
+                const baseIcon = (() => {
+                  switch (category.name) {
+                    case '필수 확인':
+                      return 'required';
+                    case '메인 공간':
+                      return 'mainSpace';
+                    case '창문':
+                      return 'window';
+                    case '욕실':
+                      return 'bathroom';
+                    case '건물':
+                      return 'building';
+                    default:
+                      return 'example';
+                  }
+                })();
+
+                const iconName = isActive ? `${baseIcon}Fill` : baseIcon;
+                return iconName as any;
+              }}
               key={category.order}
               value={category.name}
               text={category.name}
@@ -89,9 +109,9 @@ export default function CheckListTabs({
               />
             </div>
 
-            <div className="fixed bottom-0 left-1/2 flex w-105 -translate-x-1/2 flex-col gap-4 rounded-t-2xl bg-white px-4 py-4 shadow-2xl">
+            <div className="fixed bottom-0 left-1/2 flex w-full max-w-md -translate-x-1/2 flex-col gap-2 rounded-t-2xl bg-white px-4 py-4 shadow-lg md:max-w-fit md:gap-4 md:px-6 md:py-6 md:shadow-2xl lg:max-w-xl">
               <div className="flex w-full justify-between px-2">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4">
                   <Icon
                     name="spinnerLeft"
                     width={10}

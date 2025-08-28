@@ -15,6 +15,7 @@ import { checkListData } from '@/app/checklist/checkListData';
 import { Button } from '@/components/ui/Button';
 import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
+import { useSendRequiredItems } from '@/queries/checkList/useSendRequiredItems';
 
 export default function page() {
   const [sections, setSections] = useState(checkListData.sections);
@@ -34,6 +35,17 @@ export default function page() {
     );
   };
 
+  const { mutate, isPending } = useSendRequiredItems();
+
+  const handleClick = () => {
+    const filledIds = sections
+      .flatMap((section) => section.items)
+      .filter((item) => item.isFill)
+      .map((item) => item.id);
+
+    mutate({ itemIdList: filledIds });
+  };
+
   return (
     <MainLayout className="bg-[#F0F5FB] pb-22">
       <Header
@@ -43,7 +55,7 @@ export default function page() {
             name="arrowLeft"
             color="neutral"
             className="cursor-pointer"
-            size={24}
+            size={22}
             onClick={() => window.history.back()}
           />
         }
@@ -62,7 +74,27 @@ export default function page() {
             {checkListData.categories.map((category) => (
               <TabsTrigger.Chip
                 key={category.order}
-                iconName="example"
+                iconName={(isActive) => {
+                  const baseIcon = (() => {
+                    switch (category.name) {
+                      case '필수 확인':
+                        return 'required';
+                      case '메인 공간':
+                        return 'mainSpace';
+                      case '창문':
+                        return 'window';
+                      case '욕실':
+                        return 'bathroom';
+                      case '건물':
+                        return 'building';
+                      default:
+                        return 'example';
+                    }
+                  })();
+
+                  const iconName = isActive ? `${baseIcon}Fill` : baseIcon;
+                  return iconName as any;
+                }}
                 value={category.name}
                 text={category.name}
               />
@@ -72,7 +104,26 @@ export default function page() {
           {sections.map((section) => (
             <TabsContent key={section.categoryName} value={section.categoryName}>
               <CheckListBox>
-                <CheckListTitle title={section.categoryName} />
+                <CheckListTitle
+                  title={section.categoryName}
+                  iconName={(() => {
+                    switch (section.categoryName) {
+                      case '필수 확인':
+                        return 'requiredFill';
+                      case '메인 공간':
+                        return 'mainSpaceFill';
+                      case '창문':
+                        return 'windowFill';
+                      case '욕실':
+                        return 'bathroomFill';
+                      case '건물':
+                        return 'buildingFill';
+                      default:
+                        return 'example';
+                    }
+                  })()}
+                />
+
                 <CheckListBoxSeparator />
 
                 {section.categoryName === '필수 확인' ? (
@@ -136,6 +187,8 @@ export default function page() {
       </div>
       <Button
         label="저장하기"
+        onClick={handleClick}
+        disabled={isPending}
         size="large"
         className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2"
       />
