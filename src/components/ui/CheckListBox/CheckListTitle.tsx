@@ -11,8 +11,8 @@ type Props = {
 
 export function CheckListTitle({ iconName = 'example', title, className }: Props) {
   return (
-    <div className={`flex gap-3 px-7 py-4 pt-6 ${className || ''}`}>
-      <Icon name={iconName} />
+    <div className={`flex gap-1 px-5 py-4 pt-6 ${className || ''}`}>
+      <Icon width={30} name={iconName} />
       <TitleM>{title}</TitleM>
     </div>
   );

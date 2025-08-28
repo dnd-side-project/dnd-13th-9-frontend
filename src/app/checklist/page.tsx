@@ -74,7 +74,27 @@ export default function page() {
             {checkListData.categories.map((category) => (
               <TabsTrigger.Chip
                 key={category.order}
-                iconName="example"
+                iconName={(isActive) => {
+                  const baseIcon = (() => {
+                    switch (category.name) {
+                      case '필수 확인':
+                        return 'required';
+                      case '메인 공간':
+                        return 'mainSpace';
+                      case '창문':
+                        return 'window';
+                      case '욕실':
+                        return 'bathroom';
+                      case '건물':
+                        return 'building';
+                      default:
+                        return 'example';
+                    }
+                  })();
+
+                  const iconName = isActive ? `${baseIcon}Fill` : baseIcon;
+                  return iconName as any;
+                }}
                 value={category.name}
                 text={category.name}
               />
@@ -84,7 +104,26 @@ export default function page() {
           {sections.map((section) => (
             <TabsContent key={section.categoryName} value={section.categoryName}>
               <CheckListBox>
-                <CheckListTitle title={section.categoryName} />
+                <CheckListTitle
+                  title={section.categoryName}
+                  iconName={(() => {
+                    switch (section.categoryName) {
+                      case '필수 확인':
+                        return 'requiredFill';
+                      case '메인 공간':
+                        return 'mainSpaceFill';
+                      case '창문':
+                        return 'windowFill';
+                      case '욕실':
+                        return 'bathroomFill';
+                      case '건물':
+                        return 'buildingFill';
+                      default:
+                        return 'exampleFill';
+                    }
+                  })()}
+                />
+
                 <CheckListBoxSeparator />
 
                 {section.categoryName === '필수 확인' ? (

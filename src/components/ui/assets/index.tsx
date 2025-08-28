@@ -47,6 +47,17 @@ import IcoSecurity from './nearby-icon/ico-security-fill.svg';
 import IcoSecurityOutline from './nearby-icon/ico-security.svg';
 import IcoNoise from './nearby-icon/ico-noise.svg';
 import IcoNoiseFill from './nearby-icon/ico-noise-fill.svg';
+// Checklist icons
+import IcoWindow from './checklist-icon/ico-window.svg';
+import IcoWindowFill from './checklist-icon/ico-window-fill.svg';
+import IcoBuilding from './checklist-icon/ico-building.svg';
+import IcoBuildingFill from './checklist-icon/ico-building-fill.svg';
+import IcoMainSpace from './checklist-icon/ico-main-space.svg';
+import IcoMainSpaceFill from './checklist-icon/ico-main-space-fill.svg';
+import IcoBathroom from './checklist-icon/ico-bathroom.svg';
+import IcoBathroomFill from './checklist-icon/ico-bathroom-fill.svg';
+import IcoRequired from './checklist-icon/ico-required.svg';
+import IcoRequiredFill from './checklist-icon/ico-required-fill.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -85,6 +96,7 @@ export const Icons = {
   spinnerLeft: IcoSpinnerleft,
   checkList: IcoCheckList,
   copy: IcoCopy,
+  // Nearby icons
   advantage: IcoAdvantage,
   advantageFill: IcoAdvantageFill,
   disadvantage: IcoDisadvantage,
@@ -97,6 +109,17 @@ export const Icons = {
   securityOutline: IcoSecurityOutline,
   noise: IcoNoise,
   noiseFill: IcoNoiseFill,
+  // Checklist icons
+  window: IcoWindow,
+  windowFill: IcoWindowFill,
+  building: IcoBuilding,
+  buildingFill: IcoBuildingFill,
+  mainSpace: IcoMainSpace,
+  mainSpaceFill: IcoMainSpaceFill,
+  bathroom: IcoBathroom,
+  bathroomFill: IcoBathroomFill,
+  required: IcoRequired,
+  requiredFill: IcoRequiredFill,
 };
 
 export type IconName = keyof typeof Icons;
