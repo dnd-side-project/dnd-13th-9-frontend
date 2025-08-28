@@ -63,13 +63,15 @@ export default function page() {
         />
 
         <div className="fixed bottom-4 flex items-center justify-center">
-          <Button
-            label="저장하기"
-            size="large"
-            onClick={handleSave}
-            disabled={!selectedFolderId || createPropertyMutation.isPending}
-            loading={createPropertyMutation.isPending}
-          />
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 transform">
+            <Button
+              label="저장하기"
+              size="large"
+              onClick={handleSave}
+              disabled={!selectedFolderId || createPropertyMutation.isPending}
+              loading={createPropertyMutation.isPending}
+            />
+          </div>
         </div>
       </div>
     </MainLayout>

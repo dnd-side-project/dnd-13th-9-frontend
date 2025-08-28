@@ -47,7 +47,7 @@ function SelectMapListContent() {
           showPlanGrid={true}
         />
 
-        <div className="fixed bottom-4 flex items-center justify-center">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 transform">
           <Button
             label="저장하기"
             size="large"

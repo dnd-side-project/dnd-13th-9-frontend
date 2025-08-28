@@ -299,25 +299,17 @@ export function FolderSelector({
         isOpen={openDelete}
         onClose={() => setOpenDelete(false)}
         title="폴더 삭제"
-        description={`"${targetFolderName}" 폴더를 삭제하시겠습니까?`}
-        confirmLabel="삭제"
+        label="폴더"
+        name={targetFolderName}
         loading={loading}
         onConfirm={async () => {
-          if (!targetFolderId || !effectivePlanId) return;
+          if (!targetFolderId) return;
           setLoading(true);
           try {
             await deleteFolder.mutateAsync({ folderId: targetFolderId });
-            setOpenDelete(false);
-
-            if (targetFolderId === selectedFolderId) {
-              const remainingFolders = folders.filter((f) => f.folderId !== targetFolderId);
-              const latest = pickLatestByCreatedAt(remainingFolders);
-              if (latest) onFolderSelect(latest.folderId);
-            }
-          } catch (error) {
-            console.error('Failed to delete folder:', error);
           } finally {
             setLoading(false);
+            setOpenDelete(false);
           }
         }}
       />
