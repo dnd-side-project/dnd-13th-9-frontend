@@ -70,7 +70,27 @@ export default function CheckListTabs({
         <TabsList className="scrollbar-hidden overflow-scroll py-4">
           {categories.map((category) => (
             <TabsTrigger.Chip
-              iconName="example"
+              iconName={(isActive) => {
+                const baseIcon = (() => {
+                  switch (category.name) {
+                    case '필수 확인':
+                      return 'required';
+                    case '메인 공간':
+                      return 'mainSpace';
+                    case '창문':
+                      return 'window';
+                    case '욕실':
+                      return 'bathroom';
+                    case '건물':
+                      return 'building';
+                    default:
+                      return 'example';
+                  }
+                })();
+
+                const iconName = isActive ? `${baseIcon}Fill` : baseIcon;
+                return iconName as any;
+              }}
               key={category.order}
               value={category.name}
               text={category.name}
