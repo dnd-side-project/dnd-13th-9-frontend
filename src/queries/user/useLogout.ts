@@ -10,7 +10,7 @@ export function useLogout() {
     mutationFn: logout,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['myInfo'] });
-      router.push('/login');
+      router.push('/');
     },
     onError: (err) => console.error('로그아웃 실패', err),
   });

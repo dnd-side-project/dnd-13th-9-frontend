@@ -96,6 +96,7 @@
   }
 }
 
+/* 메인 페이지 애니메이션 */
 @layer utilities {
   /* 매물 지도 */
   @keyframes float-slow {
@@ -103,7 +104,7 @@
       transform: translateY(0) rotate(0deg);
     }
     50% {
-      transform: translateY(-6px) rotate(-0.4deg);
+      transform: translateY(-8px) rotate(-0.5deg);
     }
     100% {
       transform: translateY(0) rotate(0deg);
@@ -114,22 +115,16 @@
     animation: float-slow 5s ease-in-out infinite;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .animate-float-slow {
-      animation: none;
-    }
-  }
-
   /* 체크리스트 */
   @keyframes tilt-swing {
     0% {
-      transform: rotate(30deg);
+      transform: rotate(40deg);
     }
     50% {
-      transform: rotate(-10deg);
+      transform: rotate(10deg);
     }
     100% {
-      transform: rotate(30deg);
+      transform: rotate(40deg);
     }
   }
 
@@ -138,38 +133,7 @@
     transform-origin: center;
   }
 
-  /* 에티켓 인터렉션 */
-  @keyframes slide-up-in {
-    0% {
-      transform: translateY(12px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .animate-slide-up-in {
-    animation: slide-up-in 300ms ease-out both;
-  }
-
-  @keyframes slide-up-out {
-    0% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(-12px);
-      opacity: 0;
-    }
-  }
-
-  .animate-slide-up-out {
-    animation: slide-up-out 300ms ease-in both;
-  }
-
-  /* 번개 지지직 느낌의 좌우 잔진동 */
+  /* 매물 비교 투표 - 번개 지지직 느낌의 좌우 잔진동 */
   @keyframes electric-jitter {
     0%,
     100% {
@@ -221,5 +185,149 @@
   .animate-electric-jitter {
     animation: electric-jitter 3s ease-in-out infinite;
     will-change: transform, filter;
+  }
+
+  /* 에티켓 인터렉션 */
+  @keyframes slide-up-in {
+    0% {
+      transform: translateY(12px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-up-in {
+    animation: slide-up-in 300ms ease-out both;
+  }
+
+  @keyframes slide-up-out {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-12px);
+      opacity: 0;
+    }
+  }
+
+  .animate-slide-up-out {
+    animation: slide-up-out 300ms ease-in both;
+  }
+
+  /* 강조 애니메이션 (한 번만) - 손가락 아이콘 등 */
+  @keyframes finger-emphasize {
+    0% {
+      transform: translateY(0) scale(1) rotate(0deg);
+      opacity: 0.9;
+    }
+    35% {
+      transform: translateY(-2px) scale(1.08) rotate(-6deg);
+      opacity: 1;
+    }
+    65% {
+      transform: translateY(0) scale(1.02) rotate(0deg);
+    }
+    100% {
+      transform: translateY(0) scale(1) rotate(0deg);
+    }
+  }
+
+  .animate-finger-emphasize {
+    transform-origin: bottom center;
+    animation: finger-emphasize 600ms ease-out both;
+  }
+
+  /* 로그인: 조명 펜듈럼 흔들림 (감쇠로 더 자연스럽게) */
+  @keyframes light-sway {
+    0% {
+      transform: rotate(0deg);
+    }
+    15% {
+      transform: rotate(7deg);
+    }
+    35% {
+      transform: rotate(-5deg);
+    }
+    55% {
+      transform: rotate(3deg);
+    }
+    75% {
+      transform: rotate(-1deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  .animate-light-sway {
+    animation: light-sway 3.8s ease-in-out infinite;
+    transform-origin: top center;
+  }
+
+  /* 로그인: 식물 살랑 흔들림 (줄기 기준) */
+  @keyframes plant-sway {
+    0% {
+      transform: rotate(0deg) translateY(0);
+    }
+    50% {
+      transform: rotate(-4deg) translateY(0);
+    }
+    100% {
+      transform: rotate(0deg) translateY(0);
+    }
+  }
+  .animate-plant-sway {
+    animation: plant-sway 3.8s ease-in-out infinite;
+    transform-origin: bottom center;
+  }
+
+  /* 로그인: 돋보기 단순/부드러운 확대 관찰 (미세 회전 + 스케일) */
+  @keyframes search-inspect {
+    0% {
+      transform: translate(0, 0) rotate(4deg) scale(1);
+    }
+    25% {
+      transform: translate(5px, -3px) rotate(4.8deg) scale(1.03);
+    }
+    50% {
+      transform: translate(0, 0) rotate(5.2deg) scale(1.06);
+    }
+    75% {
+      transform: translate(-5px, 3px) rotate(4.6deg) scale(1.03);
+    }
+    100% {
+      transform: translate(0, 0) rotate(4deg) scale(1);
+    }
+  }
+  .animate-search-inspect {
+    animation: search-inspect 4.2s ease-in-out infinite;
+    will-change: transform;
+    transform-origin: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow,
+  .animate-tilt-swing,
+  .animate-electric-jitter {
+    animation: none !important;
+  }
+
+  /* 선택: 과도한 트랜지션도 최소화 */
+  .transition-all,
+  .transition {
+    transition: none !important;
+  }
+
+  .animate-finger-emphasize {
+    animation: none !important;
+  }
+
+  .animate-light-sway,
+  .animate-plant-sway {
+    animation: none !important;
   }
 }

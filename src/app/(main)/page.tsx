@@ -11,8 +11,7 @@ import { Icon } from '@/components/ui/Icon';
 import { useRouter } from 'next/navigation';
 import { useMyInfo } from '@/queries/user/useMyInfo';
 import { colors } from '@/utils/style/colors';
-import IcoZipText from '@assets/ico-zipzip-text.svg';
-import IcoZip from '@assets/ico-zipzip.svg';
+import IcoZip from '@assets/ico-logo.svg';
 
 export default function HomePage() {
   const router = useRouter();
@@ -59,9 +58,9 @@ export default function HomePage() {
             title="매물 지도"
             description="지도 위에 메모해둬야지"
             bgColor={colors.primary[50]}
-            bgImageSrc="/assets/bg-main-map.svg"
+            bgImageSrc="/assets/main/bg-map.svg"
             bgImageClassName="min-[440px]:-bottom-15 -bottom-18"
-            overlayImageSrc="/assets/ico-main-map-pen.svg"
+            overlayImageSrc="/assets/main/ico-map.svg"
             overlayClassName="min-[440px]:bottom-20 bottom-16 left-3 animate-float-slow"
             size="large"
           />
@@ -71,10 +70,10 @@ export default function HomePage() {
               title="체크리스트"
               description="집 볼 땐 어떤걸 확인해?"
               bgColor={colors.secondary[50]}
-              bgImageSrc="/assets/bg-checklist.svg"
+              bgImageSrc="/assets/main/bg-checklist.svg"
               bgImageClassName="top-8 -right-1 rotate-30"
-              overlayImageSrc="/assets/ico-checklist-search.svg"
-              overlayClassName="animate-tilt-swing min-[440px]:left-[50%] left-[43%] -translate-x-1/2 bottom-4 rotate-50"
+              overlayImageSrc="/assets/main/ico-checklist.svg"
+              overlayClassName="animate-tilt-swing min-[440px]:left-[50%] left-[40%] -translate-x-1/2 bottom-1 rotate-50"
               size="small"
             />
             <RouteBox
@@ -82,8 +81,8 @@ export default function HomePage() {
               title="매물 비교 투표"
               description="친구야! 넌 어떻게 생각해?"
               bgColor={colors.neutral[40]}
-              bgImageSrc="/assets/bg-main-vote.svg"
-              overlayImageSrc="/assets/ico-main-vote.svg"
+              bgImageSrc="/assets/main/bg-vote.svg"
+              overlayImageSrc="/assets/main/ico-vote.svg"
               overlayClassName="bottom-0 left-0 h-full animate-electric-jitter"
               size="small"
               textColor="#000000"
@@ -95,15 +94,19 @@ export default function HomePage() {
           <IconTextRouter
             label="바로 메모"
             routePath="map/house-memo"
-            icoPath="/assets/ico-memo.svg"
+            icoPath="/assets/main/ico-house-memo.svg"
           />
-          <IconTextRouter label="내 메모.zip" routePath="/map" icoPath="/assets/ico-list.svg" />
+          <IconTextRouter
+            label="내 메모.zip"
+            routePath="/map"
+            icoPath="/assets/main/ico-memo-list.svg"
+          />
           <IconTextRouter
             label="에티켓"
             routePath="/etiquette"
-            icoPath="/assets/ico-etiquette.svg"
+            icoPath="/assets/main/ico-etiquette.svg"
           />
-          <IconTextRouter label="자취팁 영상" routePath="/tip" icoPath="/assets/ico-tip.svg" />
+          <IconTextRouter label="자취팁 영상" routePath="/tip" icoPath="/assets/main/ico-tip.svg" />
         </div>
 
         <div className="py-12">

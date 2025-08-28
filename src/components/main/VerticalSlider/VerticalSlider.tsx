@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { BodyM } from '@/components/ui/Typography';
-import IcoFinger from '@assets/ico-finger.svg';
+import IcoFinger from '@assets/main/ico-finger.svg';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import AnimatedFingerIcon from '@/components/ui/Icon/AnimatedFingerIcon';
 
 const MESSAGES: string[] = [
   '계약 전, 꼭 등기부등본을 확인해보세요!',
@@ -21,7 +22,7 @@ const MESSAGES: string[] = [
 ];
 
 const DURATION = 0.5; // enter/exit 애니메이션 시간
-const VISIBLE_MS = 3000; // 노출 유지 시간
+const VISIBLE_MS = 2500; // 노출 유지 시간
 
 export function VerticalSlider() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export function VerticalSlider() {
       onClick={handleClick}
       className="flex max-h-[75px] w-full items-center justify-start gap-2 rounded-2xl bg-[#F0F5FB] p-5 text-left"
     >
-      <IcoFinger className="h-8 w-8 shrink-0" />
+      <AnimatedFingerIcon className="h-8 w-8 shrink-0" delayMs={150} trigger={index} />
 
       {/* 고정 높이를 주어 레이아웃 점프 방지 (BodyM 라인 높이에 맞춰 조정하세요) */}
       <div className="relative w-full overflow-hidden" style={{ height: 24 }}>
@@ -58,7 +59,7 @@ export function VerticalSlider() {
             exit={{ y: '-100%', opacity: 0 }}
             transition={{ duration: DURATION, ease: 'easeOut' }}
           >
-            <BodyM>{MESSAGES[index]}</BodyM>
+            <BodyM className="h-6 leading-6">{MESSAGES[index]}</BodyM>
           </motion.div>
         </AnimatePresence>
       </div>
