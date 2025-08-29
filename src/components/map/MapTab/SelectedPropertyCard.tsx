@@ -23,6 +23,9 @@ export function SelectedPropertyCard() {
   const isUserSlidingRef = React.useRef(false);
   const cardRef = React.useRef<HTMLDivElement | null>(null);
 
+  // Show a slight preview of the next slide when multiple slides exist
+  const hasMultipleSlides = memosInFolder.length > 1;
+
   // Swiper instance helpers for readability
   const isSwiperDestroyed = (inst: any) => !inst || Boolean(inst.destroyed);
   const getActiveIndex = (inst: any) => (inst?.realIndex ?? inst?.activeIndex ?? 0) as number;
@@ -92,12 +95,13 @@ export function SelectedPropertyCard() {
   if (!selectedProp) return null;
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-10 z-30 flex justify-center px-4">
-      <div ref={cardRef} className="pointer-events-auto w-full">
+    <div className="pointer-events-none absolute inset-x-0 bottom-10 z-30 flex justify-center">
+      <div ref={cardRef} className={`${hasMultipleSlides ? 'pointer-events-auto' : 'px-4'} w-full`}>
         <Swiper
-          slidesPerView={1}
-          spaceBetween={16}
+          slidesPerView={hasMultipleSlides ? 1.08 : 1}
+          spaceBetween={8}
           loop={false}
+          slidesOffsetAfter={hasMultipleSlides ? 32 : 0}
           onSwiper={handleSwiperMount}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
@@ -113,7 +117,7 @@ export function SelectedPropertyCard() {
             return (
               <SwiperSlide key={m.id}>
                 <div
-                  className="h-[114px] w-full cursor-pointer overflow-hidden rounded-2xl bg-white p-3 shadow-md"
+                  className={`${hasMultipleSlides ? 'ml-4' : ''} h-[114px] w-full cursor-pointer overflow-hidden rounded-2xl bg-white p-3 shadow-md`}
                   onClick={() => {
                     const href =
                       m.type === 'NEARBY'
@@ -133,13 +137,14 @@ export function SelectedPropertyCard() {
                         />
                       ) : (
                         <div
-                          className={`${m.type === 'NEARBY' ? 'bg-secondary-10' : 'bg-coolGray-20'} flex h-full w-full items-center justify-center`}
+                          className={`bg-neutral-20 flex h-full w-full items-center justify-center`}
                         >
-                          {m.type === 'NEARBY' ? (
-                            <Icon name="favorite" color="secondary" width={32} height={32} />
-                          ) : (
-                            <Icon name="house" color="primary-50" width={32} height={32} />
-                          )}
+                          <Image
+                            src="/assets/ico-no-image.svg"
+                            alt="no image"
+                            width={56}
+                            height={56}
+                          />
                         </div>
                       )}
                     </div>

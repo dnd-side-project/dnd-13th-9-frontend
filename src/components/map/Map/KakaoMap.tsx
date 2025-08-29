@@ -96,6 +96,15 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
     renderMarkers(effectiveMarkers, handleMarkerClick);
   }, [effectiveMarkers, handleMarkerClick, renderMarkers]);
 
+  // 마커 목록이 갱신되었고 선택된 메모가 없으면 첫 매물로 포커싱
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    if (selectedMemoId) return;
+    const first = effectiveMarkers && effectiveMarkers.length > 0 ? effectiveMarkers[0] : null;
+    if (!first) return;
+    panTo(first.lat, first.lng);
+  }, [effectiveMarkers, selectedMemoId, panTo, mapInstanceRef]);
+
   // 폴더 전환 시마다 첫 매물로 1회 포커싱 (선택된 메모가 있으면 스킵)
   useEffect(() => {
     if (!mapInstanceRef.current) return;
