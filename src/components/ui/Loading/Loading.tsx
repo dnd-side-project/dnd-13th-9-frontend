@@ -28,7 +28,9 @@ export function Loading({ className, size = 'medium' }: LoadingProps) {
   const rootClassName = ['flex items-center justify-center', className].filter(Boolean).join(' ');
 
   return (
-    <MainLayout className={`${rootClassName} flex h-full items-center justify-center bg-white`}>
+    <MainLayout
+      className={`${rootClassName} flex h-full items-center justify-center bg-white shadow-none`}
+    >
       <LottiePlayer
         autoplay
         loop
