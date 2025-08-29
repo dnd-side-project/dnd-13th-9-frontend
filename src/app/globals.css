@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'swiper/css';
+@import 'aos/dist/aos.css';
 
 @font-face {
   font-family: 'Pretendard';
@@ -83,6 +84,17 @@
       transform 200ms ease,
       opacity 200ms ease,
       clip-path 220ms ease;
+  }
+
+  /* AOS: custom fade-up with small 10px lift for subtle motion */
+  [data-aos='fade-up-10'] {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+    transition-property: opacity, transform;
+  }
+  [data-aos='fade-up-10'].aos-animate {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
   .reveal-panel-closed {
     opacity: 0;

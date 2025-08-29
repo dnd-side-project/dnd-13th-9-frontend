@@ -28,7 +28,7 @@ export default function HomePage() {
   };
 
   return (
-    <MainLayout className="scrollbar-hidden pb-[56px]">
+    <MainLayout className="scrollbar-hidden pb-[40px]">
       <Header
         left={
           // <IcoZipText
