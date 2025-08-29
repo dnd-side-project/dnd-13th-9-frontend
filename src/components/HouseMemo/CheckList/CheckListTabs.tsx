@@ -127,7 +127,7 @@ export default function CheckListTabs({
               />
             </div>
 
-            <div className="fixed bottom-0 left-1/2 flex w-full max-w-md -translate-x-1/2 flex-col gap-2 rounded-t-2xl bg-white px-4 py-4 shadow-lg md:max-w-fit md:gap-4 md:px-6 md:py-6 md:shadow-2xl lg:max-w-xl">
+            <div className="fixed bottom-0 left-1/2 flex w-full max-w-md -translate-x-1/2 flex-col gap-2 rounded-t-2xl bg-white px-4 py-4 shadow-lg md:max-w-lg md:gap-4 md:px-6 md:py-6 md:shadow-2xl lg:max-w-lg">
               <div className="flex w-full justify-between px-2">
                 <div className="flex items-center gap-2 md:gap-4">
                   <Icon
