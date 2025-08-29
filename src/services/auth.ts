@@ -1,6 +1,6 @@
 import { api } from '@/lib/api/ky';
 import { HTTPError } from 'ky';
-import { MyInfoResponse, LogoutResponse } from '@/types/auth';
+import { MyInfoResponse, MyPageResponse, LogoutResponse } from '@/types/auth';
 
 export async function myInfo(): Promise<MyInfoResponse | null> {
   try {
@@ -15,4 +15,8 @@ export async function myInfo(): Promise<MyInfoResponse | null> {
 
 export async function logout(): Promise<LogoutResponse> {
   return api.post('api/auth/logout').json<LogoutResponse>();
+}
+
+export async function mypage(): Promise<MyPageResponse> {
+  return api.get('api/mypage').json<MyPageResponse>();
 }
