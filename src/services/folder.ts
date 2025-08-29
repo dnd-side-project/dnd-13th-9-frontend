@@ -37,17 +37,10 @@ export async function updateFolderName(
   return unwrap(res);
 }
 
-export async function deleteFolder(
-  folderId: number
-): Promise<{ ok: true } | { ok: false; code?: string | number; message?: string }> {
-  try {
-    const res = await api
-      .delete(`api/folder/${folderId}`)
-      .json<MaybeWrapped<Record<string, unknown>>>();
-    void res;
-    return { ok: true } as const;
-  } catch (err: any) {
-    const code = err?.response ? undefined : undefined;
-    return { ok: false, code, message: (err as Error)?.message } as const;
-  }
+export async function deleteFolder(folderId: number): Promise<void> {
+  // ky throws on 4xx/5xx, 성공 시에만 resolve
+  const res = await api
+    .delete(`api/folder/${folderId}`)
+    .json<MaybeWrapped<Record<string, unknown>>>();
+  void res;
 }

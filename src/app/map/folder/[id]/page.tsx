@@ -95,17 +95,38 @@ export default function FolderDetailPage() {
   }, [foldersFromApi, storeFolders, folderIdFromParams]);
 
   const isLoading =
-    isLoadingPlans || (shouldQuery && (isLoadingFolders || isFetchingFolders)) || isLoadingMemos;
+    isLoadingPlans ||
+    (shouldQuery && (isLoadingFolders || isFetchingFolders)) ||
+    isLoadingMemos ||
+    isFetchingMemos;
+
+  // 쿼리 성공 시에는 쿼리 결과를 바로 사용해 스토어 반영 전 깜빡임 방지
+  const visibleMemos = useMemo(
+    () => (isMemosSuccess ? (memos ?? []) : memosInFolder),
+    [isMemosSuccess, memos, memosInFolder]
+  );
 
   return (
     <MainLayout className="flex min-h-0 flex-col">
+      {isLoading && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/60 backdrop-blur-[2px]">
+          <Loading size="large" />
+        </div>
+      )}
       <Header
         left={
           <Icon
             name="arrowLeft"
             className="cursor-pointer"
             size={24}
-            onClick={() => router.push('/map?tab=list')}
+            onClick={() => {
+              const pid = effectivePlanId ?? planId;
+              const fid = folderIdFromParams;
+              const qs = new URLSearchParams({ tab: 'list' });
+              if (pid) qs.set('planId', String(pid));
+              if (!Number.isNaN(fid) && fid > 0) qs.set('folderId', String(fid));
+              router.push(`/map?${qs.toString()}`);
+            }}
           />
         }
         center={
@@ -147,7 +168,8 @@ export default function FolderDetailPage() {
             />
           )}
           {!isLoading &&
-            memosInFolder.map((m) => {
+            isMemosSuccess &&
+            visibleMemos.map((m) => {
               const feelingIcon = m.feeling ? getFeelingIconName(m.feeling as any) : 'soSo';
               const feelingColor = m.feeling ? getFeelingColor(m.feeling) : 'neutral';
               return (
@@ -216,10 +238,12 @@ export default function FolderDetailPage() {
                 </button>
               );
             })}
-          {!isLoading && memosInFolder.length === 0 && (
+          {!isLoading && isMemosSuccess && visibleMemos.length === 0 && (
             <div className="mb-[168px] flex h-full flex-col items-center justify-center gap-6 text-center text-sm text-black/50">
-              <IcoEmpty className="mr-20 h-[200px] w-[200px]" />
-              <TitleXs className="text-[20px]">해당 폴더에 매물이 없어요</TitleXs>
+              <IcoEmpty className="mr-20 h-[180px] w-[180px] opacity-50" />
+              <TitleXs className="text-neutral-60 text-[16px] font-medium">
+                해당 폴더에 매물이 없어요
+              </TitleXs>
             </div>
           )}
         </div>

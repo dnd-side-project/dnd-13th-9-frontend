@@ -23,6 +23,15 @@ export default function MapPage() {
   const currentPlanId = useMapStore((s) => s.planId);
   const currentFolderId = useMapStore((s) => s.folderId);
 
+  // URL에 planId/folderId가 있으면 스토어 동기화 (뒤로가기 등 호환)
+  React.useEffect(() => {
+    const pid = Number(searchParams.get('planId'));
+    const fid = Number(searchParams.get('folderId'));
+    if (Number.isFinite(pid) && pid > 0) setPlanId(pid);
+    if (Number.isFinite(fid) && fid > 0) setFolderId(fid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleListTabActivate = React.useCallback(() => {
     if (currentPlanId) setPlanId(currentPlanId);
     if (currentFolderId) setFolderId(currentFolderId);

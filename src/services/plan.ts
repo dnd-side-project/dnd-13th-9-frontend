@@ -32,16 +32,8 @@ export async function updatePlanName(planId: number, payload: { name: string }):
   return unwrap(res);
 }
 
-export async function deletePlan(planId: number): Promise<boolean> {
-  // 일부 백엔드는 wrapper {code,message,data:{}} 형태를 반환
-  try {
-    const res = await api
-      .delete(`api/plan/${planId}`)
-      .json<MaybeWrapped<Record<string, unknown>>>();
-    // 성공 시 true로 취급
-    void res;
-    return true;
-  } catch (e) {
-    return false;
-  }
+export async function deletePlan(planId: number): Promise<void> {
+  // ky는 4xx/5xx에서 예외를 throw 하므로, 성공 시에만 여기까지 도달
+  const res = await api.delete(`api/plan/${planId}`).json<MaybeWrapped<Record<string, unknown>>>();
+  void res;
 }
