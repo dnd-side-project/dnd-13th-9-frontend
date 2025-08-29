@@ -41,12 +41,6 @@ export default function Page() {
           />
         }
         title={memo.title}
-        right={
-          <div className="flex gap-2 px-2">
-            <Icon name="share" color="black" size={20} />
-            <Icon name="edit" color="black" size={20} />
-          </div>
-        }
       />
 
       <div className="flex flex-col gap-6 px-6 py-4">
