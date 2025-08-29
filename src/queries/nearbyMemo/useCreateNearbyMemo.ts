@@ -17,9 +17,14 @@ export function useCreateNearbyMemo() {
   const { nearbyMemo } = useNearbyMemo();
   const router = useRouter();
 
+  const processBase64ToBlob = async (base64: string): Promise<Blob> => {
+    const res = await fetch(base64);
+    return await res.blob();
+  };
+
   return useMutation<CreateNearbyMemoResponse, Error, CreateNearbyMemoParams>({
     mutationFn: async ({ selectedFolderId, images }: CreateNearbyMemoParams) => {
-      let formData = new FormData();
+      const formData = new FormData();
 
       const getImagesFromStorage = (): string[] => {
         if (typeof window === 'undefined') return [];
@@ -42,26 +47,17 @@ export function useCreateNearbyMemo() {
       formData.append('folderId', String(selectedFolderId));
 
       const imagesToProcess = images || getImagesFromStorage();
-      if (imagesToProcess && imagesToProcess.length > 0) {
-        imagesToProcess.forEach((imageData: string, index: number) => {
-          try {
-            const [header, data] = imageData.split(',');
-            const mimeMatch = header.match(/data:([^;]+)/);
-            const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-            const byteCharacters = atob(data);
-            const byteNumbers = new Array(byteCharacters.length);
-            for (let i = 0; i < byteCharacters.length; i++) {
-              byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: mimeType });
-            const extension = mimeType.split('/')[1] || 'jpg';
 
+      if (imagesToProcess.length > 0) {
+        for (const [index, imageData] of imagesToProcess.entries()) {
+          try {
+            const blob = await processBase64ToBlob(imageData);
+            const extension = blob.type.split('/')[1] || 'jpg';
             formData.append('images', blob, `image_${index}.${extension}`);
-          } catch (imageError) {
-            console.error(`Failed to process image ${index}:`, imageError);
+          } catch (error) {
+            console.error(`Failed to process image ${index}:`, error);
           }
-        });
+        }
       }
 
       const result = await createNearbyMemo(formData);
@@ -82,7 +78,7 @@ export function useCreateNearbyMemo() {
       localStorage.removeItem('nearbyInfoImg');
     },
     onError: (error: any) => {
-      toast.error(error.data);
+      toast.error(error?.data || '저장 중 오류가 발생했습니다.');
     },
   });
 }
