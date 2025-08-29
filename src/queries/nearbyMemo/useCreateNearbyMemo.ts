@@ -4,6 +4,8 @@ import { NearbyMemo, CreateNearbyMemoResponse } from '@/types/nearby-memo';
 import { useNearbyMemo } from '@/contexts';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { folderKeys } from '@/queries/folder/useFoldersQuery';
+import { folderMemoKeys } from '@/queries/folder/useFolderMemosQuery';
 
 type CreateNearbyMemoParams = {
   selectedFolderId: number;
@@ -66,10 +68,14 @@ export function useCreateNearbyMemo() {
       const result = await createNearbyMemo(formData);
       return result;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ['nearby-memo'],
-      });
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['nearby-memo'] });
+      // 새 메모가 속한 폴더의 메모 목록 및 해당 플랜의 폴더 목록(카운트) 무효화
+      const folderId = variables.selectedFolderId;
+      if (Number.isFinite(folderId)) {
+        queryClient.invalidateQueries({ queryKey: folderMemoKeys.byFolder(folderId) });
+      }
+      queryClient.invalidateQueries({ queryKey: folderKeys.all });
       toast.success('주변메모 장소 저장을 성공했습니다');
 
       router.push('/map');

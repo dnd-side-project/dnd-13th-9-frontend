@@ -229,9 +229,12 @@ export function PlanGrid() {
         loading={deletePlanMutation.isPending}
         onConfirm={async () => {
           if (!actionPlan) return;
-          await deletePlanMutation.mutateAsync({ planId: actionPlan.planId });
-          setDeleteOpen(false);
-          setActionPlanId(null);
+          try {
+            await deletePlanMutation.mutateAsync({ planId: actionPlan.planId });
+          } finally {
+            setDeleteOpen(false);
+            setActionPlanId(null);
+          }
         }}
       />
     </div>

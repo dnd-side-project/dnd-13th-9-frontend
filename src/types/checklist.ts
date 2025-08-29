@@ -1,7 +1,8 @@
 export type ChecklistItem = {
-  id: number;
+  itemId: number;
   question: string;
   description?: string;
+  isFill: boolean;
 };
 
 export type ChecklistCategory = {

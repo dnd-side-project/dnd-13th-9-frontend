@@ -107,7 +107,7 @@ const KakaoMap = forwardRef<KakaoMapRef, KakaoMapProps>((props, ref) => {
           mapPinRef.current.remove();
         }
 
-        const mapPin = MapPin({ type: 'PROPERTY', size: 48 });
+        const mapPin = MapPin({ type: props.type || 'PROPERTY', size: 48 });
         mapPinRef.current = mapPin;
 
         const overlay = new kakao.maps.CustomOverlay({

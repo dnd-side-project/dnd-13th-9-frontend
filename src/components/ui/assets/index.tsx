@@ -65,6 +65,10 @@ import IcoBathroom from './checklist-icon/ico-bathroom.svg';
 import IcoBathroomFill from './checklist-icon/ico-bathroom-fill.svg';
 import IcoRequired from './checklist-icon/ico-required.svg';
 import IcoRequiredFill from './checklist-icon/ico-required-fill.svg';
+import IcoMyMemo from './ico-my-checklist.svg';
+import IcoMyNote from './ico-my-note.svg';
+import IcoArrowRight from './ico-arrow-right.svg';
+import IcoMessege from './ico-message.svg';
 
 export const Icons = {
   addImage: IcoAddImage,
@@ -134,6 +138,10 @@ export const Icons = {
   bathroomFill: IcoBathroomFill,
   required: IcoRequired,
   requiredFill: IcoRequiredFill,
+  myMemo: IcoMyMemo,
+  myNote: IcoMyNote,
+  arrowRight: IcoArrowRight,
+  messege: IcoMessege,
 };
 
 export type IconName = keyof typeof Icons;

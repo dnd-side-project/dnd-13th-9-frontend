@@ -9,6 +9,7 @@ import { useNearbyMemoInfoById } from '@/queries/nearbyMemo/useNearbyMemoInfoByI
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup/AddImgButtonGroup';
 import { Chip } from '@/components/ui/Chip';
+import { copyAddressToClipboard } from '@/utils/clipboard';
 import Loading from '@/app/loading';
 
 export default function Page() {
@@ -56,7 +57,7 @@ export default function Page() {
         />
 
         <div className="flex flex-wrap gap-2">
-          <Chip iconName="folder" variant="secondary" size="sm" text={`폴더 ${memo.folderId}`} />
+          <Chip iconName="folder" variant="secondary" size="sm" text={memo.folderName} />
 
           <Chip
             variant="secondary"
@@ -117,7 +118,7 @@ export default function Page() {
             </div>
             <button
               className="text-neutral-60 flex items-center gap-0.5 px-3 py-1 text-sm"
-              onClick={() => navigator.clipboard.writeText(memo.address)}
+              onClick={() => copyAddressToClipboard(memo.address)}
             >
               <Icon name="copy" width={14} />
               <BodyXs>복사</BodyXs>

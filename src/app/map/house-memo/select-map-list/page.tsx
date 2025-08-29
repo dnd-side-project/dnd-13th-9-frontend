@@ -62,8 +62,8 @@ export default function page() {
           showPlanGrid={true}
         />
 
-        <div className="fixed bottom-0 left-0 z-10 flex w-full items-center justify-center bg-white pb-[env(safe-area-inset-bottom)]">
-          <div className="px-6 py-4">
+        <div className="fixed bottom-0 left-0 z-10 flex w-full items-center justify-center pb-[env(safe-area-inset-bottom)]">
+          <div className="rounded-t-lg bg-white px-4 py-4">
             <Button
               label="저장하기"
               size="large"

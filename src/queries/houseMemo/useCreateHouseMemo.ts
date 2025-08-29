@@ -3,6 +3,8 @@ import { createHouseMemo } from '@/services/house.memo';
 import { HouseMemo } from '@/types/house-memo';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { folderKeys } from '@/queries/folder/useFoldersQuery';
+import { folderMemoKeys } from '@/queries/folder/useFolderMemosQuery';
 
 type CreatePropertyParams = {
   houseMemo: HouseMemo;
@@ -85,10 +87,15 @@ export function useCreateProperty() {
       const result = await createHouseMemo(formData);
       return result;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ['house-memo'],
-      });
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['house-memo'] });
+      // 새 메모가 속한 폴더의 메모 목록 및 해당 플랜의 폴더 목록(카운트) 무효화
+      const folderId = variables.selectedFolderId;
+      if (Number.isFinite(folderId)) {
+        queryClient.invalidateQueries({ queryKey: folderMemoKeys.byFolder(folderId) });
+      }
+      // 폴더 리스트는 planId로 키가 잡혀 있으므로, 근처에서 최신 planId를 유도할 수 없으면 전체 folders를 무효화
+      queryClient.invalidateQueries({ queryKey: folderKeys.all });
       toast.success('매물 정보가 저장되었습니다!');
       router.push('/map');
       localStorage.removeItem('houseMemo');

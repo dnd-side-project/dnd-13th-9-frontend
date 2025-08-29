@@ -8,6 +8,7 @@ import { IconTextRouter } from '@/components/main/IconTextRouter';
 import { TitleL } from '@/components/ui/Typography';
 import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
+import { RecentlyViewedHouses } from '@/components/main/RecentlyViewedHouses';
 import { useRouter } from 'next/navigation';
 import { useMyInfo } from '@/queries/user/useMyInfo';
 import { colors } from '@/utils/style/colors';
@@ -27,7 +28,7 @@ export default function HomePage() {
   };
 
   return (
-    <MainLayout>
+    <MainLayout className="scrollbar-hidden pb-[40px]">
       <Header
         left={
           // <IcoZipText
@@ -108,11 +109,11 @@ export default function HomePage() {
           />
           <IconTextRouter label="자취팁 영상" routePath="/tip" icoPath="/assets/main/ico-tip.svg" />
         </div>
-
-        <div className="py-12">
-          <TitleL>최근에 본 집</TitleL>
-        </div>
       </div>
+      <div className="px-6 pt-8 pb-4">
+        <TitleL>최근에 본 집</TitleL>
+      </div>
+      <RecentlyViewedHouses />
     </MainLayout>
   );
 }

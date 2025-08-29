@@ -5,7 +5,7 @@ import { HouseMemoProvider } from '@/components/providers/house-memo-provider';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
-  title: 'zip.zip',
+  title: 'zip.zip 마음에 쏙 드는 집을 찾아 .zip!',
   description: '마음에 쏙 드는 집을 찾아 .zip!',
 };
 

@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import { LabelContainer } from '@/components/HouseMemo/LabelContainer';
 import { Input } from '@/components/ui/Input';
+import { TextArea } from '@/components/ui/TextArea';
 import { CurrentLocationButton } from '@/components/ui/CurrentLocationButton';
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { InputFields, placeTagOptions } from './NearbyInfoConfig';
@@ -44,11 +45,12 @@ export function NearbyInfoForm() {
   return (
     <div className="flex flex-col gap-8 px-6 py-5 pb-24">
       {/* 장소 태그 선택 */}
-      <LabelContainer label="장소 태그" className="w-100 gap-3">
+      <LabelContainer label="장소 태그" className="w-70 gap-2">
         <ChipGroup
           activeChipColor="secondary"
           options={placeTagOptions}
           value={nearbyMemo.placeTag}
+          className={'gap-1 px-2'}
           iconName={(optionValue, isActive) => {
             if (isActive) {
               switch (optionValue) {
@@ -97,7 +99,7 @@ export function NearbyInfoForm() {
             <>
               <CurrentLocationButton
                 onClick={handleMoveToCurrentLocation}
-                className="-translate-x-14"
+                className="-translate-x-1"
                 color="secondary"
               />
               <Input
@@ -108,12 +110,32 @@ export function NearbyInfoForm() {
                 readOnly
               />
               <KakaoMap
+                type="NEARBY"
                 ref={mapRef}
                 height="130px"
                 lat={nearbyMemo.latitude}
                 lng={nearbyMemo.longitude}
               />
             </>
+          ) : key === 'description' ? (
+            <TextArea
+              placeholder={placeholder}
+              value={nearbyMemo[key] as string}
+              onChange={(e) => handleFieldChange(key as keyof typeof nearbyMemo, e.target.value)}
+              maxLength={80}
+              showCounter
+            />
+          ) : key === 'title' ? (
+            <Input
+              placeholder={placeholder}
+              value={nearbyMemo[key] as string}
+              onChange={(e) => handleFieldChange(key as keyof typeof nearbyMemo, e.target.value)}
+              unit={unit}
+              maxLength={10}
+              rightChildren={
+                <span className="text-neutral-70 text-xs">{nearbyMemo.title.length}/10</span>
+              }
+            />
           ) : (
             <Input
               placeholder={placeholder}

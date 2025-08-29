@@ -21,6 +21,7 @@ import {
 } from '@/components/map/ListTab/mapListOverlays';
 import { useRouter } from 'next/navigation';
 import ActiveFolder from '@assets/active-folder.svg';
+import EmptyFolder from '@assets/empty-folder.svg';
 
 // createdAt 기준으로 가장 최신 항목을 고르는 헬퍼
 function pickLatestByCreatedAt<T extends { createdAt: string }>(items: T[]): T | undefined {
@@ -109,68 +110,79 @@ export function FolderGrid() {
         </button>
       </div>
       <div className="min-h-0 flex-1 px-6 pb-4">
-        <Swiper
-          direction="vertical"
-          modules={[FreeMode, Mousewheel]}
-          slidesPerView={'auto'}
-          spaceBetween={10}
-          freeMode
-          mousewheel
-          className="h-full cursor-pointer"
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-            if (activeIndex > 0) {
-              swiper.slideTo(0, 0, false);
-              setTimeout(() => swiper.slideTo(activeIndex, 500, true), 150);
-            }
-          }}
-        >
-          {folders.map((f, idx) => {
-            const isActive = f.folderId === activeFolderId;
-            return (
-              <SwiperSlide key={f.folderId ?? `folder-idx-${idx}`} className="!h-auto">
-                <button
-                  onClick={() => {
-                    setFolderId(f.folderId);
-                    swiperRef.current?.slideTo(Math.max(0, idx), 350, true);
-                    const pid = effectivePlanId ?? planId;
-                    router.push(`/map/folder/${f.folderId}?planId=${pid}`);
-                  }}
-                  className={`flex h-[72px] w-full cursor-pointer items-center justify-between rounded-[20px] p-6 text-left ${isActive ? 'bg-primary-50' : 'bg-coolGray-20'}`}
-                >
-                  <div className="flex items-center gap-3">
+        {folders.length === 0 ? (
+          <div className="text-neutral-60 flex h-full items-center justify-center py-6 text-center">
+            <div className="flex flex-col items-center gap-4">
+              <EmptyFolder width={180} height={120} className="opacity-50" />
+              <TitleXs className="text-neutral-60 text-[16px] font-medium">
+                해당 계획에 폴더가 없어요
+              </TitleXs>
+            </div>
+          </div>
+        ) : (
+          <Swiper
+            direction="vertical"
+            modules={[FreeMode, Mousewheel]}
+            slidesPerView={'auto'}
+            spaceBetween={10}
+            freeMode
+            mousewheel
+            className="h-full cursor-pointer"
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+              if (activeIndex > 0) {
+                swiper.slideTo(0, 0, false);
+                setTimeout(() => swiper.slideTo(activeIndex, 500, true), 150);
+              }
+            }}
+          >
+            {folders.map((f, idx) => {
+              const isActive = f.folderId === activeFolderId;
+              return (
+                <SwiperSlide key={f.folderId ?? `folder-idx-${idx}`} className="!h-auto">
+                  <button
+                    onClick={() => {
+                      setFolderId(f.folderId);
+                      swiperRef.current?.slideTo(Math.max(0, idx), 350, true);
+                      const pid = effectivePlanId ?? planId;
+                      router.push(`/map/folder/${f.folderId}?planId=${pid}`);
+                    }}
+                    className={`flex h-[72px] w-full cursor-pointer items-center justify-between rounded-[20px] p-6 text-left ${isActive ? 'bg-primary-50' : 'bg-coolGray-20'}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon
+                        name="folder"
+                        width={24}
+                        height={24}
+                        color={isActive ? 'white' : 'coolGray-50'}
+                      />
+                      <div className="flex items-center gap-[6px]">
+                        <TitleXs className={isActive ? 'text-white' : 'text-coolGray-50'}>
+                          {f.name}
+                        </TitleXs>
+                        <Body2xs
+                          className={`flex h-[18px] w-[18px] items-center justify-center rounded-full text-[12px] font-semibold ${isActive ? 'bg-secondary-50 text-white' : 'bg-coolGray-50 text-coolGray-20'}`}
+                        >
+                          {typeof f.recordCount === 'number' ? f.recordCount : 0}
+                        </Body2xs>
+                      </div>
+                    </div>
                     <Icon
-                      name="folder"
+                      name="more"
                       width={24}
                       height={24}
                       color={isActive ? 'white' : 'coolGray-50'}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openMenu(f.folderId, e.currentTarget as unknown as Element, f.name);
+                      }}
                     />
-                    <div className="flex items-center gap-[6px]">
-                      <TitleXs className={isActive ? 'text-white' : 'text-coolGray-50'}>
-                        {f.name}
-                      </TitleXs>
-                      <Body2xs
-                        className={`flex h-[18px] w-[18px] items-center justify-center rounded-full text-[12px] font-semibold ${isActive ? 'bg-secondary-50 text-white' : 'bg-coolGray-50 text-coolGray-20'}`}
-                      >
-                        {typeof f.recordCount === 'number' ? f.recordCount : 0}
-                      </Body2xs>
-                    </div>
-                  </div>
-                  <Icon
-                    name="more"
-                    width={24}
-                    height={24}
-                    color={isActive ? 'white' : 'coolGray-50'}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openMenu(f.folderId, e.currentTarget as unknown as Element, f.name);
-                    }}
-                  />
-                </button>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
+                  </button>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        )}
         <MapListActionsMenu
           isOpen={menuOpen}
           anchorRect={menuAnchor}

@@ -5,14 +5,14 @@ import { TextArea } from '@/components/ui/TextArea';
 import { TitleM } from '@/components/ui/Typography';
 import { Icon } from '@/components/ui/Icon';
 import { useHouseMemo } from '@/contexts/HouseMemoContext';
-//todo: suspense, 타입 추가
+import { ChecklistCategory, ChecklistSection, ChecklistItem } from '@/types/checklist';
 
 type Props = {
-  categories: any[];
-  sections: any[];
-  getSectionItems: (categoryName: string) => any[];
-  isLastItem: (itemId: string, items: any[]) => boolean;
-  hasRequiredItems: (items: any[]) => boolean;
+  categories: ChecklistCategory[];
+  sections: ChecklistSection[];
+  getSectionItems: (categoryName: string) => ChecklistItem[];
+  isLastItem: (itemId: number, items: ChecklistItem[]) => boolean;
+  hasRequiredItems: (items: ChecklistItem[]) => boolean;
 };
 
 export default function CheckListTabs({
@@ -25,6 +25,24 @@ export default function CheckListTabs({
   const [memoText, setMemoText] = useState('');
   const [activeTab, setActiveTab] = useState(categories[0]?.name || '');
   const { houseMemo, setHouseMemo } = useHouseMemo();
+
+  const processedSections = sections.map((section) => {
+    if (section.categoryName === '필수 확인') {
+      const requiredItems = sections
+        .filter((s) => s.categoryName !== '필수 확인')
+        .flatMap((s) => s.items.filter((item) => item.isFill));
+
+      return {
+        ...section,
+        items: requiredItems,
+      };
+    } else {
+      return {
+        ...section,
+        items: section.items.filter((item) => !item.isFill),
+      };
+    }
+  });
 
   const handleTabChange = (tabName: string) => {
     setActiveTab(tabName);
@@ -98,7 +116,7 @@ export default function CheckListTabs({
           ))}
         </TabsList>
 
-        {sections.map((section) => (
+        {processedSections.map((section) => (
           <TabsContent key={section.categoryName} value={section.categoryName}>
             <div className="pb-[200px]">
               <CheckListSection
@@ -109,7 +127,7 @@ export default function CheckListTabs({
               />
             </div>
 
-            <div className="fixed bottom-0 left-1/2 flex w-full max-w-md -translate-x-1/2 flex-col gap-2 rounded-t-2xl bg-white px-4 py-4 shadow-lg md:max-w-fit md:gap-4 md:px-6 md:py-6 md:shadow-2xl lg:max-w-xl">
+            <div className="fixed bottom-0 left-1/2 flex w-full max-w-md -translate-x-1/2 flex-col gap-2 rounded-t-2xl bg-white px-4 py-4 shadow-lg md:max-w-lg md:gap-4 md:px-6 md:py-6 md:shadow-2xl lg:max-w-lg">
               <div className="flex w-full justify-between px-2">
                 <div className="flex items-center gap-2 md:gap-4">
                   <Icon
