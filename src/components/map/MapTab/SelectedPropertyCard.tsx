@@ -48,19 +48,18 @@ export function SelectedPropertyCard() {
   const handleSlideChange = React.useCallback(
     (inst: any) => {
       if (isSwiperDestroyed(inst)) return;
-      if (!isUserSlidingRef.current) return;
       const idx = getActiveIndex(inst);
       const next = memosInFolder[idx];
-      if (next) setSelectedMemoId(next.id);
+      if (next && selectedMemoId !== next.id) setSelectedMemoId(next.id);
     },
-    [memosInFolder, setSelectedMemoId]
+    [memosInFolder, selectedMemoId, setSelectedMemoId]
   );
 
   const placeTagToIcon: Record<string, any> = {
     ADVANTAGE: 'mapNearbyGood',
     DISADVANTAGE: 'mapNearbyBad',
     CONVENIENCE: 'mapNearbyConvenience',
-    TRANSPORTATION: 'mapNearbyTransportation',
+    TRANSPORTATION: 'mapNearbyTraffic',
     SECURITY: 'mapNearbySecurity',
     NOISE: 'mapNearbyNoise',
   };
@@ -96,11 +95,14 @@ export function SelectedPropertyCard() {
 
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-10 z-30 flex justify-center">
-      <div ref={cardRef} className={`${hasMultipleSlides ? 'pointer-events-auto' : 'px-4'} w-full`}>
+      <div
+        ref={cardRef}
+        className={`${hasMultipleSlides ? '' : 'px-4'} pointer-events-auto w-full`}
+      >
         <Swiper
           slidesPerView={hasMultipleSlides ? 1.08 : 1}
           spaceBetween={8}
-          loop={false}
+          loop={true}
           slidesOffsetAfter={hasMultipleSlides ? 32 : 0}
           onSwiper={handleSwiperMount}
           onTouchStart={handleTouchStart}

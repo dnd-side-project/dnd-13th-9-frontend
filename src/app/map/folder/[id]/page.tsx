@@ -55,7 +55,7 @@ export default function FolderDetailPage() {
     ADVANTAGE: 'mapNearbyGood',
     DISADVANTAGE: 'mapNearbyBad',
     CONVENIENCE: 'mapNearbyConvenience',
-    TRANSPORTATION: 'mapNearbyTransportation',
+    TRANSPORTATION: 'mapNearbyTraffic',
     SECURITY: 'mapNearbySecurity',
     NOISE: 'mapNearbyNoise',
   };

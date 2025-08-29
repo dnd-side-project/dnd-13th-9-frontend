@@ -155,7 +155,7 @@ export function RecentlyViewedHouses() {
                     </div>
                   )}
                 </div>
-                <div className="border-neutral-20 border-t px-3 py-[10px]">
+                <div className="border-neutral-20 overflow-hidden border-t px-3 py-[10px]">
                   <div className="flex min-w-0 items-center gap-1">
                     {feelingIcon && (
                       <Icon name={feelingIcon as any} color={feelingColor as any} size={20} />
@@ -166,7 +166,7 @@ export function RecentlyViewedHouses() {
                     {contract} {deposit}
                     {fee}
                   </BodyS>
-                  <Body2xs className="text-neutral-60 mt-1 text-right">
+                  <Body2xs className="text-neutral-60 mt-1 block w-full truncate text-right whitespace-nowrap">
                     {item.planName} | {item.folderName}
                   </Body2xs>
                 </div>

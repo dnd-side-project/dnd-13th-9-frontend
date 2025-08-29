@@ -59,7 +59,7 @@ export type PlaceMemoDto = {
   id?: number;
   placeMemoId?: number;
   title: string;
-  placeTag: 'GOOD' | 'BAD' | 'CONVENIENCE' | 'TRAFFIC' | 'TRANSPORTATION' | 'SECURITY' | 'NOISE';
+  placeTag: 'GOOD' | 'BAD' | 'CONVENIENCE' | 'TRANSPORTATION' | 'SECURITY' | 'NOISE';
   description: string | null;
   address: string | null;
   latitude: number | string;

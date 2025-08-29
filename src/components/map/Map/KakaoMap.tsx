@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useKakaoMapCore } from '@/hooks/useKakaoMapCore';
 import { CurrentLocationOverlay } from '../MapTab/CurrentLocationOverlay';
 import { MemoOverlay } from './MemoOverlay';
@@ -41,6 +41,18 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
   const currentFolderId = useMapStore((s) => s.folderId);
   const suppressClearRef = useRef(false);
   const [folderChangeKey, setFolderChangeKey] = useState(0);
+  const didAutoPanOnceRef = useRef(false);
+  const prevMarkersSigRef = useRef<string>('');
+  const markersSignature = useMemo(
+    () =>
+      (effectiveMarkers ?? [])
+        .map(
+          (m: { id: string; lat: number | string; lng: number | string }) =>
+            `${m.id}:${Number(m.lat)}:${Number(m.lng)}`
+        )
+        .join('|'),
+    [effectiveMarkers]
+  );
 
   const panTo = React.useCallback(
     (lat: number | string, lng: number | string) => {
@@ -96,23 +108,37 @@ export function KakaoMap({ center, markers, onMarkerClick }: KakaoMapProps) {
     renderMarkers(effectiveMarkers, handleMarkerClick);
   }, [effectiveMarkers, handleMarkerClick, renderMarkers]);
 
-  // 마커 목록이 갱신되었고 선택된 메모가 없으면 첫 매물로 포커싱
+  // 마커 세트 변경 감지: 내용(Signature)이 바뀔 때만 자동 포커싱을 한 번 더 허용
+  useEffect(() => {
+    if (prevMarkersSigRef.current !== markersSignature) {
+      prevMarkersSigRef.current = markersSignature;
+      didAutoPanOnceRef.current = false;
+    }
+  }, [markersSignature]);
+
+  // 초기 1회만 첫 매물로 포커싱 (선택 해제 시에는 다시 포커싱하지 않음)
   useEffect(() => {
     if (!mapInstanceRef.current) return;
-    if (selectedMemoId) return;
+    if (didAutoPanOnceRef.current) return;
     const first = effectiveMarkers && effectiveMarkers.length > 0 ? effectiveMarkers[0] : null;
     if (!first) return;
     panTo(first.lat, first.lng);
-  }, [effectiveMarkers, selectedMemoId, panTo, mapInstanceRef]);
+    didAutoPanOnceRef.current = true;
+  }, [effectiveMarkers, panTo, mapInstanceRef]);
 
-  // 폴더 전환 시마다 첫 매물로 1회 포커싱 (선택된 메모가 있으면 스킵)
+  // 폴더 전환 시 자동 포커싱 1회만 다시 허용
   useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    const first = effectiveMarkers && effectiveMarkers.length > 0 ? effectiveMarkers[0] : null;
-    if (!first) return;
-    if (!selectedMemoId) panTo(first.lat, first.lng);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    didAutoPanOnceRef.current = false;
   }, [folderChangeKey]);
+
+  // 선택된 메모가 바뀌면 해당 위치로 포커싱 (슬라이더 변경 포함)
+  useEffect(() => {
+    if (!selectedMemoId) return;
+    const m = effectiveMarkers?.find?.(
+      (mk: { id: string; lat: number | string; lng: number | string }) => mk.id === selectedMemoId
+    );
+    if (m) panTo(m.lat, m.lng);
+  }, [selectedMemoId, effectiveMarkers, panTo]);
 
   // 지도 빈 공간 클릭 시 선택 해제 (마커 클릭으로 들어온 경우 한 번 무시)
   useEffect(() => {
