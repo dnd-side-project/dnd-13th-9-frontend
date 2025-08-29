@@ -113,7 +113,7 @@ export const Icons = {
   mapNearbyGood: IcoMapNearbyGood,
   mapNearbyNoise: IcoMapNearbyNoise,
   mapNearbySecurity: IcoMapNearbySecurity,
-  IcoMapNearbyTraffic: IcoMapNearbyTraffic,
+  mapNearbyTraffic: IcoMapNearbyTraffic,
   // Nearby icons
   advantage: IcoAdvantage,
   advantageFill: IcoAdvantageFill,

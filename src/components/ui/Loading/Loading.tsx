@@ -9,6 +9,7 @@ type LottiePlayerProps = React.HTMLAttributes<HTMLElement> & {
   autoplay?: boolean;
   loop?: boolean;
   speed?: number | string;
+  background?: string;
 };
 
 const LottiePlayer = (props: LottiePlayerProps) =>
@@ -33,7 +34,9 @@ export function Loading({ className, size = 'medium' }: LoadingProps) {
         loop
         mode="normal"
         src="/lottie/loading.json"
+        background="transparent"
         style={{ height: `${sizePx}px`, width: `${sizePx}px` }}
+        suppressHydrationWarning
       />
     </MainLayout>
   );
