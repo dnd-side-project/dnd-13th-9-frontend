@@ -57,7 +57,6 @@ export function useCreateNearbyMemo() {
             const blob = new Blob([byteArray], { type: mimeType });
             const extension = mimeType.split('/')[1] || 'jpg';
 
-            formData.append('images', blob, `image_${index}.jpg`);
             formData.append('images', blob, `image_${index}.${extension}`);
           } catch (imageError) {
             console.error(`Failed to process image ${index}:`, imageError);
@@ -70,7 +69,7 @@ export function useCreateNearbyMemo() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['nearby-memo'] });
-      // 새 메모가 속한 폴더의 메모 목록 및 해당 플랜의 폴더 목록(카운트) 무효화
+
       const folderId = variables.selectedFolderId;
       if (Number.isFinite(folderId)) {
         queryClient.invalidateQueries({ queryKey: folderMemoKeys.byFolder(folderId) });
@@ -83,7 +82,7 @@ export function useCreateNearbyMemo() {
       localStorage.removeItem('nearbyInfoImg');
     },
     onError: (error: any) => {
-      console.error('Error creating nearby memo:', error);
+      toast.error(error.data);
     },
   });
 }

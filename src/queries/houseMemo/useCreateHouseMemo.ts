@@ -24,7 +24,6 @@ export function useCreateProperty() {
 
       if (passedFormData) {
         formData = passedFormData;
-
         propertyData = {
           ...houseMemo,
           folderId: selectedFolderId,
@@ -32,10 +31,7 @@ export function useCreateProperty() {
           latitude: Number(houseMemo.latitude) || 0,
           longitude: Number(houseMemo.longitude) || 0,
         };
-
-        const jsonBlob = new Blob([JSON.stringify(propertyData)], {
-          type: 'application/json',
-        });
+        const jsonBlob = new Blob([JSON.stringify(propertyData)], { type: 'application/json' });
         formData.append('data', jsonBlob, 'data.json');
       } else {
         const getLatestHouseMemo = () => {
@@ -60,14 +56,16 @@ export function useCreateProperty() {
           longitude: Number(latestHouseMemo.longitude) || 0,
         };
 
-        const jsonBlob = new Blob([JSON.stringify(propertyData)], {
-          type: 'application/json',
-        });
+        const jsonBlob = new Blob([JSON.stringify(propertyData)], { type: 'application/json' });
         formData.append('data', jsonBlob, 'data.json');
       }
 
       if (images && images.length > 0) {
-        images.forEach((imageData: string, index: number) => {
+        images.forEach((imageData, index) => {
+          if (!imageData.includes(',')) {
+            console.warn(`Skipping invalid image at index ${index}`);
+            return;
+          }
           try {
             const byteCharacters = atob(imageData.split(',')[1]);
             const byteNumbers = new Array(byteCharacters.length);
@@ -79,30 +77,38 @@ export function useCreateProperty() {
 
             formData.append('image', blob, `image_${index}.jpg`);
           } catch (imageError) {
-            console.error(`Failed to process image ${index}:`, imageError);
+            console.error(`Failed to process image at index ${index}:`, imageError);
           }
         });
+
+        const uploadedImages = formData.getAll('image');
+        console.log('FormData에 들어간 이미지 개수:', uploadedImages.length);
       }
 
       const result = await createHouseMemo(formData);
       return result;
     },
+
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['house-memo'] });
-      // 새 메모가 속한 폴더의 메모 목록 및 해당 플랜의 폴더 목록(카운트) 무효화
+
       const folderId = variables.selectedFolderId;
       if (Number.isFinite(folderId)) {
         queryClient.invalidateQueries({ queryKey: folderMemoKeys.byFolder(folderId) });
       }
-      // 폴더 리스트는 planId로 키가 잡혀 있으므로, 근처에서 최신 planId를 유도할 수 없으면 전체 folders를 무효화
+
       queryClient.invalidateQueries({ queryKey: folderKeys.all });
+
       toast.success('매물 정보가 저장되었습니다!');
       router.push('/map');
+
       localStorage.removeItem('houseMemo');
       localStorage.removeItem('images');
     },
+
     onError: (error: any) => {
       console.error('Error creating property:', error);
+      toast.error(error.data || '매물 생성 중 오류가 발생했습니다.');
     },
   });
 }

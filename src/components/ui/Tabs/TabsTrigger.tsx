@@ -1,11 +1,12 @@
 'use client';
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { useTabsContext } from './TabsContext';
 import { cn } from '@/utils/utils';
 import { BodyS } from '../Typography';
 import { IconName } from '../assets';
 import { Icon } from '../Icon';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type BarProps = {
   value: string;
@@ -45,9 +46,11 @@ TabsTrigger.Bar = function ({ value, children, className }: BarProps) {
 
       {isActive && (
         <motion.div
-          layoutId="tabs-underline"
-          className="bg-primary-50 absolute bottom-0 left-0 h-1 w-full"
-          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+          className="bg-primary-50 absolute bottom-0 left-0 h-1"
+          initial={{ width: 0 }}
+          animate={{ width: '100%' }}
+          exit={{ width: 0 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
         />
       )}
     </button>

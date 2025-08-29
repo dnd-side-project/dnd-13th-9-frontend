@@ -37,8 +37,7 @@ export default function PlaceSearch({ value, onChange, onSelect }: PlaceSearchPr
   }, [data, page, searchTriggered]);
 
   useEffect(() => {
-    if (!loaderRef.current) return;
-    if (!searchTriggered) return;
+    if (!loaderRef.current || !searchTriggered) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -57,35 +56,36 @@ export default function PlaceSearch({ value, onChange, onSelect }: PlaceSearchPr
     };
   }, [data, searchTriggered]);
 
+  const handleSearch = () => {
+    if (value.trim() === '') return;
+    setPage(1);
+    setSearchTriggered(true);
+  };
+
   return (
     <div className="flex max-h-[450px] flex-col gap-3">
       <div className="relative w-full py-2">
         <Input
           placeholder="지도에 표시할 장소를 검색해보세요."
           value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSearch();
           }}
+          className="w-full rounded-xl border p-2"
           rightChildren={
             <Icon
               name="search"
               className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer"
               width={20}
               height={25}
-              onClick={() => {
-                setPage(1);
-                setSearchTriggered(true);
-              }}
+              onClick={handleSearch}
             />
           }
         />
       </div>
 
-      {isError && searchTriggered && (
-        <div>
-          <Loading />
-        </div>
-      )}
+      {isError && searchTriggered && <Loading />}
 
       {searchTriggered && (
         <ul className="flex max-h-[400px] flex-col gap-2 overflow-y-auto">
