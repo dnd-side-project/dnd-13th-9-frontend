@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import { LabelContainer } from '@/components/HouseMemo/LabelContainer';
 import { Input } from '@/components/ui/Input';
+import { TextArea } from '@/components/ui/TextArea';
 import { CurrentLocationButton } from '@/components/ui/CurrentLocationButton';
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { InputFields, placeTagOptions } from './NearbyInfoConfig';
@@ -108,12 +109,32 @@ export function NearbyInfoForm() {
                 readOnly
               />
               <KakaoMap
+                type="NEARBY"
                 ref={mapRef}
                 height="130px"
                 lat={nearbyMemo.latitude}
                 lng={nearbyMemo.longitude}
               />
             </>
+          ) : key === 'description' ? (
+            <TextArea
+              placeholder={placeholder}
+              value={nearbyMemo[key] as string}
+              onChange={(e) => handleFieldChange(key as keyof typeof nearbyMemo, e.target.value)}
+              maxLength={80}
+              showCounter
+            />
+          ) : key === 'title' ? (
+            <Input
+              placeholder={placeholder}
+              value={nearbyMemo[key] as string}
+              onChange={(e) => handleFieldChange(key as keyof typeof nearbyMemo, e.target.value)}
+              unit={unit}
+              maxLength={10}
+              rightChildren={
+                <span className="text-neutral-70 text-xs">{nearbyMemo.title.length}/10</span>
+              }
+            />
           ) : (
             <Input
               placeholder={placeholder}
