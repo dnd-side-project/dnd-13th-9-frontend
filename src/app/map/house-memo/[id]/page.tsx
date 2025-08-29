@@ -97,13 +97,18 @@ export default function Page() {
 
         <div className="flex flex-col gap-2">
           <Title2xl className="text-xl font-bold">{houseMemo.propertyName}</Title2xl>
-          {houseMemo.depositBig && (
+          {houseMemo.depositSmall && (
             <div className="flex items-center gap-2">
               <TitleXl className="text-primary-50">
-                {getContractLabel(houseMemo.contractType)} {houseMemo.depositBig}억{' '}
+                {getContractLabel(houseMemo.contractType)}{' '}
+                {houseMemo.depositBig !== 0 && `${houseMemo.depositBig}억 `}
                 {houseMemo.depositSmall}만원
               </TitleXl>
-              <BodyS className="text-neutral-60">(보증금/월세)</BodyS>
+              <BodyS className="text-neutral-60">
+                {houseMemo.contractType === 'MONTHLY_RENT' && '(보증금/월세)'}
+                {houseMemo.contractType === 'JEONSE' && '(전세가)'}
+                {houseMemo.contractType === 'PURCHASE' && '(매매가)'}
+              </BodyS>
             </div>
           )}
 
