@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { folderKeys } from '@/queries/folder/useFoldersQuery';
 import { folderMemoKeys } from '@/queries/folder/useFolderMemosQuery';
+import { TOAST_STYLES } from '@/utils/toastStyles';
 
 type CreatePropertyParams = {
   houseMemo: HouseMemo;
@@ -97,7 +98,7 @@ export function useCreateProperty() {
 
       queryClient.invalidateQueries({ queryKey: folderKeys.all });
 
-      toast.success('매물 정보가 저장되었습니다!');
+      toast.success('매물 정보가 저장되었습니다!', TOAST_STYLES.success);
       router.push('/map');
 
       localStorage.removeItem('houseMemo');
@@ -106,7 +107,7 @@ export function useCreateProperty() {
 
     onError: (error: any) => {
       console.error('Error creating property:', error);
-      toast.error(error.data || '매물 생성 중 오류가 발생했습니다.');
+      toast.error(error.data || '매물 생성 중 오류가 발생했습니다.', TOAST_STYLES.error);
     },
   });
 }

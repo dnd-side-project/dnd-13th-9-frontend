@@ -86,12 +86,14 @@ export default function MyPage() {
             <Icon name="arrowRight" color="neutral" width={12} />
           </button>
         </div>
-        <Button
-          label={'로그아웃'}
-          size="large"
-          className="text-neutral-70 hover:bg-neutral-30 bg-white"
-          onClick={() => logoutMutate()}
-        />
+        <div className="flex w-full justify-center">
+          <Button
+            label={'로그아웃'}
+            size="large"
+            className="text-neutral-70 hover:bg-neutral-3 w-full min-w-[350px] bg-white px-12 md:min-w-[410px]"
+            onClick={() => logoutMutate()}
+          />
+        </div>
       </div>
     </MainLayout>
   );

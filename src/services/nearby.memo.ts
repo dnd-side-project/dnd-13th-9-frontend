@@ -27,3 +27,8 @@ export async function getNearbyMemoById(id: string): Promise<ApiResponse<NearbyM
     data: converted,
   };
 }
+
+export async function deleteNearbyMemoById(id: string): Promise<ApiResponse<void>> {
+  const res = await api.delete(`api/placeMemo/${id}`).json<ApiResponse<void>>();
+  return res;
+}

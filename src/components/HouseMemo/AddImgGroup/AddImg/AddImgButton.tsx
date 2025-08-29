@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { cn } from '@/utils/utils';
 import { DeleteDataModal } from '@/components/ui/DeleteDataModal';
+import Image from 'next/image';
 
 type Props = {
   size?: 'sm' | 'lg';
@@ -72,7 +73,12 @@ export function AddImgButton({
         style={{ backgroundImage: bgImage ? `url(${bgImage})` : undefined }}
         onClick={handleClick}
       >
-        {!bgImage && <Icon name="addImage" color="neutral" width={40} height={40} />}
+        {!bgImage &&
+          (readonly ? (
+            <Image src="/assets/ico-no-image.svg" alt="no image" width={40} height={40} />
+          ) : (
+            <Icon name="addImage" color="neutral" width={40} height={40} />
+          ))}
       </button>
 
       {!readonly && (
