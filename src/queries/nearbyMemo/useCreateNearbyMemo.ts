@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { folderKeys } from '@/queries/folder/useFoldersQuery';
 import { folderMemoKeys } from '@/queries/folder/useFolderMemosQuery';
+import { TOAST_STYLES } from '@/utils/toastStyles';
 
 type CreateNearbyMemoParams = {
   selectedFolderId: number;
@@ -113,7 +114,7 @@ export function useCreateNearbyMemo() {
       await Promise.allSettled(imagePromises);
 
       if (failedImages.length > 0) {
-        toast.error(`${failedImages.length}개의 이미지 처리에 실패했습니다.`);
+        toast.error(`${failedImages.length}개의 이미지 처리에 실패했습니다.`, TOAST_STYLES.error);
       }
 
       const formDataEntries = Array.from(formData.entries());
@@ -130,14 +131,14 @@ export function useCreateNearbyMemo() {
       }
       queryClient.invalidateQueries({ queryKey: folderKeys.all });
 
-      toast.success('주변메모 장소 저장을 성공했습니다');
+      toast.success('주변메모 장소 저장을 성공했습니다', TOAST_STYLES.success);
       router.push('/map');
 
       localStorage.removeItem('nearbyMemo');
       localStorage.removeItem('nearbyInfoImg');
     },
     onError: (error: any) => {
-      toast.error(error?.data || '저장 중 오류가 발생했습니다.');
+      toast.error(error?.data || '저장 중 오류가 발생했습니다.', TOAST_STYLES.error);
     },
   });
 }
