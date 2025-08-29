@@ -19,7 +19,6 @@ export default function BaseInfo({ onNextClick }: Props) {
           <Button size="large" className="w-86 shadow-sm md:w-96" onClick={onNextClick}>
             <div className="flex items-center justify-center gap-2">
               <TitleXs className="whitespace-nowrap">다음으로</TitleXs>
-              <Icon name="arrowDown" width={20} height={20} />
             </div>
           </Button>
         </div>
