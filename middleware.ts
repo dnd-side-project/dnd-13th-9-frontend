@@ -43,5 +43,5 @@ export async function middleware(request: NextRequest) {
 
 // 보호할 페이지만 매칭 (정적/이미지 등 제외)
 export const config = {
-  matcher: ['/myPage', '/map/:path*', '/checklist', '/vote/:path*'],
+  matcher: ['/myPage', '/map/:path*', '/checklist'],
 };
