@@ -1,4 +1,5 @@
 import { useChecklistInfo } from '@/queries/houseMemo/useChecklistInfo';
+import { ChecklistItem } from '@/types/checklist';
 
 export const useCheckList = () => {
   const { data, isLoading, error } = useChecklistInfo();
@@ -13,11 +14,11 @@ export const useCheckList = () => {
     return section?.items || [];
   };
 
-  const isLastItem = (itemId: string, items: any[]) => {
-    return itemId === items[items.length - 1]?.id;
+  const isLastItem = (itemId: number, items: ChecklistItem[]) => {
+    return itemId === items[items.length - 1]?.itemId;
   };
 
-  const hasRequiredItems = (items: any[]) => {
+  const hasRequiredItems = (items: ChecklistItem[]) => {
     return items.length > 0;
   };
 

@@ -19,9 +19,9 @@ export default function SearchMapBottomSheet({ onSelect, isOpen, closeModal }: P
     <BottomSheet
       isOpen={isOpen}
       closeModal={closeModal}
-      className="left-1/2 h-[600px] w-full max-w-[450px] -translate-x-1/2"
+      className="bottom-0 left-1/2 h-auto w-full max-w-[450px] -translate-x-1/2 sm:max-h-[80vh] md:max-h-[620px]"
     >
-      <div className="flex flex-col gap-2 p-5">
+      <div className="flex max-h-[90vh] flex-col gap-2 overflow-auto p-5">
         <TitleM>이 집의 주소를 알려주세요</TitleM>
 
         <BodyXl className="text-neutral-70">

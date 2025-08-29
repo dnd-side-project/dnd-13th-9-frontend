@@ -26,12 +26,11 @@ export function ChipGroup<T extends string>({
   className,
 }: ChipGroupProps<T>) {
   return (
-    <div className={`flex flex-wrap gap-2 ${className || ''}`}>
+    <div className={`flex flex-wrap gap-2`}>
       {options.map((item) => {
         const optionValue = item.value || item.text;
         const isActive = value === optionValue;
 
-        // iconName이 함수인지 확인하고 적절한 아이콘 결정
         const finalIconName =
           typeof iconName === 'function' ? iconName(optionValue, isActive) : iconName;
 
@@ -42,6 +41,7 @@ export function ChipGroup<T extends string>({
             variant={isActive ? activeChipColor : 'neutral'}
             onClick={() => onChange(optionValue as T)}
             iconName={finalIconName}
+            className={className}
           />
         );
       })}

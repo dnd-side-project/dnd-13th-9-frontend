@@ -58,13 +58,15 @@ function NearbyMemoPageContent() {
         }
         title="장소 메모"
       />
-      <div className="px-4">
-        <AddImgButtonGroup storageKey="nearbyInfoImg" readonly={false} />
+      <div className="max-w-full overflow-x-hidden">
+        <div className="px-4">
+          <AddImgButtonGroup storageKey="nearbyInfoImg" readonly={false} />
+        </div>
+        <NearbyInfoForm />
       </div>
-      <NearbyInfoForm />
 
-      <div className="fixed bottom-0 left-1/2 z-10 w-full max-w-110 -translate-x-1/2 pb-[env(safe-area-inset-bottom)]">
-        <div className="flex justify-center bg-white py-3">
+      <div className="bg-white py-2">
+        <div className="fixed bottom-2 left-1/2 z-10 flex w-full max-w-110 -translate-x-1/2 justify-center bg-white py-3 pb-[env(safe-area-inset-bottom)]">
           <Button
             size="large"
             label="저장하기"

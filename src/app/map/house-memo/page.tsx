@@ -44,6 +44,7 @@ function HouseMemoContent() {
       contractType: houseMemo.contractType,
       address: houseMemo.address,
       propertyName: houseMemo.propertyName,
+      monthlyFee: houseMemo.monthlyFee,
     };
 
     validateWithZod(houseMemoValidationSchema, validationData, () => {

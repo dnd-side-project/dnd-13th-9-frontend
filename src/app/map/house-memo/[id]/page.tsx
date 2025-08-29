@@ -20,6 +20,7 @@ import { Chip } from '@/components/ui/Chip';
 import { getContractLabel, getHouseTypeLabel } from '@/utils/labels';
 import { KakaoMap } from '@/components/HouseMemo/BaseInfo/Map';
 import { AddImgButtonGroup } from '@/components/HouseMemo/AddImgGroup/AddImgButtonGroup';
+import { copyAddressToClipboard } from '@/utils/clipboard';
 import Loading from '@/app/loading';
 
 function feelingToText(feeling: string): string {
@@ -152,7 +153,7 @@ export default function Page() {
 
             <button
               className="text-neutral-60 flex items-center gap-0.5 px-3 py-1 text-sm"
-              onClick={() => navigator.clipboard.writeText(houseMemo.address)}
+              onClick={() => copyAddressToClipboard(houseMemo.address)}
             >
               <Icon name="copy" width={14} />
               <BodyXs>복사</BodyXs>
@@ -165,7 +166,7 @@ export default function Page() {
           {houseMemo.longitude && houseMemo.latitude ? (
             <div className="h-48 w-full overflow-hidden rounded-lg">
               <KakaoMap
-                type="NEARBY"
+                type="PROPERTY"
                 height="150px"
                 lat={houseMemo.latitude}
                 lng={houseMemo.longitude}

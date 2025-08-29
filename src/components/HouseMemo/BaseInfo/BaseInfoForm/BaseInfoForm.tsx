@@ -8,10 +8,11 @@ import { CurrentLocationButton } from '@/components/ui/CurrentLocationButton';
 import { KakaoMap } from '../Map';
 import { useHouseMemo } from '@/contexts/HouseMemoContext';
 import { feelingOptions, contractOptions, houseOptions, doubleInputFields } from './BaseInfoConfig';
-import { ContractType, HouseType, Feeling } from '@/types/house-memo';
+import { ContractType, HouseType, Feeling, HouseMemo } from '@/types/house-memo';
 import { createFieldUpdater } from '@/contexts/updateHouseMemoField';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
 import SearchMapBottomSheet from '@/components/map/Map/SearchMapBottomSheet';
+import { TextArea } from '@/components/ui/TextArea';
 
 export function BaseInfoForm() {
   const { houseMemo, setHouseMemo } = useHouseMemo();
@@ -21,28 +22,14 @@ export function BaseInfoForm() {
   const mapRef = useRef<any>(null);
   const { isOpen, open, close } = useBottomSheet();
 
-  // 아이콘 클릭 시 애니메이션 적용
   const handleIconClick = (type: Feeling) => {
     setAnimatingIcon(type);
     handleFieldChange('feeling', type);
 
-    // 애니메이션 완료 후 상태 초기화
     setTimeout(() => {
       setAnimatingIcon(null);
     }, 600);
   };
-
-  // API로 보내는 데이터를 콘솔로 출력하는 함수 (지울예정)
-  const logApiData = () => {
-    console.log('=== API로 보내는 데이터 ===');
-    console.log('houseMemo:', houseMemo);
-    console.log('JSON.stringify(houseMemo):', JSON.stringify(houseMemo, null, 2));
-    console.log('========================');
-  };
-
-  React.useEffect(() => {
-    logApiData();
-  }, [houseMemo]);
 
   const handleMoveToCurrentLocation = async () => {
     if (mapRef.current) {
@@ -58,10 +45,31 @@ export function BaseInfoForm() {
     }
   };
 
+  const handleNumberInput = (
+    fieldName: keyof Pick<
+      HouseMemo,
+      'depositBig' | 'depositSmall' | 'monthlyFee' | 'managementFee'
+    >,
+    value: string
+  ) => {
+    if (value === '') {
+      setHouseMemo((prev) => {
+        const newMemo = { ...prev };
+        delete newMemo[fieldName];
+        return newMemo;
+      });
+    } else {
+      const numValue = Number(value);
+      if (!isNaN(numValue)) {
+        handleFieldChange(fieldName, numValue);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 py-5 pb-24">
       {/* 1. 전반적인 느낌 */}
-      <LabelContainer label="전반적인 느낌">
+      <LabelContainer label="전반적인 느낌" required>
         <div className="flex max-w-20 gap-2">
           {feelingOptions.map(({ type, iconName, unselectedIconName }) => (
             <Icon
@@ -70,7 +78,9 @@ export function BaseInfoForm() {
               width={35}
               height={35}
               name={houseMemo.feeling === type ? iconName : unselectedIconName}
-              className={animatingIcon === type ? 'animate-select' : ''}
+              className={`transform cursor-pointer transition-all duration-300 ease-out ${
+                animatingIcon === type ? 'scale-125 rotate-3' : 'scale-100 rotate-0'
+              }`}
             />
           ))}
         </div>
@@ -82,15 +92,21 @@ export function BaseInfoForm() {
           placeholder="지도에 표시될 제목을 입력하세요."
           value={houseMemo.propertyName || ''}
           onChange={(e) => handleFieldChange('propertyName', e.target.value)}
+          maxLength={10}
+          rightChildren={
+            <span className="text-neutral-70 text-xs">{houseMemo.propertyName.length}/10</span>
+          }
         />
       </LabelContainer>
 
       {/* 3. 메모 */}
       <LabelContainer label="메모">
-        <Input
+        <TextArea
           placeholder="기억해두고 싶은 정보와 느낌을 작성하세요."
           value={houseMemo.memo || ''}
           onChange={(e) => handleFieldChange('memo', e.target.value)}
+          showCounter
+          maxLength={80}
         />
       </LabelContainer>
 
@@ -105,7 +121,7 @@ export function BaseInfoForm() {
 
       {/* 5. 주소 */}
       <LabelContainer label="주소" required>
-        <CurrentLocationButton className="-translate-x-12" onClick={handleMoveToCurrentLocation} />
+        <CurrentLocationButton className="-translate-x-1" onClick={handleMoveToCurrentLocation} />
         <Input
           placeholder="현재 위치 버튼을 클릭하거나 지도를 터치하여 주소를 선택하세요."
           value={houseMemo.address || ''}
@@ -202,7 +218,7 @@ export function BaseInfoForm() {
           <Input
             placeholder="예) 50"
             value={houseMemo.monthlyFee !== undefined ? String(houseMemo.monthlyFee) : ''}
-            onChange={(e) => handleFieldChange('monthlyFee', Number(e.target.value))}
+            onChange={(e) => handleNumberInput('monthlyFee', e.target.value)}
             unit="만원"
           />
         </LabelContainer>
@@ -213,7 +229,7 @@ export function BaseInfoForm() {
         <Input
           placeholder="예) 9"
           value={houseMemo.managementFee !== undefined ? String(houseMemo.managementFee) : ''}
-          onChange={(e) => handleFieldChange('managementFee', Number(e.target.value))}
+          onChange={(e) => handleNumberInput('managementFee', e.target.value)}
           unit="만원"
         />
       </LabelContainer>
