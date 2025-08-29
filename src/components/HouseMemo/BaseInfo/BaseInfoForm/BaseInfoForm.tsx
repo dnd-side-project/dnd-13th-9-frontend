@@ -22,28 +22,14 @@ export function BaseInfoForm() {
   const mapRef = useRef<any>(null);
   const { isOpen, open, close } = useBottomSheet();
 
-  // 아이콘 클릭 시 애니메이션 적용
   const handleIconClick = (type: Feeling) => {
     setAnimatingIcon(type);
     handleFieldChange('feeling', type);
 
-    // 애니메이션 완료 후 상태 초기화
     setTimeout(() => {
       setAnimatingIcon(null);
     }, 600);
   };
-
-  // API로 보내는 데이터를 콘솔로 출력하는 함수 (지울예정)
-  const logApiData = () => {
-    console.log('=== API로 보내는 데이터 ===');
-    console.log('houseMemo:', houseMemo);
-    console.log('JSON.stringify(houseMemo):', JSON.stringify(houseMemo, null, 2));
-    console.log('========================');
-  };
-
-  React.useEffect(() => {
-    logApiData();
-  }, [houseMemo]);
 
   const handleMoveToCurrentLocation = async () => {
     if (mapRef.current) {
@@ -92,7 +78,9 @@ export function BaseInfoForm() {
               width={35}
               height={35}
               name={houseMemo.feeling === type ? iconName : unselectedIconName}
-              className={animatingIcon === type ? 'animate-select' : ''}
+              className={`transform cursor-pointer transition-all duration-300 ease-out hover:scale-105 ${
+                animatingIcon === type ? 'scale-125 rotate-3' : 'scale-100 rotate-0'
+              }`}
             />
           ))}
         </div>
