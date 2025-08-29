@@ -8,6 +8,7 @@ export const houseMemoValidationSchema = z
       .string()
       .min(1, '매물명은 필수값입니다')
       .max(10, '제목은 10자 이하로 입력해주세요.'),
+    referenceUrl: z.string().max(255, '링크는 255자 이하로 입력해주세요.').optional(),
     monthlyFee: z
       .number()
       .optional()
