@@ -103,6 +103,7 @@ export function useCreateProperty() {
     },
     onError: (error: any) => {
       console.error('Error creating property:', error);
+      toast.error(error.data);
     },
   });
 }

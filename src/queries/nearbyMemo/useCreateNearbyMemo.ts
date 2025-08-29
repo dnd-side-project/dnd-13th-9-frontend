@@ -83,7 +83,7 @@ export function useCreateNearbyMemo() {
       localStorage.removeItem('nearbyInfoImg');
     },
     onError: (error: any) => {
-      console.error('Error creating nearby memo:', error);
+      toast.error(error.data);
     },
   });
 }
