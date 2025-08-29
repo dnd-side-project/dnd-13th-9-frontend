@@ -52,7 +52,7 @@ export function BaseInfoForm() {
     >,
     value: string
   ) => {
-    if (value === '') {
+    if (value === '' || value === '0') {
       setHouseMemo((prev) => {
         const newMemo = { ...prev };
         delete newMemo[fieldName];
@@ -60,7 +60,7 @@ export function BaseInfoForm() {
       });
     } else {
       const numValue = Number(value);
-      if (!isNaN(numValue)) {
+      if (!isNaN(numValue) && numValue > 0) {
         handleFieldChange(fieldName, numValue);
       }
     }
@@ -204,7 +204,7 @@ export function BaseInfoForm() {
               key={key}
               placeholder={placeholder}
               value={houseMemo[key] !== undefined ? String(houseMemo[key]) : ''}
-              onChange={(e) => handleFieldChange(key, Number(e.target.value))}
+              onChange={(e) => handleNumberInput(key, e.target.value)}
               unit={unit}
               className="w-30 max-w-47"
             />
