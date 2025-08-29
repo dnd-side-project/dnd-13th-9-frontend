@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNearbyMemo } from '@/services/nearby.memo';
-import { NearbyMemo, CreateNearbyMemoResponse } from '@/types/nearby-memo';
+import { CreateNearbyMemoResponse } from '@/types/nearby-memo';
 import { useNearbyMemo } from '@/contexts';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -12,29 +12,54 @@ type CreateNearbyMemoParams = {
   images?: string[];
 };
 
+const resizeImageToBlob = (
+  base64: string,
+  maxWidth = 1024,
+  maxHeight = 1024,
+  quality = 0.7
+): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = base64;
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxWidth) {
+        height *= maxWidth / width;
+        width = maxWidth;
+      }
+      if (height > maxHeight) {
+        width *= maxHeight / height;
+        height = maxHeight;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return reject('Canvas context not available');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject('Failed to convert image to blob');
+        },
+        'image/jpeg',
+        quality
+      );
+    };
+    img.onerror = (err) => reject(err);
+  });
+};
+
 export function useCreateNearbyMemo() {
   const queryClient = useQueryClient();
   const { nearbyMemo } = useNearbyMemo();
   const router = useRouter();
 
-  const processBase64ToBlob = async (base64: string): Promise<Blob> => {
-    const res = await fetch(base64);
-    return await res.blob();
-  };
-
   return useMutation<CreateNearbyMemoResponse, Error, CreateNearbyMemoParams>({
     mutationFn: async ({ selectedFolderId, images }: CreateNearbyMemoParams) => {
       const formData = new FormData();
-
-      const getImagesFromStorage = (): string[] => {
-        if (typeof window === 'undefined') return [];
-        try {
-          return JSON.parse(localStorage.getItem('nearbyInfoImg') || '[]');
-        } catch (error) {
-          console.error('Failed to parse images from localStorage:', error);
-          return [];
-        }
-      };
 
       const latestNearbyMemo = nearbyMemo;
 
@@ -46,22 +71,28 @@ export function useCreateNearbyMemo() {
       formData.append('longitude', String(latestNearbyMemo.longitude || 0));
       formData.append('folderId', String(selectedFolderId));
 
-      const imagesToProcess = images || getImagesFromStorage();
+      const getImagesFromStorage = (): string[] => {
+        if (typeof window === 'undefined') return [];
+        try {
+          return JSON.parse(localStorage.getItem('nearbyInfoImg') || '[]');
+        } catch (error) {
+          console.error('Failed to parse images from localStorage:', error);
+          return [];
+        }
+      };
 
-      if (imagesToProcess.length > 0) {
-        for (const [index, imageData] of imagesToProcess.entries()) {
-          try {
-            const blob = await processBase64ToBlob(imageData);
-            const extension = blob.type.split('/')[1] || 'jpg';
-            formData.append('images', blob, `image_${index}.${extension}`);
-          } catch (error) {
-            console.error(`Failed to process image ${index}:`, error);
-          }
+      const imagesToProcess = images?.slice(0, 6) || getImagesFromStorage().slice(0, 6);
+
+      for (const [index, imageData] of imagesToProcess.entries()) {
+        try {
+          const blob = await resizeImageToBlob(imageData);
+          formData.append('images', blob, `image_${index}.jpg`);
+        } catch (err) {
+          console.error(`Failed to process image ${index}`, err);
         }
       }
 
-      const result = await createNearbyMemo(formData);
-      return result;
+      return await createNearbyMemo(formData);
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['nearby-memo'] });
@@ -71,9 +102,10 @@ export function useCreateNearbyMemo() {
         queryClient.invalidateQueries({ queryKey: folderMemoKeys.byFolder(folderId) });
       }
       queryClient.invalidateQueries({ queryKey: folderKeys.all });
-      toast.success('주변메모 장소 저장을 성공했습니다');
 
+      toast.success('주변메모 장소 저장을 성공했습니다');
       router.push('/map');
+
       localStorage.removeItem('nearbyMemo');
       localStorage.removeItem('nearbyInfoImg');
     },
