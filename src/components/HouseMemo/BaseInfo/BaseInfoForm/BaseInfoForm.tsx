@@ -133,7 +133,7 @@ export function BaseInfoForm() {
 
       {/* 5. 주소 */}
       <LabelContainer label="주소" required>
-        <CurrentLocationButton className="-translate-x-12" onClick={handleMoveToCurrentLocation} />
+        <CurrentLocationButton className="-translate-x-1" onClick={handleMoveToCurrentLocation} />
         <Input
           placeholder="현재 위치 버튼을 클릭하거나 지도를 터치하여 주소를 선택하세요."
           value={houseMemo.address || ''}

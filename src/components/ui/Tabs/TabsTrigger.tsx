@@ -67,12 +67,12 @@ TabsTrigger.Chip = function ({ iconName, value, text, className }: ChipProps) {
     <div
       onClick={() => setActiveTab(value)}
       className={cn(
-        'flex w-min cursor-pointer flex-row items-center gap-2 rounded-3xl px-5 py-2',
+        'flex w-min cursor-pointer flex-row items-center gap-1 rounded-3xl px-2 py-2 pr-3',
         badgeStyle,
         className
       )}
     >
-      {finalIconName && <Icon name={finalIconName} width={20} />}
+      {finalIconName && <Icon name={finalIconName} width={30} />}
       <BodyS className="text-center whitespace-nowrap">{text}</BodyS>
     </div>
   );

@@ -45,11 +45,12 @@ export function NearbyInfoForm() {
   return (
     <div className="flex flex-col gap-8 px-6 py-5 pb-24">
       {/* 장소 태그 선택 */}
-      <LabelContainer label="장소 태그" className="w-100 gap-3">
+      <LabelContainer label="장소 태그" className="w-70 gap-2">
         <ChipGroup
           activeChipColor="secondary"
           options={placeTagOptions}
           value={nearbyMemo.placeTag}
+          className={'gap-1 px-2'}
           iconName={(optionValue, isActive) => {
             if (isActive) {
               switch (optionValue) {
