@@ -4,7 +4,7 @@ import { ChecklistResponse } from '@/types/checklist';
 
 export const useChecklistInfo = () => {
   return useQuery<ChecklistResponse>({
-    queryKey: ['checklistInfo'],
+    queryKey: ['checklist'],
     queryFn: getChecklistInfo,
   });
 };
