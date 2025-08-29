@@ -11,7 +11,7 @@ export function MainLayout({ children, className }: MainLayoutProps) {
     <div
       id="main-layout"
       className={cn(
-        'relative mx-auto flex h-full min-h-0 w-full max-w-110 min-w-80 grow flex-col overflow-y-auto bg-white',
+        'scrollbar-hidden relative mx-auto flex h-full min-h-0 w-full max-w-110 min-w-80 grow flex-col overflow-y-auto bg-white shadow-xl',
         className
       )}
     >

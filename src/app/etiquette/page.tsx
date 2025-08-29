@@ -88,17 +88,17 @@ export default function EtiquettePage() {
     };
   }, []);
   return (
-    <MainLayout className="scrollbar-hidden">
+    <MainLayout className="scrollbar-hidden z-[10]">
       <Header title="에티켓" leftBack />
 
-      <div className="px-6 py-4" data-aos="fade-up-10" data-aos-delay={0}>
+      <div className="relative z-[10] px-6 py-4" data-aos="fade-up-10" data-aos-delay={0}>
         <TitleXl>
           에티켓을 지키면
           {'\n'}좋은 매물, 좋은 관계로 이어집니다.
         </TitleXl>
       </div>
 
-      <div className="flex flex-col gap-10 px-6 pb-12">
+      <div className="relative z-[10] flex flex-col gap-10 px-6 pb-12">
         {sections.map((sec, secIdx) => {
           const itemsBefore = sections.slice(0, secIdx).reduce((sum, s) => sum + s.items.length, 0);
           const titleDelay = (itemsBefore + 1) * 50; // 150ms 간격

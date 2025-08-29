@@ -58,7 +58,7 @@ function NearbyMemoPageContent() {
         }
         title="장소 메모"
       />
-      <div className="max-w-full overflow-x-hidden">
+      <div className="scrollbar-hidden max-w-full overflow-x-hidden">
         <div className="px-4">
           <AddImgButtonGroup storageKey="nearbyInfoImg" />
         </div>
