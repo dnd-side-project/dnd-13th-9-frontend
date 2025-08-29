@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Icon } from '@/components/ui/Icon';
 import { usePlacesQuery } from '@/queries/houseMemo/usePlacesQuery';
 import { Place } from '@/services/house.memo';
-import { useHouseMemo } from '@/contexts/HouseMemoContext';
+import Loading from '@/app/loading';
 
 type PlaceSearchProps = {
   value: string;
@@ -14,23 +14,57 @@ type PlaceSearchProps = {
 };
 
 export default function PlaceSearch({ value, onChange, onSelect }: PlaceSearchProps) {
-  const [page, setPage] = React.useState(1);
-  const { houseMemo, setHouseMemo } = useHouseMemo();
+  const [page, setPage] = useState(1);
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [searchTriggered, setSearchTriggered] = useState(false);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
-  const { data, isLoading, isError } = usePlacesQuery(value, page);
+  const { data, isLoading, isError } = usePlacesQuery(searchTriggered ? value : '', page);
 
-  const results = data?.documents ?? [];
-  const isEnd = data?.meta.is_end ?? true;
+  useEffect(() => {
+    setSearchTriggered(false);
+    setPage(1);
+    setPlaces([]);
+  }, [value]);
+
+  useEffect(() => {
+    if (!searchTriggered) return;
+    if (page === 1) {
+      setPlaces(data?.documents ?? []);
+    } else if (data?.documents) {
+      setPlaces((prev) => [...prev, ...data.documents]);
+    }
+  }, [data, page, searchTriggered]);
+
+  useEffect(() => {
+    if (!loaderRef.current) return;
+    if (!searchTriggered) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && data?.meta.is_end === false) {
+          setPage((p) => p + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    observer.observe(loaderRef.current);
+
+    return () => {
+      if (loaderRef.current) observer.unobserve(loaderRef.current);
+    };
+  }, [data, searchTriggered]);
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="relative w-full justify-center py-2">
+    <div className="flex max-h-[450px] flex-col gap-3">
+      <div className="relative w-full py-2">
         <Input
           placeholder="지도에 표시할 장소를 검색해보세요."
           value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') setPage(1);
+          onChange={(e) => {
+            onChange(e.target.value);
           }}
           rightChildren={
             <Icon
@@ -38,58 +72,47 @@ export default function PlaceSearch({ value, onChange, onSelect }: PlaceSearchPr
               className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer"
               width={20}
               height={25}
-              onClick={() => setPage(1)}
+              onClick={() => {
+                setPage(1);
+                setSearchTriggered(true);
+              }}
             />
           }
         />
       </div>
 
-      {isLoading && <div></div>}
-      {isError && <div>검색 오류가 발생했습니다.</div>}
-
-      <ul className="flex max-h-[400px] flex-col gap-2 overflow-y-auto">
-        {results.map((place) => (
-          <li
-            key={place.id}
-            className="hover:bg-coolGray-20 cursor-pointer rounded-lg p-3"
-            onClick={() => {
-              onSelect(place);
-            }}
-          >
-            <div className="font-semibold">{place.place_name}</div>
-            {place.road_address_name ? (
-              <div className="text-sm text-gray-600">
-                {place.road_address_name}
-                <br />
-                <span className="text-gray-400">{place.address_name}</span>
-              </div>
-            ) : (
-              <div className="text-sm text-gray-600">{place.address_name}</div>
-            )}
-            {place.phone && <div className="text-sm text-gray-500">{place.phone}</div>}
-          </li>
-        ))}
-      </ul>
-
-      {results.length > 0 && (
-        <div className="flex justify-center gap-2 py-2">
-          <button
-            disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-            className="px-2 disabled:text-gray-400"
-          >
-            이전
-          </button>
-          <span>{page}</span>
-          <button
-            disabled={isEnd}
-            onClick={() => setPage((p) => p + 1)}
-            className="px-2 disabled:text-gray-400"
-          >
-            다음
-          </button>
+      {isError && searchTriggered && (
+        <div>
+          <Loading />
         </div>
       )}
+
+      {searchTriggered && (
+        <ul className="flex max-h-[400px] flex-col gap-2 overflow-y-auto">
+          {places.map((place) => (
+            <li
+              key={place.id}
+              className="hover:bg-coolGray-20 cursor-pointer rounded-lg p-3"
+              onClick={() => onSelect(place)}
+            >
+              <div className="font-semibold">{place.place_name}</div>
+              {place.road_address_name ? (
+                <div className="text-sm text-gray-600">
+                  {place.road_address_name}
+                  <br />
+                  <span className="text-gray-400">{place.address_name}</span>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-600">{place.address_name}</div>
+              )}
+              {place.phone && <div className="text-sm text-gray-500">{place.phone}</div>}
+            </li>
+          ))}
+          <div ref={loaderRef} />
+        </ul>
+      )}
+
+      {isLoading && searchTriggered && <div className="py-2 text-center"></div>}
     </div>
   );
 }
