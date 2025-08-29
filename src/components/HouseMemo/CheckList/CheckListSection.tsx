@@ -8,15 +8,13 @@ import {
 import { TitleXs } from '@/components/ui/Typography';
 import { Chip } from '@/components/ui/Chip';
 import { useRouter } from 'next/navigation';
+import { ChecklistSection as ChecklistSectionType, ChecklistItem } from '@/types/checklist';
 
 type Props = {
-  section: {
-    categoryName: string;
-    items?: any[];
-  };
-  getSectionItems: (categoryName: string) => any[];
-  isLastItem: (itemId: string, items: any[]) => boolean;
-  hasRequiredItems: (items: any[]) => boolean;
+  section: ChecklistSectionType;
+  getSectionItems: (categoryName: string) => ChecklistItem[];
+  isLastItem: (itemId: number, items: ChecklistItem[]) => boolean;
+  hasRequiredItems: (items: ChecklistItem[]) => boolean;
 };
 
 export default function CheckListSection({
@@ -45,10 +43,18 @@ export default function CheckListSection({
   return (
     <CheckListBox className="w-full py-3">
       <div className="flex flex-col gap-4 px-4 py-4 pt-3">
-        {items.map((item: any) => (
-          <React.Fragment key={item.id}>
-            <CheckListBoxItem question={item.question} description={item.description} />
-            {!isLastItem(item.id, items) && <CheckListBoxSeparator />}
+        {items.map((item: ChecklistItem) => (
+          <React.Fragment key={item.itemId}>
+            {isRequiredCategory ? (
+              <CheckListBoxFavoriteItem
+                question={item.question}
+                description={item.description}
+                isFill={true}
+              />
+            ) : (
+              <CheckListBoxItem question={item.question} description={item.description} />
+            )}
+            {!isLastItem(item.itemId, items) && <CheckListBoxSeparator />}
           </React.Fragment>
         ))}
       </div>

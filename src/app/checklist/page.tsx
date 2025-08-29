@@ -11,23 +11,32 @@ import {
   CheckListTitle,
 } from '@/components/ui/CheckListBox';
 import { TitleXs } from '@/components/ui/Typography';
-import { checkListData } from '@/app/checklist/checkListData';
 import { Button } from '@/components/ui/Button';
 import { Header } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { useSendRequiredItems } from '@/queries/checkList/useSendRequiredItems';
+import { useChecklistInfo } from '@/queries/checkList/useChecklistInfo';
+import { ChecklistSection } from '@/types/checklist';
+import Loading from '../loading';
 
 export default function page() {
-  const [sections, setSections] = useState(checkListData.sections);
+  const { data: checkListData } = useChecklistInfo();
+  const [sections, setSections] = useState<ChecklistSection[]>([]);
+
+  React.useEffect(() => {
+    if (checkListData?.data?.sections) {
+      setSections(checkListData.data.sections);
+    }
+  }, [checkListData]);
 
   const toggleItemFill = (sectionName: string, itemId: number) => {
-    setSections((prev) =>
-      prev.map((section) =>
+    setSections((prev: ChecklistSection[]) =>
+      prev.map((section: ChecklistSection) =>
         section.categoryName === sectionName
           ? {
               ...section,
               items: section.items.map((item) =>
-                item.id === itemId ? { ...item, isFill: !item.isFill } : item
+                item.itemId === itemId ? { ...item, isFill: !item.isFill } : item
               ),
             }
           : section
@@ -39,12 +48,18 @@ export default function page() {
 
   const handleClick = () => {
     const filledIds = sections
-      .flatMap((section) => section.items)
+      .flatMap((section: ChecklistSection) => section.items)
       .filter((item) => item.isFill)
-      .map((item) => item.id);
+      .map((item) => item.itemId);
 
     mutate({ itemIdList: filledIds });
   };
+
+  if (!checkListData?.data) {
+    return <Loading />;
+  }
+
+  const { categories, sections: dataSections } = checkListData.data;
 
   return (
     <MainLayout className="bg-[#F0F5FB] pb-22">
@@ -71,7 +86,7 @@ export default function page() {
 
         <Tabs defaultValue="필수 확인">
           <TabsList className="scrollbar-hidden overflow-scroll py-3">
-            {checkListData.categories.map((category) => (
+            {categories.map((category) => (
               <TabsTrigger.Chip
                 key={category.order}
                 iconName={(isActive) => {
@@ -146,16 +161,17 @@ export default function page() {
                     return (
                       <div className="flex flex-col gap-4 px-4 py-4 pt-3">
                         {favoriteItems.map((item, index) => (
-                          <React.Fragment key={`${item.id}-${index}`}>
+                          <React.Fragment key={`${item.itemId}-${index}`}>
                             <CheckListBoxFavoriteItem
                               question={item.question}
                               description={item.description}
                               isFill={true}
                               onClick={() =>
                                 toggleItemFill(
-                                  sections.find((s) => s.items.some((i) => i.id === item.id))
-                                    ?.categoryName || '',
-                                  item.id
+                                  sections.find((s) =>
+                                    s.items.some((i) => i.itemId === item.itemId)
+                                  )?.categoryName || '',
+                                  item.itemId
                                 )
                               }
                             />
@@ -168,12 +184,12 @@ export default function page() {
                 ) : (
                   <div className="flex flex-col gap-4 px-4 py-4 pt-3">
                     {section.items.map((item, index) => (
-                      <React.Fragment key={item.id}>
+                      <React.Fragment key={item.itemId}>
                         <CheckListBoxFavoriteItem
                           question={item.question}
                           description={item.description}
                           isFill={Boolean(item.isFill)}
-                          onClick={() => toggleItemFill(section.categoryName, item.id)}
+                          onClick={() => toggleItemFill(section.categoryName, item.itemId)}
                         />
                         {index !== section.items.length - 1 && <CheckListBoxSeparator />}
                       </React.Fragment>
