@@ -5,3 +5,8 @@ export async function getHouseMemoById(id: string): Promise<ApiResponse<HouseMem
   const res = await api.get(`api/property/${id}`).json<ApiResponse<HouseMemoDataById>>();
   return res;
 }
+
+export async function deleteHouseMemoById(id: string): Promise<ApiResponse<void>> {
+  const res = await api.delete(`api/property/${id}`).json<ApiResponse<void>>();
+  return res;
+}

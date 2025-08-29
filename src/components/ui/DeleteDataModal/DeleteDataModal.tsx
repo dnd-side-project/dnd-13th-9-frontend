@@ -36,7 +36,7 @@ export function DeleteDataModal({
           <span className="text-xl font-semibold">{title}</span>
           <div className="flex flex-row">
             <span className="text-xl font-semibold text-[#669AFF]">{confirmText}</span>
-            <span className="text-xl font-semibold">하고 나가시겠어요?</span>
+            <span className="text-xl font-semibold">하시겠어요?</span>
           </div>
         </div>
 

@@ -17,6 +17,10 @@ import { useSelectedPlanName } from '@/hooks/useSelectedPlanName';
 import { usePlansQuery } from '@/queries/plan/usePlansQuery';
 import { useFoldersQuery } from '@/queries/folder/useFoldersQuery';
 import { useFolderMemosQuery } from '@/queries/folder/useFolderMemosQuery';
+import { useDeleteNearbyMemo } from '@/queries/nearbyMemo/useDeleteNearbyMemo';
+import { useDeleteHouseMemo } from '@/queries/houseMemo/useDeleteHouseMemo';
+import { DeleteActionsMenu } from '@/components/ui/DeleteActionsMenu';
+import { DeleteDataModal } from '@/components/ui/DeleteDataModal';
 import IcoEmpty from '@assets/ico-empty.svg';
 import { Loading } from '@/components/ui/Loading';
 
@@ -51,6 +55,14 @@ export default function FolderDetailPage() {
   const setSelectedMemoId = useMapStore((s) => (s as any).setSelectedMemoId);
   const { isOpen, openModal, closeModal } = useModal(false);
 
+  const deleteNearbyMemo = useDeleteNearbyMemo();
+  const deleteHouseMemo = useDeleteHouseMemo();
+
+  const [menuAnchor, setMenuAnchor] = React.useState<DOMRect | null>(null);
+  const [menuMemoId, setMenuMemoId] = React.useState<string | null>(null);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [actionMemoId, setActionMemoId] = React.useState<string | null>(null);
+
   const placeTagToIcon: Record<string, any> = {
     ADVANTAGE: 'mapNearbyGood',
     DISADVANTAGE: 'mapNearbyBad',
@@ -58,6 +70,18 @@ export default function FolderDetailPage() {
     TRANSPORTATION: 'mapNearbyTraffic',
     SECURITY: 'mapNearbySecurity',
     NOISE: 'mapNearbyNoise',
+  };
+
+  const openMenu = (event: React.MouseEvent, memoId: string) => {
+    event.stopPropagation();
+    const rect = event.currentTarget.getBoundingClientRect();
+    setMenuAnchor(rect);
+    setMenuMemoId(memoId);
+  };
+
+  const closeMenu = () => {
+    setMenuAnchor(null);
+    setMenuMemoId(null);
   };
 
   React.useEffect(() => {
@@ -234,7 +258,12 @@ export default function FolderDetailPage() {
                       </div>
                     </>
                   )}
-                  <Icon name="more" color="coolGray-50" />
+                  <Icon
+                    name="more"
+                    color="coolGray-50"
+                    onClick={(e) => openMenu(e, m.id)}
+                    className="cursor-pointer"
+                  />
                 </button>
               );
             })}
@@ -258,6 +287,41 @@ export default function FolderDetailPage() {
       )}
 
       <MemoOverlay isOpen={isOpen} onClose={closeModal} portalSelector="#main-layout" />
+
+      <DeleteActionsMenu
+        isOpen={!!menuMemoId}
+        anchorRect={menuAnchor}
+        onClose={closeMenu}
+        onDelete={() => {
+          if (menuMemoId) setActionMemoId(menuMemoId);
+          setDeleteOpen(true);
+        }}
+        deleteLabel="삭제하기"
+        offsetX={20}
+      />
+
+      <DeleteDataModal
+        isOpen={deleteOpen}
+        closeModal={() => setDeleteOpen(false)}
+        title="이 메모를"
+        confirmText="삭제"
+        onConfirm={() => {
+          if (actionMemoId) {
+            const memoType = actionMemoId.startsWith('near_') ? 'NEARBY' : 'HOUSE';
+            const memoId = actionMemoId.replace(/^(near_|prop_)/, '');
+
+            if (memoType === 'NEARBY') {
+              deleteNearbyMemo.mutate(memoId);
+            } else {
+              deleteHouseMemo.mutate(memoId);
+            }
+
+            setDeleteOpen(false);
+            setActionMemoId(null);
+            closeMenu();
+          }
+        }}
+      />
     </MainLayout>
   );
 }
