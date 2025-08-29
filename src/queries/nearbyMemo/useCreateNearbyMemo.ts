@@ -17,9 +17,13 @@ export function useCreateNearbyMemo() {
   const { nearbyMemo } = useNearbyMemo();
   const router = useRouter();
 
-  const processBase64ToBlob = async (base64: string): Promise<Blob> => {
-    const res = await fetch(base64);
-    return await res.blob();
+  const base64ToBlob = (base64: string): Blob => {
+    const [header, data] = base64.split(',');
+    const mime = header.match(/data:([^;]+)/)?.[1] || 'image/jpeg';
+    const binary = atob(data);
+    const array = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+    return new Blob([array], { type: mime });
   };
 
   return useMutation<CreateNearbyMemoResponse, Error, CreateNearbyMemoParams>({
@@ -46,22 +50,18 @@ export function useCreateNearbyMemo() {
       formData.append('longitude', String(latestNearbyMemo.longitude || 0));
       formData.append('folderId', String(selectedFolderId));
 
-      const imagesToProcess = images || getImagesFromStorage();
+      const imagesToProcess = images?.slice(0, 6) || getImagesFromStorage().slice(0, 6); // 최대 6장
 
-      if (imagesToProcess.length > 0) {
-        for (const [index, imageData] of imagesToProcess.entries()) {
-          try {
-            const blob = await processBase64ToBlob(imageData);
-            const extension = blob.type.split('/')[1] || 'jpg';
-            formData.append('images', blob, `image_${index}.${extension}`);
-          } catch (error) {
-            console.error(`Failed to process image ${index}:`, error);
-          }
+      for (const [index, imageData] of imagesToProcess.entries()) {
+        try {
+          const blob = base64ToBlob(imageData);
+          formData.append('images', blob, `image_${index}.jpg`);
+        } catch (error) {
+          console.error(`Failed to process image ${index}`, error);
         }
       }
 
-      const result = await createNearbyMemo(formData);
-      return result;
+      return await createNearbyMemo(formData);
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['nearby-memo'] });
@@ -71,6 +71,7 @@ export function useCreateNearbyMemo() {
         queryClient.invalidateQueries({ queryKey: folderMemoKeys.byFolder(folderId) });
       }
       queryClient.invalidateQueries({ queryKey: folderKeys.all });
+
       toast.success('주변메모 장소 저장을 성공했습니다');
 
       router.push('/map');
