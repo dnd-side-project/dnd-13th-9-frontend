@@ -57,7 +57,7 @@ export default function Page() {
         />
 
         <div className="flex flex-wrap gap-2">
-          <Chip iconName="folder" variant="secondary" size="sm" text={`폴더 ${memo.folderId}`} />
+          <Chip iconName="folder" variant="secondary" size="sm" text={memo.folderName} />
 
           <Chip
             variant="secondary"

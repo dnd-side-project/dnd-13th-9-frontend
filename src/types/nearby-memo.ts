@@ -34,6 +34,7 @@ export type NearbyMemoInputField = {
 export type NearbyMemoById = NearbyMemo & {
   id: number;
   imageUrls: string[];
+  folderName: string;
 };
 
 export type ApiResponse<T> = {

@@ -166,7 +166,7 @@ export default function Page() {
           {houseMemo.longitude && houseMemo.latitude ? (
             <div className="h-48 w-full overflow-hidden rounded-lg">
               <KakaoMap
-                type="NEARBY"
+                type="PROPERTY"
                 height="150px"
                 lat={houseMemo.latitude}
                 lng={houseMemo.longitude}
