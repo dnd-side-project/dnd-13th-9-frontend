@@ -78,7 +78,7 @@ export function BaseInfoForm() {
               width={35}
               height={35}
               name={houseMemo.feeling === type ? iconName : unselectedIconName}
-              className={`transform cursor-pointer transition-all duration-300 ease-out hover:scale-105 ${
+              className={`transform cursor-pointer transition-all duration-300 ease-out ${
                 animatingIcon === type ? 'scale-125 rotate-3' : 'scale-100 rotate-0'
               }`}
             />
