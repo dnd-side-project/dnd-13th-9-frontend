@@ -98,7 +98,7 @@ export function NearbyInfoForm() {
             <>
               <CurrentLocationButton
                 onClick={handleMoveToCurrentLocation}
-                className="-translate-x-14"
+                className="-translate-x-1"
                 color="secondary"
               />
               <Input

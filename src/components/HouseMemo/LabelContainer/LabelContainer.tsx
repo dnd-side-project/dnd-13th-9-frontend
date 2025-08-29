@@ -11,7 +11,7 @@ type Props = {
 
 export function LabelContainer({ label, required = false, children, className }: Props) {
   return (
-    <div className={cn('flex flex-col items-start gap-2 align-top', className)}>
+    <div className={cn('relative flex flex-col items-start gap-2 align-top', className)}>
       <TitleXs>
         {label}
         {required && (
