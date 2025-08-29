@@ -48,8 +48,6 @@ export default function RootLayout({
         </div>
         <HouseMemoProvider>
           <QueryProvider>
-            <div className="h-full lg:hidden">{children}</div>
-
             <div className="absolute top-55 left-38 hidden lg:block">
               <IcoLogoAll className="h-[150px] w-80" />
               <TitleXl className="text-primary-50 ml-6 text-[32px] font-semibold">
@@ -59,7 +57,7 @@ export default function RootLayout({
               </TitleXl>
             </div>
 
-            <div className="absolute right-10 flex h-full items-end justify-center">
+            <div className="pointer-events-none absolute right-10 flex h-full items-end justify-center">
               <div className="relative h-[600px] w-[540px] origin-bottom-right scale-[0.9]">
                 <IcoHouse className="h-[600px] w-[540px]" />
                 <IcoLight className="animate-light-sway absolute top-2 left-1/2 h-[160px] w-[140px] -translate-x-1/2" />
