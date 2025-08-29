@@ -74,7 +74,18 @@ export function useCreateNearbyMemo() {
       const getImagesFromStorage = (): string[] => {
         if (typeof window === 'undefined') return [];
         try {
-          return JSON.parse(localStorage.getItem('nearbyInfoImg') || '[]');
+          const stored = localStorage.getItem('nearbyInfoImg');
+          if (!stored) return [];
+
+          const storedImages = JSON.parse(stored);
+
+          if (Array.isArray(storedImages)) {
+            const filteredImages = storedImages.filter((img: string) => img && img.trim() !== '');
+
+            return filteredImages;
+          }
+
+          return [];
         } catch (error) {
           console.error('Failed to parse images from localStorage:', error);
           return [];
@@ -83,14 +94,30 @@ export function useCreateNearbyMemo() {
 
       const imagesToProcess = images?.slice(0, 6) || getImagesFromStorage().slice(0, 6);
 
-      for (const [index, imageData] of imagesToProcess.entries()) {
+      let processedImageCount = 0;
+      const failedImages: number[] = [];
+
+      const imagePromises = imagesToProcess.map(async (imageData, index) => {
         try {
           const blob = await resizeImageToBlob(imageData);
           formData.append('images', blob, `image_${index}.jpg`);
+          processedImageCount++;
+
+          return { success: true, index };
         } catch (err) {
-          console.error(`Failed to process image ${index}`, err);
+          failedImages.push(index);
+          return { success: false, index, error: err };
         }
+      });
+
+      await Promise.allSettled(imagePromises);
+
+      if (failedImages.length > 0) {
+        toast.error(`${failedImages.length}개의 이미지 처리에 실패했습니다.`);
       }
+
+      const formDataEntries = Array.from(formData.entries());
+      const imageEntries = formDataEntries.filter(([key]) => key === 'images');
 
       return await createNearbyMemo(formData);
     },

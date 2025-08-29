@@ -60,7 +60,7 @@ function NearbyMemoPageContent() {
       />
       <div className="max-w-full overflow-x-hidden">
         <div className="px-4">
-          <AddImgButtonGroup storageKey="nearbyInfoImg" readonly={false} />
+          <AddImgButtonGroup storageKey="nearbyInfoImg" />
         </div>
         <NearbyInfoForm />
       </div>

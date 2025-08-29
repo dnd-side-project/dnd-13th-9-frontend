@@ -61,11 +61,9 @@ export function useCreateProperty() {
       }
 
       if (images && images.length > 0) {
-        images.forEach((imageData, index) => {
-          if (!imageData.includes(',')) {
-            console.warn(`Skipping invalid image at index ${index}`);
-            return;
-          }
+        const processedImages = images.filter((imageData) => imageData && imageData.includes(','));
+
+        processedImages.forEach((imageData, index) => {
           try {
             const byteCharacters = atob(imageData.split(',')[1]);
             const byteNumbers = new Array(byteCharacters.length);

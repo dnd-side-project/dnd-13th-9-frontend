@@ -18,7 +18,11 @@ export default function page() {
   const getImagesFromStorage = () => {
     if (typeof window === 'undefined') return [];
     try {
-      return JSON.parse(localStorage.getItem('images') || '[]');
+      const storedImages = JSON.parse(localStorage.getItem('images') || '[]');
+
+      const filteredImages = storedImages.filter((img: string) => img && img.trim() !== '');
+
+      return filteredImages;
     } catch (error) {
       console.error('Failed to parse images from localStorage:', error);
       return [];
