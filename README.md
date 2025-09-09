@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏡 내 기준에 맞는 집 .zip! 해서 후회없게
 
-## Getting Started
+[![Storybook](https://img.shields.io/badge/Storybook-FF4785?style=flat-square&logo=storybook&logoColor=white)](https://6894a6ac4e37e8794db64f74-gchnyribst.chromatic.com/)
 
-First, run the development server:
+<div align="center">
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![Main](docs/main.png)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ❓ 왜 zip.zip일까요?
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+✔ 집 볼 때 무엇을 확인해야 할지 막막한가요?  
+✔ 계약 후에 “그때 확인할 걸…” 하고 후회한 적 있나요?  
+✔ 집 구조, 방향, 조건이 헷갈려 기억이 뒤죽박죽되나요?
 
-## Learn More
+👉 **zip.zip**은 내가 원하는 기준으로 집을 기록하고,  
+주변의 조언을 더해 **확신 있는 선택**을 할 수 있게 돕는 자취방 구하기 서비스입니다 ✨
 
-To learn more about Next.js, take a look at the following resources:
+## 주요 기능
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<div align="center">
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+![Feature1](docs/feature1.png)  
+![Feature2](docs/feature2.png)  
+![Feature3](docs/feature3.png)  
+![Feature4](docs/feature4.png)  
+![Feature5](docs/feature5.png)
 
-## Deploy on Vercel
+</div>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<div align="center">
+
+<img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=white"/> 
+<img src="https://img.shields.io/badge/Storybook-FF4785?style=for-the-badge&logo=Storybook&logoColor=white"/> 
+<img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
+
+<br/>  
+<img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white"/> 
+<img src="https://img.shields.io/badge/Zustand-181717?style=for-the-badge&logo=react&logoColor=white"/> 
+<img src="https://img.shields.io/badge/ky-7F52FF?style=for-the-badge&logo=yarn&logoColor=white"/>
+
+</div>
+
+## TEAM
+
+<div align="center">
+
+| Role        | Name / GitHub                               |
+| ----------- | ------------------------------------------- |
+| 🎨 Designer | 이수연                                      |
+| 🎨 Designer | 우다현                                      |
+| 💻 Frontend | [ujinsim](https://github.com/ujinsim)       |
+| 💻 Frontend | [ydw1996](https://github.com/ydw1996)       |
+| 🛠️ Backend  | [Daae-Kim](https://github.com/Daae-Kim)     |
+| 🛠️ Backend  | [youabledev](https://github.com/youabledev) |
+
+</div>
