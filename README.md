@@ -1,6 +1,6 @@
 # 🏡 내 기준에 맞는 집 .zip! 해서 후회없게
 
-[![Storybook](https://img.shields.io/badge/Storybook-FF4785?style=flat-square&logo=storybook&logoColor=white)](https://<스토리북-배포-주소>)
+[![Storybook](https://img.shields.io/badge/Storybook-FF4785?style=flat-square&logo=storybook&logoColor=white)](https://6894a6ac4e37e8794db64f74-gchnyribst.chromatic.com/)
 
 <div align="center">
 
@@ -52,7 +52,7 @@
 | ----------- | ------------------------------------------- |
 | 🎨 Designer | 이수연                                      |
 | 🎨 Designer | 우다현                                      |
-| 💻 Frontend | [ujinsim](https://github.com/ujinsim프론트) |
+| 💻 Frontend | [ujinsim](https://github.com/ujinsim)       |
 | 💻 Frontend | [ydw1996](https://github.com/ydw1996)       |
 | 🛠️ Backend  | [Daae-Kim](https://github.com/Daae-Kim)     |
 | 🛠️ Backend  | [youabledev](https://github.com/youabledev) |
