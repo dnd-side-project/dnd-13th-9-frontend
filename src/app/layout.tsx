@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { HouseMemoProvider } from '@/components/providers/house-memo-provider';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import IcoLogoAll from '@assets/ico-logo-all.svg';
 import IcoHouse from '@assets/login/lco-house.svg';
@@ -68,6 +69,7 @@ export default function RootLayout({
 
             {children}
             <Toaster position="top-center" reverseOrder={false} />
+            {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
           </QueryProvider>
         </HouseMemoProvider>
       </body>
