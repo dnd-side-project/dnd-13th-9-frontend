@@ -1,10 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { getChecklistInfo } from '@/services/checkList';
-import { ChecklistResponse } from '@/types/checklist';
+import { queries } from '@/queries';
 
 export const useChecklistInfo = () => {
-  return useQuery<ChecklistResponse>({
-    queryKey: ['checklist'],
-    queryFn: getChecklistInfo,
-  });
+  return useQuery(queries.checklist.info);
 };
